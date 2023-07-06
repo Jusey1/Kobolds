@@ -52,7 +52,7 @@ public class KoboldSkeletonEntity extends Skeleton implements CrossbowAttackMob,
 	@Override
 	protected void registerGoals() {
 		super.registerGoals();
-		this.goalSelector.addGoal(1, new RangedCrossbowAttackGoal<>(this, 1.0D, 21.0F));
+		this.goalSelector.addGoal(1, new RangedCrossbowAttackGoal<>(this, 1.0D, 12.0F));
 	}
 
 	@Override
@@ -61,7 +61,8 @@ public class KoboldSkeletonEntity extends Skeleton implements CrossbowAttackMob,
 	}
 
 	@Override
-	public void performRangedAttack(LivingEntity target, float distanceFactor) {
+	public void performRangedAttack(LivingEntity target, float f) {
+		super.performRangedAttack(target, f);
 		if (this.getMainHandItem().getItem() instanceof CrossbowItem) {
 			this.performCrossbowAttack(this, 6.0F);
 		}

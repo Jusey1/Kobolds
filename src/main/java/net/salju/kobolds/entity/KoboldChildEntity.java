@@ -10,7 +10,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.ai.goal.PanicGoal;
 import net.minecraft.world.entity.Pose;
 import net.minecraft.world.entity.MobSpawnType;
-import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.EntityDimensions;
 import net.minecraft.world.InteractionResult;
@@ -20,10 +19,13 @@ import net.minecraft.tags.ItemTags;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.network.chat.Component;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.core.BlockPos;
 
 public class KoboldChildEntity extends AbstractKoboldEntity {
+	private int grow;
+
 	public KoboldChildEntity(PlayMessages.SpawnEntity packet, Level world) {
 		this(KoboldsModEntities.KOBOLD_CHILD.get(), world);
 	}
@@ -38,6 +40,21 @@ public class KoboldChildEntity extends AbstractKoboldEntity {
 	protected void registerGoals() {
 		super.registerGoals();
 		this.goalSelector.addGoal(0, new PanicGoal(this, 1.2));
+	}
+
+	@Override
+	public void addAdditionalSaveData(CompoundTag tag) {
+		super.addAdditionalSaveData(tag);
+		tag.putInt("Grow", this.grow);
+	}
+
+	@Override
+	public void readAdditionalSaveData(CompoundTag tag) {
+		super.readAdditionalSaveData(tag);
+		if (tag.contains("Grow")) {
+			int saved = tag.getInt("Grow");
+			this.grow = saved;
+		}
 	}
 
 	public boolean isBaby() {
@@ -59,9 +76,9 @@ public class KoboldChildEntity extends AbstractKoboldEntity {
 		double y = this.getY();
 		double z = this.getZ();
 		if (!world.isClientSide()) {
-			if (this.getPersistentData().getDouble("TimerGrow") < 24000 && (this.getDisplayName().getString()).equals(Component.translatable("entity.kobolds.kobold_child").getString())) {
-				this.getPersistentData().putDouble("TimerGrow", (this.getPersistentData().getDouble("TimerGrow") + 1));
-			} else if (this.getPersistentData().getDouble("TimerGrow") >= 24000) {
+			if (this.grow < 24000 && (this.getDisplayName().getString()).equals(Component.translatable("entity.kobolds.kobold_child").getString())) {
+				++this.grow;
+			} else if (this.grow >= 24000) {
 				BlockPos pos = BlockPos.containing(x, y, z);
 				this.discard();
 				if (world instanceof ServerLevel lvl) {
@@ -93,7 +110,7 @@ public class KoboldChildEntity extends AbstractKoboldEntity {
 				gem.shrink(1);
 			}
 			player.swing(hand, true);
-			this.getPersistentData().putDouble("TimerGrow", (this.getPersistentData().getDouble("TimerGrow") + 1256));
+			this.grow = this.grow + 1256;
 		}
 		return InteractionResult.FAIL;
 	}

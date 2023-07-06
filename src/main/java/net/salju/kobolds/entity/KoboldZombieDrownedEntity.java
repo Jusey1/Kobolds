@@ -36,11 +36,13 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.core.BlockPos;
 
 public class KoboldZombieDrownedEntity extends Drowned {
 	private static final EntityDataAccessor<Boolean> DATA_CONVERTING = SynchedEntityData.defineId(KoboldZombieDrownedEntity.class, EntityDataSerializers.BOOLEAN);
+	private int convert;
 
 	public KoboldZombieDrownedEntity(PlayMessages.SpawnEntity packet, Level world) {
 		this(KoboldsModEntities.KOBOLD_ZOMBIE_DROWNED.get(), world);
@@ -62,6 +64,21 @@ public class KoboldZombieDrownedEntity extends Drowned {
 	protected void registerGoals() {
 		super.registerGoals();
 		this.targetSelector.addGoal(2, new NearestAttackableTargetGoal(this, GlowSquid.class, true, false));
+	}
+
+	@Override
+	public void addAdditionalSaveData(CompoundTag tag) {
+		super.addAdditionalSaveData(tag);
+		tag.putInt("Convert", this.convert);
+	}
+
+	@Override
+	public void readAdditionalSaveData(CompoundTag tag) {
+		super.readAdditionalSaveData(tag);
+		if (tag.contains("Convert")) {
+			int saved = tag.getInt("Convert");
+			this.convert = saved;
+		}
 	}
 
 	@Override
@@ -98,9 +115,12 @@ public class KoboldZombieDrownedEntity extends Drowned {
 		double y = this.getY();
 		double z = this.getZ();
 		if (!world.isClientSide() && this.isAlive() && !this.isNoAi()) {
-			if (this.getPersistentData().getDouble("Convert") > 1) {
-				this.getPersistentData().putDouble("Convert", (this.getPersistentData().getDouble("Convert") - 1));
-			} else if (this.getPersistentData().getDouble("Convert") == 1) {
+			if (this.convert > 1) {
+				--this.convert;
+				if (this.isConvert() == false) {
+					this.getEntityData().set(DATA_CONVERTING, true);
+				}
+			} else if (this.convert == 1) {
 				if (this.isAlive()) {
 					this.playSound(SoundEvents.ZOMBIE_VILLAGER_CONVERTED, 1.0F, 1.0F);
 					ItemStack weapon = this.getMainHandItem();
@@ -138,8 +158,8 @@ public class KoboldZombieDrownedEntity extends Drowned {
 		double x = this.getX();
 		double y = this.getY();
 		double z = this.getZ();
-		double waitTicks = 0;
-		double potionLevel = 0;
+		int waitTicks = 0;
+		int potionLevel = 0;
 		if (!world.isClientSide() && apple.getItem() == Items.GOLDEN_APPLE && this.hasEffect(MobEffects.WEAKNESS)) {
 			if (world.getDifficulty() == Difficulty.EASY) {
 				potionLevel = 0;
@@ -152,13 +172,13 @@ public class KoboldZombieDrownedEntity extends Drowned {
 				waitTicks = 4800;
 			}
 			if (!player.getAbilities().instabuild) {
-				(apple).shrink(1);
+				apple.shrink(1);
 			}
 			player.swing(hand, true);
 			this.playSound(SoundEvents.ZOMBIE_VILLAGER_CURE, 1.0F, 1.0F);
 			this.removeEffect(MobEffects.WEAKNESS);
-			this.addEffect(new MobEffectInstance(MobEffects.DAMAGE_BOOST, (int) waitTicks, (int) potionLevel));
-			this.getPersistentData().putDouble("Convert", waitTicks);
+			this.addEffect(new MobEffectInstance(MobEffects.DAMAGE_BOOST, waitTicks, potionLevel));
+			this.convert = waitTicks;
 			this.getEntityData().set(DATA_CONVERTING, true);
 		}
 		return InteractionResult.FAIL;
@@ -173,4 +193,4 @@ public class KoboldZombieDrownedEntity extends Drowned {
 		builder = builder.add(Attributes.SPAWN_REINFORCEMENTS_CHANCE);
 		return builder;
 	}
-}
+}
