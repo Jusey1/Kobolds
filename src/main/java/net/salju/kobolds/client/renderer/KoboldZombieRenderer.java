@@ -36,7 +36,7 @@ public class KoboldZombieRenderer extends MobRenderer<KoboldZombieEntity, Zombol
 
 	@Override
 	protected boolean isShaking(KoboldZombieEntity zombo) {
-		return (zombo.isInWater() && zombo.isEyeInFluid(FluidTags.WATER) || zombo.isConvert());
+		return (zombo.isConvert());
 	}
 
 	@Override

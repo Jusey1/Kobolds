@@ -5,7 +5,6 @@
 package net.salju.kobolds.init;
 
 import net.salju.kobolds.entity.KoboldZombieEntity;
-import net.salju.kobolds.entity.KoboldZombieDrownedEntity;
 import net.salju.kobolds.entity.KoboldWarriorEntity;
 import net.salju.kobolds.entity.KoboldSkeletonEntity;
 import net.salju.kobolds.entity.KoboldRascalEntity;
@@ -64,10 +63,6 @@ public class KoboldsModEntities {
 			EntityType.Builder.<KoboldZombieEntity>of(KoboldZombieEntity::new, MobCategory.MONSTER).setShouldReceiveVelocityUpdates(true).setTrackingRange(64).setUpdateInterval(3).setCustomClientFactory(KoboldZombieEntity::new)
 
 					.sized(0.5f, 1.48f));
-	public static final RegistryObject<EntityType<KoboldZombieDrownedEntity>> KOBOLD_ZOMBIE_DROWNED = register("kobold_zombie_drowned",
-			EntityType.Builder.<KoboldZombieDrownedEntity>of(KoboldZombieDrownedEntity::new, MobCategory.MONSTER).setShouldReceiveVelocityUpdates(true).setTrackingRange(64).setUpdateInterval(3).setCustomClientFactory(KoboldZombieDrownedEntity::new)
-
-					.sized(0.5f, 1.48f));
 	public static final RegistryObject<EntityType<KoboldSkeletonEntity>> KOBOLD_SKELETON = register("kobold_skeleton",
 			EntityType.Builder.<KoboldSkeletonEntity>of(KoboldSkeletonEntity::new, MobCategory.MONSTER).setShouldReceiveVelocityUpdates(true).setTrackingRange(64).setUpdateInterval(3).setCustomClientFactory(KoboldSkeletonEntity::new)
 
@@ -92,7 +87,6 @@ public class KoboldsModEntities {
 			KoboldCaptainEntity.init();
 			KoboldChildEntity.init();
 			KoboldZombieEntity.init();
-			KoboldZombieDrownedEntity.init();
 			KoboldSkeletonEntity.init();
 			KoboldRascalEntity.init();
 		});
@@ -108,7 +102,6 @@ public class KoboldsModEntities {
 		event.put(KOBOLD_CAPTAIN.get(), KoboldCaptainEntity.createAttributes().build());
 		event.put(KOBOLD_CHILD.get(), KoboldChildEntity.createAttributes().build());
 		event.put(KOBOLD_ZOMBIE.get(), KoboldZombieEntity.createAttributes().build());
-		event.put(KOBOLD_ZOMBIE_DROWNED.get(), KoboldZombieDrownedEntity.createAttributes().build());
 		event.put(KOBOLD_SKELETON.get(), KoboldSkeletonEntity.createAttributes().build());
 		event.put(KOBOLD_RASCAL.get(), KoboldRascalEntity.createAttributes().build());
 	}

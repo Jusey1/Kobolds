@@ -424,12 +424,15 @@ public abstract class AbstractKoboldEntity extends Monster implements CrossbowAt
 	}
 
 	@Override
-	public SpawnGroupData finalizeSpawn(ServerLevelAccessor world, DifficultyInstance difficulty, MobSpawnType reason, @Nullable SpawnGroupData livingdata, @Nullable CompoundTag tag) {
-		SpawnGroupData retval = super.finalizeSpawn(world, difficulty, reason, livingdata, tag);
+	public SpawnGroupData finalizeSpawn(ServerLevelAccessor world, DifficultyInstance difficulty, MobSpawnType reason, @Nullable SpawnGroupData data, @Nullable CompoundTag tag) {
+		SpawnGroupData retval = super.finalizeSpawn(world, difficulty, reason, data, tag);
 		RandomSource randy = world.getRandom();
 		this.populateDefaultEquipmentSlots(randy, difficulty);
-		if (this instanceof KoboldRascalEntity) {
-			this.addEffect(new MobEffectInstance(MobEffects.INVISIBILITY, 24000, 0));
+		if (this instanceof KoboldRascalEntity rascal) {
+			if (reason != MobSpawnType.EVENT) {
+				rascal.setDespawnDelay(1200);
+			}
+			rascal.addEffect(new MobEffectInstance(MobEffects.INVISIBILITY, rascal.getDespawnDelay(), 0));
 		}
 		return retval;
 	}
@@ -476,9 +479,6 @@ public abstract class AbstractKoboldEntity extends Monster implements CrossbowAt
 	public void baseTick() {
 		super.baseTick();
 		LevelAccessor world = this.level();
-		double x = this.getX();
-		double y = this.getY();
-		double z = this.getZ();
 		if (!world.isClientSide() && this.isAlive() && this.isEffectiveAi()) {
 			if (this.cd > 0) {
 				if (this.cd == 1 && !(this.trident.isEmpty())) {
@@ -491,10 +491,8 @@ public abstract class AbstractKoboldEntity extends Monster implements CrossbowAt
 			if (this.breed > 0) {
 				if (this.breed == 12000) {
 					if (world instanceof ServerLevel lvl) {
-						Mob kobold = new KoboldChildEntity(KoboldsModEntities.KOBOLD_CHILD.get(), lvl);
-						kobold.moveTo(x, y, z, world.getRandom().nextFloat() * 360F, 0);
-						kobold.finalizeSpawn(lvl, world.getCurrentDifficultyAt(kobold.blockPosition()), MobSpawnType.MOB_SUMMONED, null, null);
-						world.addFreshEntity(kobold);
+						BlockPos spawn = BlockPos.containing(this.getX(), this.getY(), this.getZ());
+						KoboldChildEntity baby = KoboldsModEntities.KOBOLD_CHILD.get().spawn(lvl, spawn, MobSpawnType.BREEDING);
 					}
 				}
 				--this.breed;

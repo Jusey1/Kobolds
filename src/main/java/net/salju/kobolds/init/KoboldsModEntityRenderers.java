@@ -5,7 +5,6 @@
 package net.salju.kobolds.init;
 
 import net.salju.kobolds.client.renderer.KoboldZombieRenderer;
-import net.salju.kobolds.client.renderer.KoboldZombieDrownedRenderer;
 import net.salju.kobolds.client.renderer.KoboldWarriorRenderer;
 import net.salju.kobolds.client.renderer.KoboldSkeletonRenderer;
 import net.salju.kobolds.client.renderer.KoboldRenderer;
@@ -33,7 +32,6 @@ public class KoboldsModEntityRenderers {
 		event.registerEntityRenderer(KoboldsModEntities.KOBOLD_CAPTAIN.get(), KoboldCaptainRenderer::new);
 		event.registerEntityRenderer(KoboldsModEntities.KOBOLD_CHILD.get(), KoboldChildRenderer::new);
 		event.registerEntityRenderer(KoboldsModEntities.KOBOLD_ZOMBIE.get(), KoboldZombieRenderer::new);
-		event.registerEntityRenderer(KoboldsModEntities.KOBOLD_ZOMBIE_DROWNED.get(), KoboldZombieDrownedRenderer::new);
 		event.registerEntityRenderer(KoboldsModEntities.KOBOLD_SKELETON.get(), KoboldSkeletonRenderer::new);
 		event.registerEntityRenderer(KoboldsModEntities.KOBOLD_RASCAL.get(), KoboldRascalRenderer::new);
 	}

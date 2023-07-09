@@ -17,11 +17,11 @@ public class KoboldsTabs {
 				tabData.accept(KoboldsItems.KOBOLD_SPAWN_EGG.get());
 				tabData.accept(KoboldsItems.KOBOLD_WARRIOR_SPAWN_EGG.get());
 				tabData.accept(KoboldsItems.KOBOLD_ENCHANTER_SPAWN_EGG.get());
+				tabData.accept(KoboldsItems.KOBOLD_RASCAL_SPAWN_EGG.get());
 				tabData.accept(KoboldsItems.KOBOLD_ENGINEER_SPAWN_EGG.get());
 				tabData.accept(KoboldsItems.KOBOLD_PIRATE_SPAWN_EGG.get());
 				tabData.accept(KoboldsItems.KOBOLD_CAPTAIN_SPAWN_EGG.get());
 				tabData.accept(KoboldsItems.KOBOLD_ZOMBIE_SPAWN_EGG.get());
-				tabData.accept(KoboldsItems.KOBOLD_ZOMBIE_DROWNED_SPAWN_EGG.get());
 				tabData.accept(KoboldsItems.KOBOLD_SKELETON_SPAWN_EGG.get());
 				tabData.accept(KoboldsItems.KOBOLD_POTION_HEALTH.get());
 				tabData.accept(KoboldsItems.KOBOLD_POTION_FIRE.get());
