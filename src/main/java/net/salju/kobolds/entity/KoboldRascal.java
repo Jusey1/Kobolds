@@ -3,7 +3,7 @@ package net.salju.kobolds.entity;
 import net.salju.kobolds.init.KoboldsModSounds;
 import net.salju.kobolds.init.KoboldsMobs;
 import net.salju.kobolds.init.KoboldsItems;
-import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.network.PlayMessages;
 
 import net.minecraft.world.level.LevelAccessor;
@@ -17,6 +17,7 @@ import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.entity.ai.targeting.TargetingConditions;
 import net.minecraft.world.entity.ai.goal.MeleeAttackGoal;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.effect.MobEffects;
@@ -131,10 +132,9 @@ public class KoboldRascal extends AbstractKoboldEntity {
 			}
 			this.isFound = true;
 		}
-		for (AbstractKoboldEntity kobolds : this.level().getEntitiesOfClass(AbstractKoboldEntity.class, this.getBoundingBox().inflate(128.0D))) {
-			if (!(kobolds instanceof KoboldRascal)) {
-				this.getNavigation().moveTo(kobolds.getX(), kobolds.getY(), kobolds.getZ(), 1.2);
-			}
+		AbstractKoboldEntity kobold = world.getNearestEntity(AbstractKoboldEntity.class, TargetingConditions.DEFAULT, this, x, y, z, this.getBoundingBox().inflate(128.0D));
+		if (kobold != null && !(kobold instanceof KoboldRascal)) {
+			this.getNavigation().moveTo(kobold.getX(), kobold.getY(), kobold.getZ(), 1.2);
 		}
 		return InteractionResult.FAIL;
 	}

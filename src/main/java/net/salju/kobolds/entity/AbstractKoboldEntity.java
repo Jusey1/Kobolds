@@ -1,16 +1,11 @@
 package net.salju.kobolds.entity;
 
-import org.checkerframework.checker.units.qual.cd;
-
 import net.salju.kobolds.init.KoboldsModSounds;
 import net.salju.kobolds.init.KoboldsMobs;
 import net.salju.kobolds.init.KoboldsItems;
 import net.salju.kobolds.KoboldsMod;
+import net.minecraftforge.event.ForgeEventFactory;
 
-import net.minecraftforge.event.ForgeEventFactory;
-
-import net.minecraft.world.phys.Vec3;
-import net.minecraft.world.phys.AABB;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
 import net.minecraft.world.level.storage.loot.LootTable;
@@ -43,6 +38,7 @@ import net.minecraft.world.entity.monster.RangedAttackMob;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.monster.CrossbowAttackMob;
 import net.minecraft.world.entity.animal.IronGolem;
+import net.minecraft.world.entity.ai.targeting.TargetingConditions;
 import net.minecraft.world.entity.ai.navigation.GroundPathNavigation;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
@@ -90,8 +86,7 @@ import net.minecraft.advancements.AdvancementProgress;
 import net.minecraft.advancements.Advancement;
 
 import javax.annotation.Nullable;
-
-import java.util.function.Predicate;
+import java.util.function.Predicate;
 import java.util.List;
 import java.util.Iterator;
 
@@ -408,7 +403,8 @@ public abstract class AbstractKoboldEntity extends Monster implements CrossbowAt
 						return InteractionResult.SUCCESS;
 					}
 				} else if (gem.is(ItemTags.create(new ResourceLocation("kobolds:kobold_breed_items")))) {
-					if (!(this instanceof KoboldWarrior) && !this.isBaby() && !world.getEntitiesOfClass(KoboldWarrior.class, AABB.ofSize(new Vec3(x, y, z), 32, 32, 32), e -> true).isEmpty() && this.breed <= 0) {
+					KoboldWarrior target = world.getNearestEntity(KoboldWarrior.class, TargetingConditions.DEFAULT, this, this.getX(), this.getY(), this.getZ(), this.getBoundingBox().inflate(32.0D));
+					if (!(this instanceof KoboldWarrior) && !this.isBaby() && target != null && this.breed <= 0) {
 						this.breed = 24000;
 						if (!player.getAbilities().instabuild) {
 							(player.getItemInHand(hand)).shrink(1);
@@ -498,14 +494,14 @@ public abstract class AbstractKoboldEntity extends Monster implements CrossbowAt
 			if (this.breed > 0) {
 				if (this.breed == 12000) {
 					if (world instanceof ServerLevel lvl) {
-						BlockPos spawn = BlockPos.containing(this.getX(), this.getY(), this.getZ());
-						KoboldChild baby = KoboldsMobs.KOBOLD_CHILD.get().spawn(lvl, spawn, MobSpawnType.BREEDING);
+						BlockPos pos = BlockPos.containing(this.getX(), this.getY(), this.getZ());
+						KoboldChild baby = KoboldsMobs.KOBOLD_CHILD.get().spawn(lvl, pos, MobSpawnType.BREEDING);
 					}
 				}
 				--this.breed;
 			}
 			for (ThrownTrident proj : this.level().getEntitiesOfClass(ThrownTrident.class, this.getBoundingBox().inflate(0.85D))) {
-				if ((proj.getOwner() == this) && (proj.clientSideReturnTridentTickCount > 0) && this.getOffhandItem().isEmpty()) {
+				if (proj.getOwner() == this && proj.clientSideReturnTridentTickCount > 0 && this.getOffhandItem().isEmpty()) {
 					this.setItemInHand(InteractionHand.MAIN_HAND, ItemStack.EMPTY);
 					this.setItemInHand(InteractionHand.OFF_HAND, this.trident);
 					this.cd = 0;
@@ -674,4 +670,4 @@ public abstract class AbstractKoboldEntity extends Monster implements CrossbowAt
 			return false;
 		}
 	}
-}
+}
