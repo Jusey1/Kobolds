@@ -31,7 +31,6 @@ public class KoboldChild extends AbstractKoboldEntity {
 
 	public KoboldChild(EntityType<KoboldChild> type, Level world) {
 		super(type, world);
-		this.setPersistenceRequired();
 		this.setCanPickUpLoot(false);
 	}
 

@@ -41,7 +41,6 @@ public class KoboldRascal extends AbstractKoboldEntity {
 
 	public KoboldRascal(EntityType<KoboldRascal> type, Level world) {
 		super(type, world);
-		this.setPersistenceRequired();
 	}
 
 	public boolean isFound;
@@ -92,14 +91,8 @@ public class KoboldRascal extends AbstractKoboldEntity {
 					ListTag list = tag.getList("Items", 10);
 					if (Math.random() >= 0.85) {
 						ItemStack loot = new ItemStack(KoboldsItems.KOBOLD_IRON_PICKAXE.get());
-						loot.hurt(Mth.nextInt(RandomSource.create(), 28, 396), null, null);
-						loot.enchant(Enchantments.BLOCK_EFFICIENCY, Mth.nextInt(RandomSource.create(), 1, 5));
-						if (Math.random() >= 0.45) {
-							loot.enchant(Enchantments.UNBREAKING, Mth.nextInt(RandomSource.create(), 1, 3));
-						}
-						if (Math.random() >= 0.65) {
-							loot.enchant(Enchantments.BLOCK_FORTUNE, Mth.nextInt(RandomSource.create(), 1, 3));
-						}
+						loot.hurt(Mth.nextInt(RandomSource.create(), 128, 596), null, null);
+						EnchantmentHelper.enchantItem(RandomSource.create(), loot, Mth.nextInt(RandomSource.create(), 18, 32), true);
 						CompoundTag loottag = new CompoundTag();
 						loot.save(loottag);
 						list.add(0, (Tag) loottag);
@@ -110,7 +103,7 @@ public class KoboldRascal extends AbstractKoboldEntity {
 							if (Math.random() >= 0.99) {
 								loot = new ItemStack(Items.DIAMOND);
 							}
-							Optional<CompoundTag> optional = this.getMatchingItem(loot, list);
+							Optional<CompoundTag> optional = getMatchingItem(loot, list);
 							if (optional.isPresent()) {
 								CompoundTag loottag = optional.get();
 								ItemStack bagged = ItemStack.of(loottag);
@@ -182,4 +175,4 @@ public class KoboldRascal extends AbstractKoboldEntity {
 			return false;
 		}
 	}
-}
+}

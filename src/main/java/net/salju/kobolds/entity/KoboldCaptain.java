@@ -32,7 +32,6 @@ public class KoboldCaptain extends AbstractKoboldEntity {
 
 	public KoboldCaptain(EntityType<KoboldCaptain> type, Level world) {
 		super(type, world);
-		this.setPersistenceRequired();
 	}
 
 	@Override

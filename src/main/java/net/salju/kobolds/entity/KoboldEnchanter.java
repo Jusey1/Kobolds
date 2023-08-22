@@ -1,9 +1,12 @@
 package net.salju.kobolds.entity;
 
+import net.salju.kobolds.item.KoboldPotionUtils;
 import net.salju.kobolds.init.KoboldsModSounds;
 import net.salju.kobolds.init.KoboldsMobs;
+import net.salju.kobolds.init.KoboldsItems;
 import net.salju.kobolds.KoboldsMod;
-import net.minecraftforge.network.PlayMessages;
+
+import net.minecraftforge.network.PlayMessages;
 
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.level.LevelAccessor;
@@ -22,6 +25,8 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.util.RandomSource;
+import net.minecraft.util.Mth;
 import net.minecraft.server.level.ServerLevel;
 
 import java.util.List;
@@ -33,7 +38,6 @@ public class KoboldEnchanter extends AbstractKoboldEntity {
 
 	public KoboldEnchanter(EntityType<KoboldEnchanter> type, Level world) {
 		super(type, world);
-		this.setPersistenceRequired();
 	}
 
 	@Override
@@ -72,6 +76,7 @@ public class KoboldEnchanter extends AbstractKoboldEntity {
 
 	class KoboldTradeGoal extends Goal {
 		public final AbstractKoboldEntity kobold;
+		private ItemStack potion = new ItemStack(KoboldsItems.KOBOLD_POTION.get());
 
 		public KoboldTradeGoal(AbstractKoboldEntity kobold) {
 			this.kobold = kobold;
@@ -94,17 +99,15 @@ public class KoboldEnchanter extends AbstractKoboldEntity {
 				double z = this.kobold.getZ();
 				if (world instanceof ServerLevel lvl) {
 					if (Math.random() >= 0.1) {
-						List<ItemStack> list = this.kobold.getTradeItems(this.kobold, "kobolds:gameplay/enchanter_potion_loot");
+						ItemStack stack = KoboldPotionUtils.sellPotion(potion, Mth.nextInt(RandomSource.create(), 0, 100));
 						Vec3 pos = LandRandomPos.getPos(this.kobold, 2, 0);
 						Player target = lvl.getNearestPlayer(this.kobold, 7);
 						if (target != null) {
 							pos = target.position();
 						}
-						for (ItemStack stack : list) {
-							BehaviorUtils.throwItem(this.kobold, stack, pos);
-						}
+						BehaviorUtils.throwItem(this.kobold, stack, pos);
 					} else {
-						List<ItemStack> list = this.kobold.getTradeItems(this.kobold, "kobolds:gameplay/enchanter_gear_loot");
+						List<ItemStack> list = this.kobold.getTradeItems(this.kobold, "kobolds:gameplay/enchanter_loot");
 						Vec3 pos = LandRandomPos.getPos(this.kobold, 2, 0);
 						Player target = lvl.getNearestPlayer(this.kobold, 7);
 						if (target != null) {

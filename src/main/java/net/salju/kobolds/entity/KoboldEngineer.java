@@ -34,7 +34,6 @@ public class KoboldEngineer extends AbstractKoboldEntity {
 
 	public KoboldEngineer(EntityType<KoboldEngineer> type, Level world) {
 		super(type, world);
-		this.setPersistenceRequired();
 	}
 
 	@Override

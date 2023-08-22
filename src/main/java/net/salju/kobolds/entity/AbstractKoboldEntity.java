@@ -1,8 +1,7 @@
 package net.salju.kobolds.entity;
 
-import net.salju.kobolds.init.KoboldsModSounds;
-import net.salju.kobolds.init.KoboldsMobs;
-import net.salju.kobolds.init.KoboldsItems;
+import net.salju.kobolds.item.*;
+import net.salju.kobolds.init.*;
 import net.salju.kobolds.KoboldsMod;
 import net.minecraftforge.event.ForgeEventFactory;
 
@@ -104,6 +103,7 @@ public abstract class AbstractKoboldEntity extends Monster implements CrossbowAt
 		super(type, world);
 		xpReward = 4;
 		this.setCanPickUpLoot(true);
+		this.setPersistenceRequired();
 		((GroundPathNavigation) this.getNavigation()).setCanOpenDoors(true);
 	}
 
@@ -597,6 +597,7 @@ public abstract class AbstractKoboldEntity extends Monster implements CrossbowAt
 
 	class KoboldHealGoal extends Goal {
 		public final AbstractKoboldEntity kobold;
+		private ItemStack potion = new ItemStack(KoboldsItems.KOBOLD_POTION.get());
 
 		public KoboldHealGoal(AbstractKoboldEntity kobold) {
 			this.kobold = kobold;
@@ -609,19 +610,20 @@ public abstract class AbstractKoboldEntity extends Monster implements CrossbowAt
 
 		@Override
 		public void start() {
-			kobold.setItemInHand(InteractionHand.OFF_HAND, new ItemStack(KoboldsItems.KOBOLD_POTION_HEALTH.get()));
+			kobold.setItemInHand(InteractionHand.OFF_HAND, KoboldPotionUtils.makePotion(potion, MobEffects.HEAL, MobEffects.REGENERATION, null, 1, 900, 0));
 			kobold.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SPEED, 32, -4, (false), (false)));
 			kobold.playSound(SoundEvents.GENERIC_DRINK, 0.5F, 1.0F);
 			KoboldsMod.queueServerWork(32, () -> {
-				kobold.addEffect(new MobEffectInstance(MobEffects.HEAL, 1, 0, (false), (false)));
-				kobold.addEffect(new MobEffectInstance(MobEffects.REGENERATION, 600, 0, (false), (false)));
-				kobold.setCD(600);
+				for (MobEffectInstance effect : KoboldPotionUtils.getEffects(kobold.getOffhandItem())) {
+					kobold.addEffect(effect);
+				}
+				kobold.setCD(900);
 				kobold.setItemInHand(InteractionHand.OFF_HAND, ItemStack.EMPTY);
 			});
 		}
 
 		protected boolean checkHand() {
-			return (kobold.getOffhandItem().isEmpty()) || (kobold.getOffhandItem().getItem() == KoboldsItems.KOBOLD_POTION_HEALTH.get());
+			return (kobold.getOffhandItem().isEmpty()) || (kobold.getOffhandItem().getItem() == KoboldsItems.KOBOLD_POTION.get());
 		}
 	}
 

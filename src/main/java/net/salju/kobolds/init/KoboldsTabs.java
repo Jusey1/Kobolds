@@ -1,5 +1,6 @@
 package net.salju.kobolds.init;
 
+import net.salju.kobolds.item.KoboldPotionUtils;
 import net.salju.kobolds.KoboldsMod;
 
 import net.minecraftforge.registries.RegistryObject;
@@ -7,8 +8,12 @@ import net.minecraftforge.registries.DeferredRegister;
 
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.effect.MobEffect;
 import net.minecraft.network.chat.Component;
 import net.minecraft.core.registries.Registries;
+
+import java.util.List;
 
 public class KoboldsTabs {
 	public static final DeferredRegister<CreativeModeTab> REGISTRY = DeferredRegister.create(Registries.CREATIVE_MODE_TAB, KoboldsMod.MODID);
@@ -23,16 +28,7 @@ public class KoboldsTabs {
 				tabData.accept(KoboldsItems.KOBOLD_CAPTAIN_SPAWN_EGG.get());
 				tabData.accept(KoboldsItems.KOBOLD_ZOMBIE_SPAWN_EGG.get());
 				tabData.accept(KoboldsItems.KOBOLD_SKELETON_SPAWN_EGG.get());
-				tabData.accept(KoboldsItems.KOBOLD_POTION_HEALTH.get());
-				tabData.accept(KoboldsItems.KOBOLD_POTION_FIRE.get());
-				tabData.accept(KoboldsItems.KOBOLD_POTION_STEALTH.get());
-				tabData.accept(KoboldsItems.KOBOLD_POTION_COMBAT.get());
-				tabData.accept(KoboldsItems.KOBOLD_POTION_WATER.get());
-				tabData.accept(KoboldsItems.KOBOLD_POTION_LEAPING.get());
-				tabData.accept(KoboldsItems.KOBOLD_POTION_LEVITATION.get());
-				tabData.accept(KoboldsItems.KOBOLD_POTION_MINING.get());
-				tabData.accept(KoboldsBlocks.KOBOLD_SKULL.get().asItem());
-				tabData.accept(KoboldsItems.KOBOLD_INFINITY_POTION.get());
+				tabData.accept(KoboldsItems.KOBOLD_TEMPLATE.get());
 				tabData.accept(KoboldsItems.KOBOLD_IRON_SWORD.get());
 				tabData.accept(KoboldsItems.KOBOLD_IRON_SHOVEL.get());
 				tabData.accept(KoboldsItems.KOBOLD_IRON_PICKAXE.get());
@@ -40,6 +36,29 @@ public class KoboldsTabs {
 				tabData.accept(KoboldsItems.KOBOLD_IRON_HOE.get());
 				tabData.accept(KoboldsItems.BANNER_PATTERN_KOBOLD.get());
 				tabData.accept(KoboldsItems.MUSIC_DISC_KOBBLESTONE.get());
-				tabData.accept(KoboldsItems.KOBOLD_TEMPLATE.get());
+				tabData.accept(KoboldsBlocks.KOBOLD_SKULL.get().asItem());
+			}).build());
+			
+	public static final RegistryObject<CreativeModeTab> KOBOLDS_POTS = REGISTRY.register("kobolds_pots",
+			() -> CreativeModeTab.builder().title(Component.translatable("itemGroup.kobolds_pots")).icon(() -> new ItemStack(KoboldsItems.KOBOLD_POTION_INFINITY.get())).displayItems((parameters, tabData) -> {
+				List<MobEffect> commons = KoboldPotionUtils.getCommon();
+				List<MobEffect> specials = KoboldPotionUtils.getSpecial();
+				tabData.accept(KoboldsItems.KOBOLD_POTION_INFINITY.get());
+				tabData.accept(KoboldPotionUtils.makePotion(new ItemStack(KoboldsItems.KOBOLD_POTION.get()), MobEffects.HEAL, MobEffects.REGENERATION, null, 1, 900, 0));
+				for (MobEffect effect : commons) {
+					tabData.accept(KoboldPotionUtils.makePotion(new ItemStack(KoboldsItems.KOBOLD_POTION.get()), effect, null, null, 3600, 0, 0));
+				}
+				for (MobEffect effect : specials) {
+					tabData.accept(KoboldPotionUtils.makePotion(new ItemStack(KoboldsItems.KOBOLD_POTION.get()), effect, null, null, 1200, 0, 0));
+					for (MobEffect secondary : commons) {
+						tabData.accept(KoboldPotionUtils.makePotion(new ItemStack(KoboldsItems.KOBOLD_POTION.get()), effect, secondary, null, 1200, 3600, 0));
+					}
+				}
+				tabData.accept(KoboldPotionUtils.makePotion(new ItemStack(KoboldsItems.KOBOLD_POTION.get()), MobEffects.HEAL, MobEffects.REGENERATION, MobEffects.BLINDNESS, 1, 900, 300));
+				for (MobEffect effect : specials) {
+					for (MobEffect secondary : commons) {
+						tabData.accept(KoboldPotionUtils.makePotion(new ItemStack(KoboldsItems.KOBOLD_POTION.get()), effect, secondary, MobEffects.BLINDNESS, 1200, 3600, 300));
+					}
+				}
 			}).build());
 }
