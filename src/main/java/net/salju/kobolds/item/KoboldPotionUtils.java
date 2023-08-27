@@ -17,17 +17,15 @@ public class KoboldPotionUtils {
 	public static ItemStack sellPotion(ItemStack stack, int chance) {
 		MobEffect primary = null;
 		MobEffect secondary = null;
-		MobEffect negative = null;
 		int fi = 0;
 		int si = 0;
-		int ni = 0;
 
 		if (chance >= 90) {
 			fi = 1200;
 			int i = Mth.nextInt(RandomSource.create(), 0, 3);
 			List<MobEffect> list = getSpecial();
 			primary = list.get(i);
-		} else if (chance >= 65) {
+		} else if (chance >= 60) {
 			primary = MobEffects.HEAL;
 			secondary = MobEffects.REGENERATION;
 			fi = 1;
@@ -38,30 +36,23 @@ public class KoboldPotionUtils {
 			List<MobEffect> list = getCommon();
 			primary = list.get(i);
 		}
-		if (chance >= 95) {
+		if (chance >= 95 || chance <= 10) {
 			si = 3600;
 			int i = Mth.nextInt(RandomSource.create(), 0, 6);
 			List<MobEffect> list = getCommon();
-			secondary = list.get(i);
+			if (list.get(i) != primary) {
+				secondary = list.get(i);
+			}
 		}
-		if ((chance <= 2 || chance >= 99) && secondary != null) {
-			ni = 300;
-			negative = MobEffects.BLINDNESS;
-		}
-		return makePotion(stack, primary, secondary, negative, fi, si, ni);
+		return makePotion(stack, primary, secondary, fi, si);
 	}
 
-	public static ItemStack makePotion(ItemStack stack, @Nullable MobEffect first, @Nullable MobEffect second, @Nullable MobEffect bad, int fi, int si, int ni) {
+	public static ItemStack makePotion(ItemStack stack, MobEffect first, @Nullable MobEffect second, int fi, int si) {
 		CompoundTag tag = stack.getOrCreateTag();
 		ListTag list = tag.getList("KoboldPotionEffects", 9);
-		if (first != null) {
-			list.add(new MobEffectInstance(first, fi, 0).save(new CompoundTag()));
-		}
+		list.add(new MobEffectInstance(first, fi, 0).save(new CompoundTag()));
 		if (second != null) {
 			list.add(new MobEffectInstance(second, si, 0).save(new CompoundTag()));
-		}
-		if (bad != null) {
-			list.add(new MobEffectInstance(bad, ni, 0).save(new CompoundTag()));
 		}
 		tag.put("KoboldPotionEffects", list);
 		return stack;
@@ -70,10 +61,8 @@ public class KoboldPotionUtils {
 	public static ItemStack copyPotion(ItemStack stack, ItemStack copy) {
 		MobEffect primary = null;
 		MobEffect secondary = null;
-		MobEffect negative = null;
 		int fi = 0;
 		int si = 0;
-		int ni = 0;
 		if (copy.getItem() instanceof KoboldPotionItem && !getEffects(copy).isEmpty()) {
 			List<MobEffectInstance> list = getEffects(copy);
 			for (int i = 0; i < list.size(); ++i) {
@@ -84,13 +73,10 @@ public class KoboldPotionUtils {
 				} else if (i == 1) {
 					secondary = instance.getEffect();
 					si = instance.getDuration();
-				} else if (i == 2) {
-					negative = instance.getEffect();
-					ni = instance.getDuration();
 				}
 			}
 		}
-		return makePotion(stack, primary, secondary, negative, fi, si, ni);
+		return makePotion(stack, primary, secondary, fi, si);
 	}
 
 	public static List<MobEffectInstance> getEffects(ItemStack stack) {

@@ -396,6 +396,7 @@ public abstract class AbstractKoboldEntity extends Monster implements CrossbowAt
 					}
 				} else if (gem.getItem() == Items.EMERALD) {
 					if (this instanceof Kobold || this instanceof KoboldPirate || this instanceof KoboldEnchanter || this instanceof KoboldEngineer) {
+						gem.setCount(1);
 						this.setItemInHand(InteractionHand.OFF_HAND, gem);
 						if (!player.getAbilities().instabuild) {
 							(player.getItemInHand(hand)).shrink(1);
@@ -610,8 +611,8 @@ public abstract class AbstractKoboldEntity extends Monster implements CrossbowAt
 
 		@Override
 		public void start() {
-			kobold.setItemInHand(InteractionHand.OFF_HAND, KoboldPotionUtils.makePotion(potion, MobEffects.HEAL, MobEffects.REGENERATION, null, 1, 900, 0));
-			kobold.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SPEED, 32, -4, (false), (false)));
+			kobold.setItemInHand(InteractionHand.OFF_HAND, KoboldPotionUtils.makePotion(potion, MobEffects.HEAL, MobEffects.REGENERATION, 1, 900));
+			kobold.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SPEED, 32, -4, false, false));
 			kobold.playSound(SoundEvents.GENERIC_DRINK, 0.5F, 1.0F);
 			KoboldsMod.queueServerWork(32, () -> {
 				for (MobEffectInstance effect : KoboldPotionUtils.getEffects(kobold.getOffhandItem())) {

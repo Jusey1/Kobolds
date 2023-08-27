@@ -44,20 +44,23 @@ public class KoboldsTabs {
 				List<MobEffect> commons = KoboldPotionUtils.getCommon();
 				List<MobEffect> specials = KoboldPotionUtils.getSpecial();
 				tabData.accept(KoboldsItems.KOBOLD_POTION_INFINITY.get());
-				tabData.accept(KoboldPotionUtils.makePotion(new ItemStack(KoboldsItems.KOBOLD_POTION.get()), MobEffects.HEAL, MobEffects.REGENERATION, null, 1, 900, 0));
+				tabData.accept(KoboldPotionUtils.makePotion(new ItemStack(KoboldsItems.KOBOLD_POTION.get()), MobEffects.HEAL, MobEffects.REGENERATION, 1, 900));
 				for (MobEffect effect : commons) {
-					tabData.accept(KoboldPotionUtils.makePotion(new ItemStack(KoboldsItems.KOBOLD_POTION.get()), effect, null, null, 3600, 0, 0));
+					tabData.accept(KoboldPotionUtils.makePotion(new ItemStack(KoboldsItems.KOBOLD_POTION.get()), effect, null, 3600, 0));
 				}
 				for (MobEffect effect : specials) {
-					tabData.accept(KoboldPotionUtils.makePotion(new ItemStack(KoboldsItems.KOBOLD_POTION.get()), effect, null, null, 1200, 0, 0));
+					tabData.accept(KoboldPotionUtils.makePotion(new ItemStack(KoboldsItems.KOBOLD_POTION.get()), effect, null, 1200, 0));
+				}
+				for (MobEffect effect : commons) {
 					for (MobEffect secondary : commons) {
-						tabData.accept(KoboldPotionUtils.makePotion(new ItemStack(KoboldsItems.KOBOLD_POTION.get()), effect, secondary, null, 1200, 3600, 0));
+						if (effect != secondary) {
+							tabData.accept(KoboldPotionUtils.makePotion(new ItemStack(KoboldsItems.KOBOLD_POTION.get()), effect, secondary, 3600, 3600));
+						}
 					}
 				}
-				tabData.accept(KoboldPotionUtils.makePotion(new ItemStack(KoboldsItems.KOBOLD_POTION.get()), MobEffects.HEAL, MobEffects.REGENERATION, MobEffects.BLINDNESS, 1, 900, 300));
 				for (MobEffect effect : specials) {
 					for (MobEffect secondary : commons) {
-						tabData.accept(KoboldPotionUtils.makePotion(new ItemStack(KoboldsItems.KOBOLD_POTION.get()), effect, secondary, MobEffects.BLINDNESS, 1200, 3600, 300));
+						tabData.accept(KoboldPotionUtils.makePotion(new ItemStack(KoboldsItems.KOBOLD_POTION.get()), effect, secondary, 1200, 3600));
 					}
 				}
 			}).build());

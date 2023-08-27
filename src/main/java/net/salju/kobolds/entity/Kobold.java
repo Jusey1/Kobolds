@@ -3,7 +3,8 @@ package net.salju.kobolds.entity;
 import net.salju.kobolds.init.KoboldsModSounds;
 import net.salju.kobolds.init.KoboldsMobs;
 import net.salju.kobolds.KoboldsMod;
-import net.minecraftforge.network.PlayMessages;
+
+import net.minecraftforge.network.PlayMessages;
 import net.minecraftforge.event.ForgeEventFactory;
 
 import net.minecraft.world.phys.Vec3;
@@ -60,26 +61,28 @@ public class Kobold extends AbstractKoboldEntity {
 		public void start() {
 			this.kobold.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SPEED, 120, -10, (false), (false)));
 			KoboldsMod.queueServerWork(100, () -> {
-				this.kobold.swing(InteractionHand.MAIN_HAND, true);
-				this.kobold.playSound(KoboldsModSounds.KOBOLD_TRADE.get(), 1.0F, 1.0F);
-				LevelAccessor world = this.kobold.level();
-				double x = this.kobold.getX();
-				double y = this.kobold.getY();
-				double z = this.kobold.getZ();
-				if (world instanceof ServerLevel lvl) {
-					List<ItemStack> list = this.kobold.getTradeItems(this.kobold, "kobolds:gameplay/trader_loot");
-					Vec3 pos = LandRandomPos.getPos(this.kobold, 2, 1);
-					Player target = lvl.getNearestPlayer(this.kobold, 7);
-					if (target != null) {
-						pos = target.position();
+				if (this.kobold.isAlive()) {
+					this.kobold.swing(InteractionHand.MAIN_HAND, true);
+					this.kobold.playSound(KoboldsModSounds.KOBOLD_TRADE.get(), 1.0F, 1.0F);
+					LevelAccessor world = this.kobold.level();
+					double x = this.kobold.getX();
+					double y = this.kobold.getY();
+					double z = this.kobold.getZ();
+					if (world instanceof ServerLevel lvl) {
+						List<ItemStack> list = this.kobold.getTradeItems(this.kobold, "kobolds:gameplay/trader_loot");
+						Vec3 pos = LandRandomPos.getPos(this.kobold, 2, 1);
+						Player target = lvl.getNearestPlayer(this.kobold, 7);
+						if (target != null) {
+							pos = target.position();
+						}
+						for (ItemStack stack : list) {
+							BehaviorUtils.throwItem(this.kobold, stack, pos);
+						}
 					}
-					for (ItemStack stack : list) {
-						BehaviorUtils.throwItem(this.kobold, stack, pos);
-					}
+					KoboldsMod.queueServerWork(20, () -> {
+						this.kobold.setItemInHand(InteractionHand.OFF_HAND, ItemStack.EMPTY);
+					});
 				}
-				KoboldsMod.queueServerWork(20, () -> {
-					this.kobold.setItemInHand(InteractionHand.OFF_HAND, ItemStack.EMPTY);
-				});
 			});
 		}
 
@@ -102,7 +105,7 @@ public class Kobold extends AbstractKoboldEntity {
 
 		@Override
 		public void start() {
-			this.kobold.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SPEED, 600, -10, (false), (false)));
+			this.kobold.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SPEED, 600, -10, false, false));
 			KoboldsMod.queueServerWork(600, () -> {
 				ItemStack weapon = this.kobold.getMainHandItem();
 				ItemStack off = this.kobold.getOffhandItem();

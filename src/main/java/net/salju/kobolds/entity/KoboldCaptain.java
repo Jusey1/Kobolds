@@ -3,7 +3,8 @@ package net.salju.kobolds.entity;
 import net.salju.kobolds.init.KoboldsModSounds;
 import net.salju.kobolds.init.KoboldsMobs;
 import net.salju.kobolds.KoboldsMod;
-import net.minecraftforge.network.PlayMessages;
+
+import net.minecraftforge.network.PlayMessages;
 
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.level.LevelAccessor;
@@ -76,7 +77,7 @@ public class KoboldCaptain extends AbstractKoboldEntity {
 
 		@Override
 		public void start() {
-			this.kobold.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SPEED, 120, -10, (false), (false)));
+			this.kobold.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SPEED, 120, -10, false, false));
 			ItemStack off = this.kobold.getOffhandItem();
 			LevelAccessor world = this.kobold.level();
 			double x = this.kobold.getX();
@@ -84,60 +85,66 @@ public class KoboldCaptain extends AbstractKoboldEntity {
 			double z = this.kobold.getZ();
 			if (off.is(ItemTags.create(new ResourceLocation("kobolds:captain_tier_one")))) {
 				KoboldsMod.queueServerWork(100, () -> {
-					this.kobold.swing(InteractionHand.MAIN_HAND, true);
-					this.kobold.playSound(KoboldsModSounds.KOBOLD_TRADE.get(), 1.0F, 1.0F);
-					if (world instanceof ServerLevel lvl) {
-						List<ItemStack> list = this.kobold.getTradeItems(this.kobold, "kobolds:gameplay/captain_one_loot");
-						Vec3 pos = LandRandomPos.getPos(this.kobold, 2, 1);
-						Player target = lvl.getNearestPlayer(this.kobold, 7);
-						if (target != null) {
-							pos = target.position();
+					if (this.kobold.isAlive()) {
+						this.kobold.swing(InteractionHand.MAIN_HAND, true);
+						this.kobold.playSound(KoboldsModSounds.KOBOLD_TRADE.get(), 1.0F, 1.0F);
+						if (world instanceof ServerLevel lvl) {
+							List<ItemStack> list = this.kobold.getTradeItems(this.kobold, "kobolds:gameplay/captain_one_loot");
+							Vec3 pos = LandRandomPos.getPos(this.kobold, 2, 1);
+							Player target = lvl.getNearestPlayer(this.kobold, 7);
+							if (target != null) {
+								pos = target.position();
+							}
+							for (ItemStack stack : list) {
+								BehaviorUtils.throwItem(this.kobold, stack, pos);
+							}
 						}
-						for (ItemStack stack : list) {
-							BehaviorUtils.throwItem(this.kobold, stack, pos);
-						}
+						KoboldsMod.queueServerWork(20, () -> {
+							this.kobold.setItemInHand(InteractionHand.OFF_HAND, ItemStack.EMPTY);
+						});
 					}
-					KoboldsMod.queueServerWork(20, () -> {
-						this.kobold.setItemInHand(InteractionHand.OFF_HAND, ItemStack.EMPTY);
-					});
 				});
 			} else if (off.is(ItemTags.create(new ResourceLocation("kobolds:captain_tier_two")))) {
 				KoboldsMod.queueServerWork(100, () -> {
-					this.kobold.swing(InteractionHand.MAIN_HAND, true);
-					this.kobold.playSound(KoboldsModSounds.KOBOLD_TRADE.get(), 1.0F, 1.0F);
-					if (world instanceof ServerLevel lvl) {
-						List<ItemStack> list = this.kobold.getTradeItems(this.kobold, "kobolds:gameplay/captain_two_loot");
-						Vec3 pos = LandRandomPos.getPos(this.kobold, 2, 1);
-						Player target = lvl.getNearestPlayer(this.kobold, 7);
-						if (target != null) {
-							pos = target.position();
+					if (this.kobold.isAlive()) {
+						this.kobold.swing(InteractionHand.MAIN_HAND, true);
+						this.kobold.playSound(KoboldsModSounds.KOBOLD_TRADE.get(), 1.0F, 1.0F);
+						if (world instanceof ServerLevel lvl) {
+							List<ItemStack> list = this.kobold.getTradeItems(this.kobold, "kobolds:gameplay/captain_two_loot");
+							Vec3 pos = LandRandomPos.getPos(this.kobold, 2, 1);
+							Player target = lvl.getNearestPlayer(this.kobold, 7);
+							if (target != null) {
+								pos = target.position();
+							}
+							for (ItemStack stack : list) {
+								BehaviorUtils.throwItem(this.kobold, stack, pos);
+							}
 						}
-						for (ItemStack stack : list) {
-							BehaviorUtils.throwItem(this.kobold, stack, pos);
-						}
+						KoboldsMod.queueServerWork(20, () -> {
+							this.kobold.setItemInHand(InteractionHand.OFF_HAND, ItemStack.EMPTY);
+						});
 					}
-					KoboldsMod.queueServerWork(20, () -> {
-						this.kobold.setItemInHand(InteractionHand.OFF_HAND, ItemStack.EMPTY);
-					});
 				});
 			} else if (off.is(ItemTags.create(new ResourceLocation("kobolds:captain_tier_three")))) {
 				KoboldsMod.queueServerWork(100, () -> {
-					this.kobold.swing(InteractionHand.MAIN_HAND, true);
-					this.kobold.playSound(KoboldsModSounds.KOBOLD_TRADE.get(), 1.0F, 1.0F);
-					if (world instanceof ServerLevel lvl) {
-						List<ItemStack> list = this.kobold.getTradeItems(this.kobold, "kobolds:gameplay/captain_three_loot");
-						Vec3 pos = LandRandomPos.getPos(this.kobold, 2, 1);
-						Player target = lvl.getNearestPlayer(this.kobold, 7);
-						if (target != null) {
-							pos = target.position();
+					if (this.kobold.isAlive()) {
+						this.kobold.swing(InteractionHand.MAIN_HAND, true);
+						this.kobold.playSound(KoboldsModSounds.KOBOLD_TRADE.get(), 1.0F, 1.0F);
+						if (world instanceof ServerLevel lvl) {
+							List<ItemStack> list = this.kobold.getTradeItems(this.kobold, "kobolds:gameplay/captain_three_loot");
+							Vec3 pos = LandRandomPos.getPos(this.kobold, 2, 1);
+							Player target = lvl.getNearestPlayer(this.kobold, 7);
+							if (target != null) {
+								pos = target.position();
+							}
+							for (ItemStack stack : list) {
+								BehaviorUtils.throwItem(this.kobold, stack, pos);
+							}
 						}
-						for (ItemStack stack : list) {
-							BehaviorUtils.throwItem(this.kobold, stack, pos);
-						}
+						KoboldsMod.queueServerWork(20, () -> {
+							this.kobold.setItemInHand(InteractionHand.OFF_HAND, ItemStack.EMPTY);
+						});
 					}
-					KoboldsMod.queueServerWork(20, () -> {
-						this.kobold.setItemInHand(InteractionHand.OFF_HAND, ItemStack.EMPTY);
-					});
 				});
 			}
 		}

@@ -76,7 +76,6 @@ public class KoboldEnchanter extends AbstractKoboldEntity {
 
 	class KoboldTradeGoal extends Goal {
 		public final AbstractKoboldEntity kobold;
-		private ItemStack potion = new ItemStack(KoboldsItems.KOBOLD_POTION.get());
 
 		public KoboldTradeGoal(AbstractKoboldEntity kobold) {
 			this.kobold = kobold;
@@ -89,38 +88,40 @@ public class KoboldEnchanter extends AbstractKoboldEntity {
 
 		@Override
 		public void start() {
-			this.kobold.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SPEED, 120, -10, (false), (false)));
+			this.kobold.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SPEED, 120, -10, false, false));
+			ItemStack potion = KoboldPotionUtils.sellPotion(new ItemStack(KoboldsItems.KOBOLD_POTION.get()), Mth.nextInt(RandomSource.create(), 0, 100));
 			KoboldsMod.queueServerWork(100, () -> {
-				this.kobold.swing(InteractionHand.MAIN_HAND, true);
-				this.kobold.playSound(KoboldsModSounds.KOBOLD_TRADE.get(), 1.0F, 1.0F);
-				LevelAccessor world = this.kobold.level();
-				double x = this.kobold.getX();
-				double y = this.kobold.getY();
-				double z = this.kobold.getZ();
-				if (world instanceof ServerLevel lvl) {
-					if (Math.random() >= 0.1) {
-						ItemStack stack = KoboldPotionUtils.sellPotion(potion, Mth.nextInt(RandomSource.create(), 0, 100));
-						Vec3 pos = LandRandomPos.getPos(this.kobold, 2, 0);
-						Player target = lvl.getNearestPlayer(this.kobold, 7);
-						if (target != null) {
-							pos = target.position();
-						}
-						BehaviorUtils.throwItem(this.kobold, stack, pos);
-					} else {
-						List<ItemStack> list = this.kobold.getTradeItems(this.kobold, "kobolds:gameplay/enchanter_loot");
-						Vec3 pos = LandRandomPos.getPos(this.kobold, 2, 0);
-						Player target = lvl.getNearestPlayer(this.kobold, 7);
-						if (target != null) {
-							pos = target.position();
-						}
-						for (ItemStack stack : list) {
-							BehaviorUtils.throwItem(this.kobold, stack, pos);
+				if (this.kobold.isAlive()) {
+					this.kobold.swing(InteractionHand.MAIN_HAND, true);
+					this.kobold.playSound(KoboldsModSounds.KOBOLD_TRADE.get(), 1.0F, 1.0F);
+					LevelAccessor world = this.kobold.level();
+					double x = this.kobold.getX();
+					double y = this.kobold.getY();
+					double z = this.kobold.getZ();
+					if (world instanceof ServerLevel lvl) {
+						if (Math.random() >= 0.1) {
+							Vec3 pos = LandRandomPos.getPos(this.kobold, 2, 0);
+							Player target = lvl.getNearestPlayer(this.kobold, 7);
+							if (target != null) {
+								pos = target.position();
+							}
+							BehaviorUtils.throwItem(this.kobold, potion, pos);
+						} else {
+							List<ItemStack> list = this.kobold.getTradeItems(this.kobold, "kobolds:gameplay/enchanter_loot");
+							Vec3 pos = LandRandomPos.getPos(this.kobold, 2, 0);
+							Player target = lvl.getNearestPlayer(this.kobold, 7);
+							if (target != null) {
+								pos = target.position();
+							}
+							for (ItemStack stack : list) {
+								BehaviorUtils.throwItem(this.kobold, stack, pos);
+							}
 						}
 					}
+					KoboldsMod.queueServerWork(20, () -> {
+						this.kobold.setItemInHand(InteractionHand.OFF_HAND, ItemStack.EMPTY);
+					});
 				}
-				KoboldsMod.queueServerWork(20, () -> {
-					this.kobold.setItemInHand(InteractionHand.OFF_HAND, ItemStack.EMPTY);
-				});
 			});
 		}
 
