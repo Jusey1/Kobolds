@@ -5,6 +5,7 @@ import net.salju.kobolds.entity.KoboldRascal;
 
 import net.minecraft.world.level.NaturalSpawner;
 import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.entity.player.Player;
@@ -74,7 +75,7 @@ public class KoboldRascalSpawner {
 		} else {
 			BlockPos pos = player.blockPosition();
 			BlockPos spawn = this.findSpawnPositionNear(world, pos, 32);
-			if (spawn != null && this.hasEnoughSpace(world, spawn) && !(spawn.getY() > 42)) {
+			if (spawn != null && this.hasEnoughSpace(world, spawn) && !(spawn.getY() > 42) && player.level().dimension() == Level.OVERWORLD) {
 				KoboldRascal rascal = KoboldsMobs.KOBOLD_RASCAL.get().spawn(world, spawn, MobSpawnType.EVENT);
 				if (rascal != null) {
 					return true;

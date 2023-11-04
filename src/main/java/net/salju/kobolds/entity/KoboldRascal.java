@@ -58,7 +58,7 @@ public class KoboldRascal extends AbstractKoboldEntity {
 		if (!this.isFound && !(this.hasEffect(MobEffects.INVISIBILITY))) {
 			this.isFound = true;
 		}
-		if (!this.level().isClientSide && --this.despawnDelay <= 0 && this.isFound) {
+		if (!this.level().isClientSide && --this.despawnDelay <= 0) {
 			this.discard();
 		}
 	}
