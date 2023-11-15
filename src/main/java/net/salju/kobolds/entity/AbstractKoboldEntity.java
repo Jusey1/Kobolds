@@ -1,9 +1,12 @@
 package net.salju.kobolds.entity;
 
-import net.salju.kobolds.item.*;
-import net.salju.kobolds.init.*;
+import net.salju.kobolds.item.KoboldPotionUtils;
+import net.salju.kobolds.init.KoboldsModSounds;
+import net.salju.kobolds.init.KoboldsMobs;
+import net.salju.kobolds.init.KoboldsItems;
 import net.salju.kobolds.KoboldsMod;
-import net.minecraftforge.event.ForgeEventFactory;
+
+import net.minecraftforge.event.ForgeEventFactory;
 
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
@@ -673,4 +676,4 @@ public abstract class AbstractKoboldEntity extends Monster implements CrossbowAt
 			return false;
 		}
 	}
-}
+}

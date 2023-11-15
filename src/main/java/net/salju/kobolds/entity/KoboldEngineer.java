@@ -102,6 +102,8 @@ public class KoboldEngineer extends AbstractKoboldEntity {
 						Player target = lvl.getNearestPlayer(this.kobold, 7);
 						if (target != null) {
 							pos = target.position();
+						} else if (pos == null) {
+							pos = this.kobold.position();
 						}
 						for (ItemStack stack : list) {
 							BehaviorUtils.throwItem(this.kobold, stack, pos);

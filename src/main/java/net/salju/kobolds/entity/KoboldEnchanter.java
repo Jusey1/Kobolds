@@ -104,6 +104,8 @@ public class KoboldEnchanter extends AbstractKoboldEntity {
 							Player target = lvl.getNearestPlayer(this.kobold, 7);
 							if (target != null) {
 								pos = target.position();
+							} else if (pos == null) {
+								pos = this.kobold.position();
 							}
 							BehaviorUtils.throwItem(this.kobold, potion, pos);
 						} else {
@@ -112,6 +114,8 @@ public class KoboldEnchanter extends AbstractKoboldEntity {
 							Player target = lvl.getNearestPlayer(this.kobold, 7);
 							if (target != null) {
 								pos = target.position();
+							} else if (pos == null) {
+								pos = this.kobold.position();
 							}
 							for (ItemStack stack : list) {
 								BehaviorUtils.throwItem(this.kobold, stack, pos);

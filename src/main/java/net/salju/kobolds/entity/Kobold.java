@@ -65,15 +65,14 @@ public class Kobold extends AbstractKoboldEntity {
 					this.kobold.swing(InteractionHand.MAIN_HAND, true);
 					this.kobold.playSound(KoboldsModSounds.KOBOLD_TRADE.get(), 1.0F, 1.0F);
 					LevelAccessor world = this.kobold.level();
-					double x = this.kobold.getX();
-					double y = this.kobold.getY();
-					double z = this.kobold.getZ();
 					if (world instanceof ServerLevel lvl) {
 						List<ItemStack> list = this.kobold.getTradeItems(this.kobold, "kobolds:gameplay/trader_loot");
 						Vec3 pos = LandRandomPos.getPos(this.kobold, 2, 1);
 						Player target = lvl.getNearestPlayer(this.kobold, 7);
 						if (target != null) {
 							pos = target.position();
+						} else if (pos == null) {
+							pos = this.kobold.position();
 						}
 						for (ItemStack stack : list) {
 							BehaviorUtils.throwItem(this.kobold, stack, pos);
