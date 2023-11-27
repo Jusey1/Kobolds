@@ -23,6 +23,7 @@ public class KoboldsMod {
 		MinecraftForge.EVENT_BUS.register(this);
 		IEventBus bus = FMLJavaModLoadingContext.get().getModEventBus();
 		KoboldsModSounds.REGISTRY.register(bus);
+		KoboldsBlockEntities.REGISTRY.register(bus);
 		KoboldsBlocks.REGISTRY.register(bus);
 		KoboldsItems.REGISTRY.register(bus);
 		KoboldsBanners.REGISTRY.register(bus);

@@ -1,11 +1,17 @@
 package net.salju.kobolds.init;
 
 import net.salju.kobolds.client.renderer.*;
+import net.salju.kobolds.client.model.KoboldSkullModel;
+import net.salju.kobolds.block.KoboldSkull;
 
+import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.api.distmarker.Dist;
+
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.client.renderer.blockentity.SkullBlockRenderer;
 
 @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
 public class KoboldsRenderers {
@@ -21,5 +27,16 @@ public class KoboldsRenderers {
 		event.registerEntityRenderer(KoboldsMobs.KOBOLD_ZOMBIE.get(), KoboldZombieRenderer::new);
 		event.registerEntityRenderer(KoboldsMobs.KOBOLD_SKELETON.get(), KoboldSkeletonRenderer::new);
 		event.registerEntityRenderer(KoboldsMobs.KOBOLD_RASCAL.get(), KoboldRascalRenderer::new);
+		event.registerBlockEntityRenderer(KoboldsBlockEntities.KOBOLD_SKULL.get(), SkullBlockRenderer::new);
+	}
+
+	@SubscribeEvent
+	public static void registerSkullRenderers(EntityRenderersEvent.CreateSkullModels event) {
+		event.registerSkullModel(KoboldSkull.Types.SKELEBOLD, new KoboldSkullModel(event.getEntityModelSet().bakeLayer(KoboldSkullModel.KOBOLD_SKULL_MODEL)));
+	}
+
+	@SubscribeEvent
+	public static void clientSetupEvent(FMLClientSetupEvent event) {
+		event.enqueueWork(() -> SkullBlockRenderer.SKIN_BY_TYPE.put(KoboldSkull.Types.SKELEBOLD, new ResourceLocation("kobolds:textures/entities/kobold_skeleton.png")));
 	}
 }

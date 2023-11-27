@@ -7,6 +7,7 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.WallSkullBlock;
 import net.minecraft.world.level.block.SkullBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.Level;
@@ -17,8 +18,8 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.core.BlockPos;
 
-public class KoboldSkull extends SkullBlock {
-	public KoboldSkull(SkullBlock.Type type, BlockBehaviour.Properties props) {
+public class KoboldWallSkull extends WallSkullBlock {
+	public KoboldWallSkull(SkullBlock.Type type, BlockBehaviour.Properties props) {
 		super(type, props);
 	}
 
@@ -52,9 +53,5 @@ public class KoboldSkull extends SkullBlock {
 		bolt.setVisualOnly(true);
 		KoboldSkeleton skelebold = KoboldsMobs.KOBOLD_SKELETON.get().spawn(lvl, pos, MobSpawnType.MOB_SUMMONED);
 		lvl.addFreshEntity(bolt);
-	}
-
-	public enum Types implements SkullBlock.Type {
-		SKELEBOLD
 	}
 }

@@ -19,5 +19,6 @@ public class KoboldsModels {
 		event.registerLayerDefinition(KoboldChildModel.KOBOLD_CHILD_MODEL, KoboldChildModel::createBodyLayer);
 		event.registerLayerDefinition(ZomboldModel.ZOMBOLD_MODEL, ZomboldModel::createBodyLayer);
 		event.registerLayerDefinition(SkeleboldModel.SKELEBOLD_MODEL, SkeleboldModel::createBodyLayer);
+		event.registerLayerDefinition(KoboldSkullModel.KOBOLD_SKULL_MODEL, KoboldSkullModel::createBodyLayer);
 	}
 }
