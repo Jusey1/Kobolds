@@ -1,13 +1,12 @@
 package net.salju.kobolds.client.renderer;
 
 import net.salju.kobolds.entity.KoboldChild;
+import net.salju.kobolds.client.renderer.layers.KoboldEyesLayer;
 import net.salju.kobolds.client.model.KoboldChildModel;
 
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.client.renderer.entity.layers.EyesLayer;
 import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.MultiBufferSource;
 
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -15,13 +14,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 public class KoboldChildRenderer extends MobRenderer<KoboldChild, KoboldChildModel<KoboldChild>> {
 	public KoboldChildRenderer(EntityRendererProvider.Context context) {
 		super(context, new KoboldChildModel(context.bakeLayer(KoboldChildModel.KOBOLD_CHILD_MODEL)), 0.36f);
-		//this.addLayer(new ItemInHandLayer<KoboldChild, KoboldChildModel<KoboldChild>>(this, context.getItemInHandRenderer()));
-		this.addLayer(new EyesLayer<KoboldChild, KoboldChildModel<KoboldChild>>(this) {
-			@Override
-			public RenderType renderType() {
-				return RenderType.eyes(new ResourceLocation("kobolds:textures/entities/kobold_glow.png"));
-			}
-		});
+		this.addLayer(new KoboldEyesLayer<>(this));
 	}
 
 	@Override
@@ -38,4 +31,4 @@ public class KoboldChildRenderer extends MobRenderer<KoboldChild, KoboldChildMod
 		super.render(kobold, f1, f2, stack, buffer, inty);
 		stack.popPose();
 	}
-}
+}

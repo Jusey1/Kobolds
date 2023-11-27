@@ -12,12 +12,9 @@ import net.minecraftforge.event.entity.EntityJoinLevelEvent;
 import net.minecraftforge.event.TickEvent;
 
 import net.minecraft.world.entity.raid.Raider;
-import net.minecraft.world.entity.npc.Villager;
 import net.minecraft.world.entity.monster.ZombifiedPiglin;
 import net.minecraft.world.entity.monster.Zombie;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
-import net.minecraft.world.entity.ai.goal.AvoidEntityGoal;
-import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.server.level.ServerLevel;
@@ -33,11 +30,9 @@ public class KoboldsEvents {
 	public static void onEntitySpawned(EntityJoinLevelEvent event) {
 		Entity target = event.getEntity();
 		if (target instanceof Raider johnny) {
-			((Mob) johnny).targetSelector.addGoal(3, new NearestAttackableTargetGoal((Mob) johnny, AbstractKoboldEntity.class, false));
+			johnny.targetSelector.addGoal(3, new NearestAttackableTargetGoal(johnny, AbstractKoboldEntity.class, false));
 		} else if (target instanceof Zombie billy && !(billy instanceof ZombifiedPiglin)) {
-			((Mob) billy).targetSelector.addGoal(3, new NearestAttackableTargetGoal((Mob) billy, AbstractKoboldEntity.class, false));
-		} else if (target instanceof Villager nose) {
-			((Villager) nose).goalSelector.addGoal(1, new AvoidEntityGoal((Villager) nose, AbstractKoboldEntity.class, (float) 6, 0.6, 0.8));
+			billy.targetSelector.addGoal(3, new NearestAttackableTargetGoal(billy, AbstractKoboldEntity.class, false));
 		}
 	}
 

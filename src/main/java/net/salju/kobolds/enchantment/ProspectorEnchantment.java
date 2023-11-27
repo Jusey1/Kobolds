@@ -1,8 +1,5 @@
 package net.salju.kobolds.enchantment;
 
-import net.salju.kobolds.init.KoboldsEnchantments;
-
-import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.item.enchantment.EnchantmentCategory;
 import net.minecraft.world.item.enchantment.Enchantment;
@@ -54,15 +51,11 @@ public class ProspectorEnchantment extends Enchantment {
 	@Override
 	public void doPostAttack(LivingEntity source, Entity target, int lvl) {
 		if (target instanceof Enemy) {
-			LevelAccessor world = target.level();
-			double x = target.getX();
-			double y = target.getY();
-			double z = target.getZ();
 			double check = source.hasEffect(MobEffects.LUCK) ? 0.25 : 0.05;
-			if (!target.isAlive() && !world.isClientSide()) {
+			if (!target.isAlive() && !target.level().isClientSide()) {
 				if (Math.random() <= check) {
 					for (int i = 0; i < 1 * lvl; i++) {
-						target.level().addFreshEntity(new ItemEntity(target.level(), x, y, z, new ItemStack(Items.EMERALD)));
+						target.level().addFreshEntity(new ItemEntity(target.level(), target.getX(), target.getY(), target.getZ(), new ItemStack(Items.EMERALD)));
 					}
 				}
 			}

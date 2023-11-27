@@ -2,8 +2,7 @@ package net.salju.kobolds.entity;
 
 import net.salju.kobolds.init.KoboldsMobs;
 import net.salju.kobolds.init.KoboldsItems;
-import net.minecraftforge.network.PlayMessages;
-import net.minecraftforge.event.ForgeEventFactory;
+import net.minecraftforge.event.ForgeEventFactory;
 
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.level.ServerLevelAccessor;
@@ -42,16 +41,11 @@ import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.core.BlockPos;
-
-import javax.annotation.Nullable;
+import javax.annotation.Nullable;
 
 public class KoboldZombie extends Zombie {
 	private static final EntityDataAccessor<Boolean> DATA_CONVERTING = SynchedEntityData.defineId(KoboldZombie.class, EntityDataSerializers.BOOLEAN);
 	private int convert;
-
-	public KoboldZombie(PlayMessages.SpawnEntity packet, Level world) {
-		this(KoboldsMobs.KOBOLD_ZOMBIE.get(), world);
-	}
 
 	public KoboldZombie(EntityType<KoboldZombie> type, Level world) {
 		super(type, world);
@@ -89,7 +83,7 @@ public class KoboldZombie extends Zombie {
 		return this.isBaby() ? 0.0D : -0.225D;
 	}
 
-	protected float getStandingEyeHeight(Pose poseIn, EntityDimensions sizeIn) {
+	protected float getStandingEyeHeight(Pose pose, EntityDimensions size) {
 		return this.isBaby() ? 0.66F : 1.26F;
 	}
 
@@ -111,7 +105,7 @@ public class KoboldZombie extends Zombie {
 	}
 
 	@Override
-	public SoundEvent getHurtSound(DamageSource ds) {
+	public SoundEvent getHurtSound(DamageSource source) {
 		return SoundEvents.ZOMBIE_VILLAGER_HURT;
 	}
 
@@ -130,7 +124,7 @@ public class KoboldZombie extends Zombie {
 		if (!world.isClientSide() && this.isAlive() && !this.isNoAi()) {
 			if (this.convert > 1) {
 				--this.convert;
-				if (this.isConvert() == false) {
+				if (!this.isConvert()) {
 					this.getEntityData().set(DATA_CONVERTING, true);
 				}
 			} else if (this.convert == 1) {
@@ -165,7 +159,6 @@ public class KoboldZombie extends Zombie {
 
 	@Override
 	public InteractionResult mobInteract(Player player, InteractionHand hand) {
-		super.mobInteract(player, hand);
 		ItemStack apple = player.getItemInHand(hand);
 		LevelAccessor world = this.level();
 		double x = this.getX();
@@ -194,16 +187,14 @@ public class KoboldZombie extends Zombie {
 			this.convert = waitTicks;
 			this.getEntityData().set(DATA_CONVERTING, true);
 		}
-		return InteractionResult.FAIL;
+		return super.mobInteract(player, hand);
 	}
 
 	@Override
 	public SpawnGroupData finalizeSpawn(ServerLevelAccessor world, DifficultyInstance difficulty, MobSpawnType reason, @Nullable SpawnGroupData data, @Nullable CompoundTag tag) {
-		SpawnGroupData retval = super.finalizeSpawn(world, difficulty, reason, data, tag);
-		ItemStack sword = new ItemStack(KoboldsItems.KOBOLD_IRON_SWORD.get());
 		this.setCanPickUpLoot(true);
-		this.setItemSlot(EquipmentSlot.MAINHAND, sword);
-		return retval;
+		this.setItemSlot(EquipmentSlot.MAINHAND, new ItemStack(KoboldsItems.KOBOLD_IRON_SWORD.get()));
+		return super.finalizeSpawn(world, difficulty, reason, data, tag);
 	}
 
 	public static AttributeSupplier.Builder createAttributes() {

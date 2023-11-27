@@ -1,16 +1,15 @@
 package net.salju.kobolds.client.renderer;
 
 import net.salju.kobolds.entity.KoboldRascal;
+import net.salju.kobolds.client.renderer.layers.KoboldEyesLayer;
 import net.salju.kobolds.client.model.RascalModel;
 import net.salju.kobolds.client.model.KoboldArmorModel;
 
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.client.renderer.entity.layers.ItemInHandLayer;
 import net.minecraft.client.renderer.entity.layers.HumanoidArmorLayer;
-import net.minecraft.client.renderer.entity.layers.EyesLayer;
 import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.MultiBufferSource;
 
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -18,12 +17,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 public class KoboldRascalRenderer extends MobRenderer<KoboldRascal, RascalModel<KoboldRascal>> {
 	public KoboldRascalRenderer(EntityRendererProvider.Context context) {
 		super(context, new RascalModel(context.bakeLayer(RascalModel.RASCAL_MODEL)), 0.36f);
-		this.addLayer(new EyesLayer<KoboldRascal, RascalModel<KoboldRascal>>(this) {
-			@Override
-			public RenderType renderType() {
-				return RenderType.eyes(new ResourceLocation("kobolds:textures/entities/kobold_glow.png"));
-			}
-		});
+		this.addLayer(new KoboldEyesLayer<>(this));
 		this.addLayer(new ItemInHandLayer<KoboldRascal, RascalModel<KoboldRascal>>(this, context.getItemInHandRenderer()) {
 			public void render(PoseStack pose, MultiBufferSource buffer, int inty, KoboldRascal kobold, float f1, float f2, float f3, float f4, float f5, float f6) {
 				if (kobold.isAggressive()) {
@@ -48,4 +42,4 @@ public class KoboldRascalRenderer extends MobRenderer<KoboldRascal, RascalModel<
 		super.render(kobold, f1, f2, stack, buffer, inty);
 		stack.popPose();
 	}
-}
+}

@@ -1,8 +1,5 @@
 package net.salju.kobolds.entity;
 
-import net.salju.kobolds.init.KoboldsMobs;
-import net.minecraftforge.network.PlayMessages;
-
 import net.minecraft.world.level.Level;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.TridentItem;
@@ -15,10 +12,6 @@ import net.minecraft.world.entity.ai.goal.MeleeAttackGoal;
 import net.minecraft.world.entity.EntityType;
 
 public class KoboldWarrior extends AbstractKoboldEntity {
-	public KoboldWarrior(PlayMessages.SpawnEntity packet, Level world) {
-		this(KoboldsMobs.KOBOLD_WARRIOR.get(), world);
-	}
-
 	public KoboldWarrior(EntityType<KoboldWarrior> type, Level world) {
 		super(type, world);
 	}
@@ -69,4 +62,4 @@ public class KoboldWarrior extends AbstractKoboldEntity {
 			return false;
 		}
 	}
-}
+}

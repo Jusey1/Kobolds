@@ -1,15 +1,11 @@
 package net.salju.kobolds.entity;
 
+import net.salju.kobolds.init.KoboldsTags;
 import net.salju.kobolds.init.KoboldsModSounds;
-import net.salju.kobolds.init.KoboldsMobs;
 import net.salju.kobolds.init.KoboldsItems;
+import net.minecraftforge.registries.ForgeRegistries;
 
-import net.minecraftforge.registries.ForgeRegistries;
-import net.minecraftforge.network.PlayMessages;
-
-import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.SwordItem;
 import net.minecraft.world.item.Items;
@@ -25,20 +21,13 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.util.RandomSource;
 import net.minecraft.util.Mth;
-import net.minecraft.tags.ItemTags;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.nbt.Tag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.CompoundTag;
-
-import java.util.Optional;
+import java.util.Optional;
 
 public class KoboldRascal extends AbstractKoboldEntity {
-	public KoboldRascal(PlayMessages.SpawnEntity packet, Level world) {
-		this(KoboldsMobs.KOBOLD_RASCAL.get(), world);
-	}
-
 	public KoboldRascal(EntityType<KoboldRascal> type, Level world) {
 		super(type, world);
 	}
@@ -55,9 +44,6 @@ public class KoboldRascal extends AbstractKoboldEntity {
 	@Override
 	public void baseTick() {
 		super.baseTick();
-		if (!this.isFound && !(this.hasEffect(MobEffects.INVISIBILITY))) {
-			this.isFound = true;
-		}
 		if (!this.level().isClientSide && --this.despawnDelay <= 0) {
 			this.discard();
 		}
@@ -73,17 +59,12 @@ public class KoboldRascal extends AbstractKoboldEntity {
 
 	@Override
 	public InteractionResult mobInteract(Player player, InteractionHand hand) {
-		super.mobInteract(player, hand);
-		LevelAccessor world = this.level();
-		double x = this.getX();
-		double y = this.getY();
-		double z = this.getZ();
 		if (!this.isFound) {
-			if (!world.isClientSide()) {
+			if (!this.level().isClientSide()) {
 				player.swing(hand);
 				this.removeEffect(MobEffects.INVISIBILITY);
 				this.swing(InteractionHand.MAIN_HAND, true);
-				if (world instanceof ServerLevel lvl) {
+				if (this.level() instanceof ServerLevel lvl) {
 					this.playSound(KoboldsModSounds.KOBOLD_TRADE.get(), 1.0F, 1.0F);
 					ItemStack stack = new ItemStack(Items.BUNDLE);
 					CompoundTag tag = stack.getOrCreateTag();
@@ -99,7 +80,7 @@ public class KoboldRascal extends AbstractKoboldEntity {
 					} else {
 						int max = Mth.nextInt(RandomSource.create(), 7, 38);
 						for (int i = 0; i < max; ++i) {
-							ItemStack loot = new ItemStack((ForgeRegistries.ITEMS.tags().getTag(ItemTags.create(new ResourceLocation("kobolds:rascal_items"))).getRandomElement(RandomSource.create()).orElseGet(() -> Items.EMERALD)));
+							ItemStack loot = new ItemStack((ForgeRegistries.ITEMS.tags().getTag(KoboldsTags.RASCAL).getRandomElement(RandomSource.create()).orElseGet(() -> Items.EMERALD)));
 							if (Math.random() >= 0.99) {
 								loot = new ItemStack(Items.DIAMOND);
 							}
@@ -118,7 +99,7 @@ public class KoboldRascal extends AbstractKoboldEntity {
 							}
 						}
 					}
-					ItemEntity bundle = new ItemEntity(lvl, x, y, z, stack);
+					ItemEntity bundle = new ItemEntity(lvl, this.getX(), this.getY(), this.getZ(), stack);
 					bundle.setPickUpDelay(10);
 					lvl.addFreshEntity(bundle);
 				}
@@ -126,11 +107,11 @@ public class KoboldRascal extends AbstractKoboldEntity {
 			this.isFound = true;
 		}
 		for (AbstractKoboldEntity kobold : this.level().getEntitiesOfClass(AbstractKoboldEntity.class, this.getBoundingBox().inflate(128.0D))) {
-			if (kobold != null && !(kobold instanceof KoboldRascal)) {
-				this.getNavigation().moveTo(kobold.getX(), kobold.getY(), kobold.getZ(), 1.2);
+			if (kobold != null && !(kobold.is(this))) {
+				this.getNavigation().moveTo(kobold, 1.2);
 			}
 		}
-		return InteractionResult.FAIL;
+		return super.mobInteract(player, hand);
 	}
 
 	private static Optional<CompoundTag> getMatchingItem(ItemStack stack, ListTag tag) {

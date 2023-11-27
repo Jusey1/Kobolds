@@ -7,10 +7,8 @@ import net.salju.kobolds.client.model.KoboldArmorModel;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.client.renderer.entity.layers.ItemInHandLayer;
 import net.minecraft.client.renderer.entity.layers.HumanoidArmorLayer;
-import net.minecraft.client.renderer.entity.layers.EyesLayer;
 import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.MultiBufferSource;
 
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -19,12 +17,6 @@ public class KoboldSkeletonRenderer extends MobRenderer<KoboldSkeleton, Skelebol
 	public KoboldSkeletonRenderer(EntityRendererProvider.Context context) {
 		super(context, new SkeleboldModel(context.bakeLayer(SkeleboldModel.SKELEBOLD_MODEL)), 0.36f);
 		this.addLayer(new ItemInHandLayer<KoboldSkeleton, SkeleboldModel<KoboldSkeleton>>(this, context.getItemInHandRenderer()));
-		this.addLayer(new EyesLayer<KoboldSkeleton, SkeleboldModel<KoboldSkeleton>>(this) {
-			@Override
-			public RenderType renderType() {
-				return RenderType.eyes(new ResourceLocation("kobolds:textures/entities/kobold_skeleton_glow.png"));
-			}
-		});
 		this.addLayer(new HumanoidArmorLayer(this, new KoboldArmorModel(context.bakeLayer(KoboldArmorModel.KOBOLD_ARMOR_INNER_MODEL)), new KoboldArmorModel(context.bakeLayer(KoboldArmorModel.KOBOLD_ARMOR_OUTER_MODEL)), context.getModelManager()));
 	}
 
@@ -42,4 +34,4 @@ public class KoboldSkeletonRenderer extends MobRenderer<KoboldSkeleton, Skelebol
 		super.render(kobold, f1, f2, stack, buffer, inty);
 		stack.popPose();
 	}
-}
+}

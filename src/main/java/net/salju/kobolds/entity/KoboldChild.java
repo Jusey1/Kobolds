@@ -1,10 +1,9 @@
 package net.salju.kobolds.entity;
 
 import net.salju.kobolds.init.KoboldsMobs;
-import net.minecraftforge.network.PlayMessages;
-
-import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.ai.goal.PanicGoal;
@@ -14,20 +13,14 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.EntityDimensions;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.BiomeTags;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.network.chat.Component;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.core.BlockPos;
 
 public class KoboldChild extends AbstractKoboldEntity {
 	private int grow;
-
-	public KoboldChild(PlayMessages.SpawnEntity packet, Level world) {
-		this(KoboldsMobs.KOBOLD_CHILD.get(), world);
-	}
 
 	public KoboldChild(EntityType<KoboldChild> type, Level world) {
 		super(type, world);
@@ -59,7 +52,7 @@ public class KoboldChild extends AbstractKoboldEntity {
 		return true;
 	}
 
-	protected float getStandingEyeHeight(Pose poseIn, EntityDimensions sizeIn) {
+	protected float getStandingEyeHeight(Pose pose, EntityDimensions size) {
 		return this.isBaby() ? 0.66F : 1.26F;
 	}
 
@@ -97,16 +90,14 @@ public class KoboldChild extends AbstractKoboldEntity {
 
 	@Override
 	public InteractionResult mobInteract(Player player, InteractionHand hand) {
-		super.mobInteract(player, hand);
-		LevelAccessor world = this.level();
 		ItemStack gem = player.getItemInHand(hand);
-		if (gem.is(ItemTags.create(new ResourceLocation("kobolds:kobold_breed_items")))) {
+		if (gem.is(Items.AMETHYST_SHARD)) {
 			if (!player.getAbilities().instabuild) {
 				gem.shrink(1);
 			}
-			player.swing(hand, true);
 			this.grow = this.grow + 1256;
+			return InteractionResult.SUCCESS;
 		}
-		return InteractionResult.FAIL;
+		return super.mobInteract(player, hand);
 	}
 }

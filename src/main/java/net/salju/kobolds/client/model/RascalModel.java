@@ -19,7 +19,7 @@ import net.minecraft.client.model.HumanoidModel;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.blaze3d.vertex.PoseStack;
 
-public class RascalModel<T extends AbstractKoboldEntity> extends HumanoidModel<T> {
+public class RascalModel<T extends AbstractKoboldEntity> extends KoboldModel<T> {
 	public static final ModelLayerLocation RASCAL_MODEL = new ModelLayerLocation(new ResourceLocation("kobolds", "kobold_rascal"), "main");
 	public final ModelPart bag;
 

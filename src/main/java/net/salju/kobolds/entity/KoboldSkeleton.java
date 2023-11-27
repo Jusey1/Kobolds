@@ -1,9 +1,7 @@
 package net.salju.kobolds.entity;
 
 import net.salju.kobolds.init.KoboldsMobs;
-import net.minecraftforge.network.PlayMessages;
-
-import net.minecraft.world.level.levelgen.Heightmap;
+import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.item.Items;
@@ -33,20 +31,15 @@ import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.nbt.CompoundTag;
-
-import javax.annotation.Nullable;
+import javax.annotation.Nullable;
 
 public class KoboldSkeleton extends Skeleton implements CrossbowAttackMob, RangedAttackMob {
-	public KoboldSkeleton(PlayMessages.SpawnEntity packet, Level world) {
-		this(KoboldsMobs.KOBOLD_SKELETON.get(), world);
-	}
+	private static final EntityDataAccessor<Boolean> DATA_CHARGING_STATE = SynchedEntityData.defineId(KoboldSkeleton.class, EntityDataSerializers.BOOLEAN);
 
 	public KoboldSkeleton(EntityType<KoboldSkeleton> type, Level world) {
 		super(type, world);
 		getEyePosition(0.5F);
 	}
-
-	private static final EntityDataAccessor<Boolean> DATA_CHARGING_STATE = SynchedEntityData.defineId(KoboldSkeleton.class, EntityDataSerializers.BOOLEAN);
 
 	@Override
 	protected void registerGoals() {
@@ -85,10 +78,8 @@ public class KoboldSkeleton extends Skeleton implements CrossbowAttackMob, Range
 
 	@Override
 	public SpawnGroupData finalizeSpawn(ServerLevelAccessor world, DifficultyInstance difficulty, MobSpawnType reason, @Nullable SpawnGroupData livingdata, @Nullable CompoundTag tag) {
-		SpawnGroupData retval = super.finalizeSpawn(world, difficulty, reason, livingdata, tag);
-		RandomSource randy = world.getRandom();
-		this.populateDefaultEquipmentSlots(randy, difficulty);
-		return retval;
+		this.populateDefaultEquipmentSlots(world.getRandom(), difficulty);
+		return super.finalizeSpawn(world, difficulty, reason, livingdata, tag);
 	}
 
 	@Override
@@ -98,7 +89,7 @@ public class KoboldSkeleton extends Skeleton implements CrossbowAttackMob, Range
 		this.populateDefaultEquipmentEnchantments(randy, souls);
 	}
 
-	protected float getStandingEyeHeight(Pose poseIn, EntityDimensions sizeIn) {
+	protected float getStandingEyeHeight(Pose pose, EntityDimensions size) {
 		return this.isBaby() ? 0.66F : 1.26F;
 	}
 

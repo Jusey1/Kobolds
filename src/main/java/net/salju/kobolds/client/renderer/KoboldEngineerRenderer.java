@@ -1,16 +1,15 @@
 package net.salju.kobolds.client.renderer;
 
 import net.salju.kobolds.entity.KoboldEngineer;
+import net.salju.kobolds.client.renderer.layers.KoboldEyesLayer;
 import net.salju.kobolds.client.model.KoboldModel;
 import net.salju.kobolds.client.model.KoboldArmorModel;
 
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.client.renderer.entity.layers.ItemInHandLayer;
 import net.minecraft.client.renderer.entity.layers.HumanoidArmorLayer;
-import net.minecraft.client.renderer.entity.layers.EyesLayer;
 import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.MultiBufferSource;
 
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -19,12 +18,7 @@ public class KoboldEngineerRenderer extends MobRenderer<KoboldEngineer, KoboldMo
 	public KoboldEngineerRenderer(EntityRendererProvider.Context context) {
 		super(context, new KoboldModel(context.bakeLayer(KoboldModel.KOBOLD_MODEL)), 0.36f);
 		this.addLayer(new ItemInHandLayer<KoboldEngineer, KoboldModel<KoboldEngineer>>(this, context.getItemInHandRenderer()));
-		this.addLayer(new EyesLayer<KoboldEngineer, KoboldModel<KoboldEngineer>>(this) {
-			@Override
-			public RenderType renderType() {
-				return RenderType.eyes(new ResourceLocation("kobolds:textures/entities/kobold_glow.png"));
-			}
-		});
+		this.addLayer(new KoboldEyesLayer<>(this));
 		this.addLayer(new HumanoidArmorLayer(this, new KoboldArmorModel(context.bakeLayer(KoboldArmorModel.KOBOLD_ARMOR_INNER_MODEL)), new KoboldArmorModel(context.bakeLayer(KoboldArmorModel.KOBOLD_ARMOR_OUTER_MODEL)), context.getModelManager()));
 	}
 
@@ -46,4 +40,4 @@ public class KoboldEngineerRenderer extends MobRenderer<KoboldEngineer, KoboldMo
 		super.render(kobold, f1, f2, stack, buffer, inty);
 		stack.popPose();
 	}
-}
+}
