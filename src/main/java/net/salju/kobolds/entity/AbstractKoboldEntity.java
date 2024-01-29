@@ -399,7 +399,7 @@ public abstract class AbstractKoboldEntity extends PathfinderMob implements Cros
 						return InteractionResult.SUCCESS;
 					}
 				} else if (this.getOffhandItem().isEmpty()) {
-					if (gem.getItem() instanceof AxeItem) {
+					if (gem.getItem() instanceof AxeItem && hand != InteractionHand.MAIN_HAND) {
 						if (this instanceof Kobold) {
 							this.setItemInHand(InteractionHand.OFF_HAND, gem);
 							if (!player.getAbilities().instabuild) {

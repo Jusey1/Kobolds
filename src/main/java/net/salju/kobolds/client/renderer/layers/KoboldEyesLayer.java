@@ -23,6 +23,8 @@ public class KoboldEyesLayer<T extends AbstractKoboldEntity, M extends KoboldMod
 		VertexConsumer eyes = buffer.getBuffer(this.renderType());
 		if (kobold.isDiamond()) {
 			eyes = buffer.getBuffer(this.renderDiamondType());
+		} else if (kobold.getDisplayName().getString().equals("Popper")) {
+			eyes = buffer.getBuffer(this.renderPopperType());
 		}
 		this.getParentModel().renderToBuffer(pose, eyes, 15728640, OverlayTexture.NO_OVERLAY, 1.0F, 1.0F, 1.0F, 1.0F);
 	}
@@ -34,5 +36,9 @@ public class KoboldEyesLayer<T extends AbstractKoboldEntity, M extends KoboldMod
 
 	public RenderType renderDiamondType() {
 		return RenderType.eyes(new ResourceLocation("kobolds:textures/entities/kobold_eyes_diamond.png"));
+	}
+
+	public RenderType renderPopperType() {
+		return RenderType.eyes(new ResourceLocation("kobolds:textures/entities/kobold_eyes_popper.png"));
 	}
 }

@@ -11,8 +11,7 @@ import net.minecraft.client.renderer.entity.layers.HumanoidArmorLayer;
 import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.MultiBufferSource;
-
-import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 
 public class KoboldEngineerRenderer extends MobRenderer<KoboldEngineer, KoboldModel<KoboldEngineer>> {
 	public KoboldEngineerRenderer(EntityRendererProvider.Context context) {
@@ -23,9 +22,11 @@ public class KoboldEngineerRenderer extends MobRenderer<KoboldEngineer, KoboldMo
 	}
 
 	@Override
-	public ResourceLocation getTextureLocation(KoboldEngineer entity) {
-		if ((entity.getDisplayName().getString()).equals("Dell") || (entity.getDisplayName().getString()).equals("Conagher") || (entity.getDisplayName().getString()).equals("Dell Conagher")) {
+	public ResourceLocation getTextureLocation(KoboldEngineer kobold) {
+		if (kobold.getDisplayName().getString().equals("Dell") || kobold.getDisplayName().getString().equals("Conagher") || kobold.getDisplayName().getString().equals("Dell Conagher")) {
 			return new ResourceLocation("kobolds:textures/entities/kobold_engineer_tf2.png");
+		} else if (kobold.getDisplayName().getString().equals("Popper")) {
+			return new ResourceLocation("kobolds:textures/entities/kobold_popper.png");
 		} else {
 			return new ResourceLocation("kobolds:textures/entities/kobold_engineer.png");
 		}
