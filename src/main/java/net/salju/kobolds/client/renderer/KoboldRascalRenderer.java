@@ -30,7 +30,7 @@ public class KoboldRascalRenderer extends MobRenderer<KoboldRascal, RascalModel<
 
 	@Override
 	public ResourceLocation getTextureLocation(KoboldRascal entity) {
-		return new ResourceLocation("kobolds:textures/entities/kobold_rascal.png");
+		return new ResourceLocation("kobolds:textures/entity/kobold_rascal.png");
 	}
 
 	@Override

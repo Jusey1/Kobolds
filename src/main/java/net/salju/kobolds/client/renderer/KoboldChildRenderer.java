@@ -19,7 +19,7 @@ public class KoboldChildRenderer extends MobRenderer<KoboldChild, KoboldChildMod
 
 	@Override
 	public ResourceLocation getTextureLocation(KoboldChild entity) {
-		return new ResourceLocation("kobolds:textures/entities/kobold_classic.png");
+		return new ResourceLocation("kobolds:textures/entity/kobold_classic.png");
 	}
 
 	@Override

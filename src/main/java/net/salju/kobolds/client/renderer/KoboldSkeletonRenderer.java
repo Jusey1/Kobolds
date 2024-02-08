@@ -22,7 +22,7 @@ public class KoboldSkeletonRenderer extends MobRenderer<KoboldSkeleton, Skelebol
 
 	@Override
 	public ResourceLocation getTextureLocation(KoboldSkeleton entity) {
-		return new ResourceLocation("kobolds:textures/entities/kobold_skeleton.png");
+		return new ResourceLocation("kobolds:textures/entity/kobold_skeleton.png");
 	}
 
 	@Override

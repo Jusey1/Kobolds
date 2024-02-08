@@ -29,10 +29,10 @@ public class KoboldPirateEyesLayer<T extends AbstractKoboldEntity, M extends Kob
 
 	@Override
 	public RenderType renderType() {
-		return RenderType.eyes(new ResourceLocation("kobolds:textures/entities/kobold_eyes_pirate.png"));
+		return RenderType.eyes(new ResourceLocation("kobolds:textures/entity/kobold_eyes_pirate.png"));
 	}
 
 	public RenderType renderDiamondType() {
-		return RenderType.eyes(new ResourceLocation("kobolds:textures/entities/kobold_eyes_pirate_diamond.png"));
+		return RenderType.eyes(new ResourceLocation("kobolds:textures/entity/kobold_eyes_pirate_diamond.png"));
 	}
 }

@@ -15,6 +15,6 @@ public class KoboldZombieEyesLayer<T extends KoboldZombie, M extends ZomboldMode
 
 	@Override
 	public RenderType renderType() {
-		return RenderType.eyes(new ResourceLocation("kobolds:textures/entities/kobold_eyes_zombie.png"));
+		return RenderType.eyes(new ResourceLocation("kobolds:textures/entity/kobold_eyes_zombie.png"));
 	}
 }

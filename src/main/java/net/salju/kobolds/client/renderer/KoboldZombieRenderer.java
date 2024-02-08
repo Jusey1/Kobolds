@@ -24,7 +24,7 @@ public class KoboldZombieRenderer extends MobRenderer<KoboldZombie, ZomboldModel
 
 	@Override
 	public ResourceLocation getTextureLocation(KoboldZombie entity) {
-		return new ResourceLocation("kobolds:textures/entities/kobold_zombie.png");
+		return new ResourceLocation("kobolds:textures/entity/kobold_zombie.png");
 	}
 
 	@Override
