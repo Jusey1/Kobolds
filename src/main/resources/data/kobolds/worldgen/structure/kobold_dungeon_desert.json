@@ -1,5 +1,5 @@
 {
-  "type": "kobolds:kobold_surface",
+  "type": "kobolds:kobold_den",
   "start_pool": "kobolds:kobold_dungeon_desert_pool",
   "biomes": "#minecraft:has_structure/desert_pyramid",
   "step": "surface_structures",
