@@ -1,15 +1,13 @@
 package net.salju.kobolds;
 
 import net.salju.kobolds.init.*;
-
-import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.common.MinecraftForge;
-
-import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.List;
 import java.util.Collection;
 import java.util.ArrayList;
