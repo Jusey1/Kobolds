@@ -4,11 +4,11 @@ license="MIT License"
 
 [[mods]]
 modId="kobolds"
-version="2.10.3"
+version="2.10.6"
 displayName="Kobolds"
-credits="Jusey1, Giodude1580, Burack, Lorian Ross"
 displayURL="https://discord.gg/s7QaYGUzZU"
 logoFile="logo.png"
+credits="Jusey1, Giodude1580, Burack, Lorian Ross"
 authors="Jusey1"
 description="Tiny Lizards"
 
