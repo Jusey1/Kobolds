@@ -1,9 +1,8 @@
 package net.salju.kobolds.client.model;
 
 import net.salju.kobolds.entity.KoboldSkeleton;
-
-import net.minecraft.world.item.CrossbowItem;
-import net.minecraft.world.entity.monster.Monster;
+import net.minecraft.world.item.CrossbowItem;
+import net.minecraft.world.item.BowItem;
 import net.minecraft.world.entity.HumanoidArm;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.util.Mth;
@@ -17,11 +16,10 @@ import net.minecraft.client.model.geom.PartPose;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.HumanoidModel;
-
-import com.mojang.blaze3d.vertex.VertexConsumer;
+import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.blaze3d.vertex.PoseStack;
 
-public class SkeleboldModel<T extends Monster> extends HumanoidModel<T> {
+public class SkeleboldModel<T extends KoboldSkeleton> extends HumanoidModel<T> {
 	public static final ModelLayerLocation SKELEBOLD_MODEL = new ModelLayerLocation(new ResourceLocation("kobolds", "skelebold"), "main");
 
 	public SkeleboldModel(ModelPart root) {
@@ -72,32 +70,46 @@ public class SkeleboldModel<T extends Monster> extends HumanoidModel<T> {
 		if (kobold.hasItemInSlot(EquipmentSlot.MAINHAND)) {
 			if (kobold.isAggressive()) {
 				if (kobold.isLeftHanded()) {
-					this.leftArm.xRot = -2.0944F;
-					this.leftArm.yRot = -0.1745F;
+					if (kobold.getMainHandItem().getItem() instanceof BowItem) {
+						this.leftArm.xRot = -1.4399F;
+						this.leftArm.yRot = 0.2618F;
+						this.rightArm.xRot = -1.3963F;
+						this.rightArm.yRot = -0.3054F;
+					} else {
+						this.leftArm.xRot = -2.0944F;
+						this.leftArm.yRot = -0.1745F;
+					}
 				} else {
-					this.rightArm.xRot = -2.0944F;
-					this.rightArm.yRot = 0.1745F;
+					if (kobold.getMainHandItem().getItem() instanceof BowItem) {
+						this.rightArm.xRot = -1.4399F;
+						this.rightArm.yRot = -0.2618F;
+						this.leftArm.xRot = -1.3963F;
+						this.leftArm.yRot = 0.3054F;
+					} else {
+						this.rightArm.xRot = -2.0944F;
+						this.rightArm.yRot = 0.1745F;
+					}
 				}
-			} else if (kobold.getMainHandItem().getItem() instanceof CrossbowItem && kobold instanceof KoboldSkeleton kevin) {
-				if (kevin.isLeftHanded()) {
-					if (kevin.isCharging()) {
+			} else if (kobold.getMainHandItem().getItem() instanceof CrossbowItem) {
+				if (kobold.isLeftHanded()) {
+					if (kobold.isCharging()) {
 						this.leftArm.xRot = -0.6981F;
 						this.leftArm.yRot = 0.3491F;
 						this.rightArm.xRot = -1.1345F;
 						this.rightArm.yRot = -0.5672F;
-					} else if (CrossbowItem.isCharged(kevin.getMainHandItem())) {
+					} else if (CrossbowItem.isCharged(kobold.getMainHandItem())) {
 						this.leftArm.xRot = -1.4399F;
 						this.leftArm.yRot = 0.2618F;
 						this.rightArm.xRot = -1.3963F;
 						this.rightArm.yRot = -0.3054F;
 					}
 				} else {
-					if (kevin.isCharging()) {
+					if (kobold.isCharging()) {
 						this.rightArm.xRot = -0.6981F;
 						this.rightArm.yRot = -0.3491F;
 						this.leftArm.xRot = -1.1345F;
 						this.leftArm.yRot = 0.5672F;
-					} else if (CrossbowItem.isCharged(kevin.getMainHandItem())) {
+					} else if (CrossbowItem.isCharged(kobold.getMainHandItem())) {
 						this.rightArm.xRot = -1.4399F;
 						this.rightArm.yRot = -0.2618F;
 						this.leftArm.xRot = -1.3963F;

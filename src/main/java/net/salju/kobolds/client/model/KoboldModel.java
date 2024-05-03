@@ -1,10 +1,10 @@
 package net.salju.kobolds.client.model;
 
 import net.salju.kobolds.entity.AbstractKoboldEntity;
-
-import net.minecraft.world.item.TridentItem;
+import net.minecraft.world.item.TridentItem;
 import net.minecraft.world.item.ShieldItem;
 import net.minecraft.world.item.CrossbowItem;
+import net.minecraft.world.item.BowItem;
 import net.minecraft.world.entity.HumanoidArm;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.util.Mth;
@@ -18,8 +18,7 @@ import net.minecraft.client.model.geom.PartPose;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.HumanoidModel;
-
-import com.mojang.blaze3d.vertex.VertexConsumer;
+import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.blaze3d.vertex.PoseStack;
 
 public class KoboldModel<T extends AbstractKoboldEntity> extends HumanoidModel<T> {
@@ -92,11 +91,25 @@ public class KoboldModel<T extends AbstractKoboldEntity> extends HumanoidModel<T
 		if (kobold.hasItemInSlot(EquipmentSlot.MAINHAND)) {
 			if (kobold.isAggressive()) {
 				if (kobold.isLeftHanded()) {
-					this.leftArm.xRot = -2.0944F;
-					this.leftArm.yRot = -0.1745F;
+					if (kobold.getMainHandItem().getItem() instanceof BowItem) {
+						this.leftArm.xRot = -1.4399F;
+						this.leftArm.yRot = 0.2618F;
+						this.rightArm.xRot = -1.3963F;
+						this.rightArm.yRot = -0.3054F;
+					} else {
+						this.leftArm.xRot = -2.0944F;
+						this.leftArm.yRot = -0.1745F;
+					}
 				} else {
-					this.rightArm.xRot = -2.0944F;
-					this.rightArm.yRot = 0.1745F;
+					if (kobold.getMainHandItem().getItem() instanceof BowItem) {
+						this.rightArm.xRot = -1.4399F;
+						this.rightArm.yRot = -0.2618F;
+						this.leftArm.xRot = -1.3963F;
+						this.leftArm.yRot = 0.3054F;
+					} else {
+						this.rightArm.xRot = -2.0944F;
+						this.rightArm.yRot = 0.1745F;
+					}
 				}
 			} else if (kobold.getMainHandItem().getItem() instanceof CrossbowItem) {
 				if (kobold.isLeftHanded()) {
