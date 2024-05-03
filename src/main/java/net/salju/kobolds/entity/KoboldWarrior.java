@@ -8,18 +8,11 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.AxeItem;
 import net.minecraft.world.item.ArmorItem;
-import net.minecraft.world.entity.ai.goal.MeleeAttackGoal;
 import net.minecraft.world.entity.EntityType;
 
 public class KoboldWarrior extends AbstractKoboldEntity {
 	public KoboldWarrior(EntityType<KoboldWarrior> type, Level world) {
 		super(type, world);
-	}
-
-	@Override
-	protected void registerGoals() {
-		super.registerGoals();
-		this.goalSelector.addGoal(2, new MeleeAttackGoal(this, 1.2, false));
 	}
 
 	@Override

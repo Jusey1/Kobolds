@@ -4,8 +4,7 @@ import net.salju.kobolds.init.KoboldsTags;
 import net.salju.kobolds.init.KoboldsModSounds;
 import net.salju.kobolds.init.KoboldsItems;
 import net.minecraftforge.registries.ForgeRegistries;
-
-import net.minecraft.world.level.Level;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.SwordItem;
 import net.minecraft.world.item.Items;
@@ -14,7 +13,6 @@ import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.item.ItemEntity;
-import net.minecraft.world.entity.ai.goal.MeleeAttackGoal;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.InteractionResult;
@@ -34,12 +32,6 @@ public class KoboldRascal extends AbstractKoboldEntity {
 
 	public boolean isFound;
 	private int despawnDelay;
-
-	@Override
-	protected void registerGoals() {
-		super.registerGoals();
-		this.goalSelector.addGoal(2, new MeleeAttackGoal(this, 1.2, true));
-	}
 
 	@Override
 	public void baseTick() {

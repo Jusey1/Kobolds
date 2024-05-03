@@ -2,11 +2,9 @@ package net.salju.kobolds.entity;
 
 import net.salju.kobolds.init.KoboldsTags;
 import net.salju.kobolds.entity.ai.KoboldCaptainTradeGoal;
-
-import net.minecraft.world.level.Level;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.entity.ai.goal.MeleeAttackGoal;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionHand;
@@ -20,7 +18,6 @@ public class KoboldCaptain extends AbstractKoboldEntity {
 	protected void registerGoals() {
 		super.registerGoals();
 		this.goalSelector.addGoal(1, new KoboldCaptainTradeGoal(this));
-		this.goalSelector.addGoal(2, new MeleeAttackGoal(this, 1.2, true));
 	}
 
 	@Override

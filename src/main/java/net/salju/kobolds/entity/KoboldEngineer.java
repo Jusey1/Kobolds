@@ -1,15 +1,13 @@
 package net.salju.kobolds.entity;
 
 import net.salju.kobolds.entity.ai.KoboldTradeGoal;
-
-import net.minecraft.world.level.Level;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.CrossbowItem;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ArmorItem;
-import net.minecraft.world.entity.ai.goal.MeleeAttackGoal;
 import net.minecraft.world.entity.EntityType;
 
 public class KoboldEngineer extends AbstractKoboldEntity {
@@ -21,7 +19,6 @@ public class KoboldEngineer extends AbstractKoboldEntity {
 	protected void registerGoals() {
 		super.registerGoals();
 		this.goalSelector.addGoal(1, new KoboldTradeGoal(this, "kobolds:gameplay/engineer_loot"));
-		this.goalSelector.addGoal(2, new MeleeAttackGoal(this, 1.2, false));
 	}
 
 	@Override

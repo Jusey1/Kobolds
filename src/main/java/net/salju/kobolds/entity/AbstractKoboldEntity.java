@@ -6,17 +6,17 @@ import net.salju.kobolds.init.KoboldsItems;
 import net.salju.kobolds.entity.ai.KoboldTridentGoal;
 import net.salju.kobolds.entity.ai.KoboldShieldGoal;
 import net.salju.kobolds.entity.ai.KoboldRevengeGoal;
+import net.salju.kobolds.entity.ai.KoboldMeleeGoal;
 import net.salju.kobolds.entity.ai.KoboldHealGoal;
 import net.salju.kobolds.entity.ai.KoboldCrossbowGoal;
+import net.salju.kobolds.entity.ai.KoboldBowGoal;
 import net.salju.kobolds.entity.ai.KoboldAttackSelector;
 import net.minecraftforge.event.ForgeEventFactory;
-
-import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
+import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
 import net.minecraft.world.level.storage.loot.LootParams;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.ServerLevelAccessor;
-import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.TridentItem;
@@ -26,11 +26,14 @@ import net.minecraft.world.item.ProjectileWeaponItem;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.CrossbowItem;
+import net.minecraft.world.item.BowItem;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.AxeItem;
 import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.entity.projectile.ThrownTrident;
+import net.minecraft.world.entity.projectile.ProjectileUtil;
 import net.minecraft.world.entity.projectile.Projectile;
+import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.monster.Zombie;
 import net.minecraft.world.entity.monster.RangedAttackMob;
@@ -73,8 +76,7 @@ import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.BlockPos;
-
-import javax.annotation.Nullable;
+import javax.annotation.Nullable;
 import java.util.UUID;
 import java.util.List;
 
@@ -106,6 +108,8 @@ public abstract class AbstractKoboldEntity extends PathfinderMob implements Cros
 		this.goalSelector.addGoal(1, new KoboldHealGoal(this));
 		this.goalSelector.addGoal(1, new KoboldTridentGoal(this, 1.0D, 40, 12.0F));
 		this.goalSelector.addGoal(1, new KoboldCrossbowGoal<>(this, 1.0D, 12.0F));
+		this.goalSelector.addGoal(1, new KoboldBowGoal<>(this, 1.0D, 20, 15.0F));
+		this.goalSelector.addGoal(2, new KoboldMeleeGoal(this, 1.2D, false));
 		this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, LivingEntity.class, 12, true, false, new KoboldAttackSelector(this)));
 		this.goalSelector.addGoal(3, new RandomStrollGoal(this, 1));
 		this.goalSelector.addGoal(3, new LookAtPlayerGoal(this, LivingEntity.class, (float) 6));
@@ -166,9 +170,19 @@ public abstract class AbstractKoboldEntity extends PathfinderMob implements Cros
 	}
 
 	@Override
-	public void performRangedAttack(LivingEntity target, float distanceFactor) {
+	public void performRangedAttack(LivingEntity target, float f) {
 		if (this.getMainHandItem().getItem() instanceof CrossbowItem) {
 			this.performCrossbowAttack(this, 2.0F);
+		} else if (this.getMainHandItem().getItem() instanceof BowItem bow) {
+			AbstractArrow arrow = ProjectileUtil.getMobArrow(this, this.getMainHandItem(), f);
+			arrow = bow.customArrow(arrow);
+			double d0 = target.getX() - this.getX();
+			double d1 = target.getY(0.3333333333333333D) - arrow.getY();
+			double d2 = target.getZ() - this.getZ();
+			double d3 = Math.sqrt(d0 * d0 + d2 * d2);
+			arrow.shoot(d0, d1 + d3 * (double) 0.2F, d2, 1.6F, (float) (14 - this.level().getDifficulty().getId() * 4));
+			this.playSound(SoundEvents.SKELETON_SHOOT, 1.0F, 1.0F / (this.getRandom().nextFloat() * 0.4F + 0.8F));
+			this.level().addFreshEntity(arrow);
 		} else if (this.getOffhandItem().getItem() instanceof TridentItem) {
 			this.trident = this.getOffhandItem();
 			ThrownTrident proj = new ThrownTrident(this.level(), this, this.trident);
@@ -249,22 +263,30 @@ public abstract class AbstractKoboldEntity extends PathfinderMob implements Cros
 
 	@Override
 	protected boolean canReplaceCurrentItem(ItemStack drop, ItemStack hand) {
-		if (drop.getItem() instanceof SwordItem) {
-			if (hand.isEmpty() && (this.getOffhandItem().getItem() instanceof TridentItem)) {
-				return false;
-			} else if (!(hand.getItem() instanceof SwordItem)) {
+		if (drop.getItem() instanceof SwordItem && hand.getItem() instanceof SwordItem) {
+			SwordItem newbie = (SwordItem) drop.getItem();
+			SwordItem weapon = (SwordItem) hand.getItem();
+			if (newbie.getDamage() != weapon.getDamage()) {
+				return newbie.getDamage() > weapon.getDamage();
+			} else {
+				return this.canReplaceEqualItem(drop, hand);
+			}
+		} else if (drop.getItem() instanceof CrossbowItem) {
+			if (hand.getItem() instanceof CrossbowItem) {
+				return this.canReplaceEqualItem(drop, hand);
+			} else if (hand.getItem() instanceof BowItem && !hand.isEnchanted() && drop.isEnchanted()) {
 				return true;
 			} else {
-				SwordItem newbie = (SwordItem) drop.getItem();
-				SwordItem weapon = (SwordItem) hand.getItem();
-				if (newbie.getDamage() != weapon.getDamage()) {
-					return newbie.getDamage() > weapon.getDamage();
-				} else {
-					return this.canReplaceEqualItem(drop, hand);
-				}
+				return false;
 			}
-		} else if (drop.getItem() instanceof CrossbowItem && hand.getItem() instanceof CrossbowItem) {
-			return this.canReplaceEqualItem(drop, hand);
+		} else if (drop.getItem() instanceof BowItem) {
+			if (hand.getItem() instanceof BowItem) {
+				return this.canReplaceEqualItem(drop, hand);
+			} else if (hand.getItem() instanceof CrossbowItem && !hand.isEnchanted() && drop.isEnchanted()) {
+				return true;
+			} else {
+				return false;
+			}
 		} else if (drop.getItem() instanceof ArmorItem) {
 			if (EnchantmentHelper.hasBindingCurse(hand)) {
 				return false;
@@ -384,7 +406,7 @@ public abstract class AbstractKoboldEntity extends PathfinderMob implements Cros
 					BlockPos spawn = BlockPos.containing(this.getX(), this.getY(), this.getZ());
 					KoboldChild baby = KoboldsMobs.KOBOLD_CHILD.get().spawn(lvl, spawn, MobSpawnType.BREEDING);
 				}
-				if (!player.getAbilities().instabuild) {
+				if (!player.isCreative()) {
 					(player.getItemInHand(hand)).shrink(1);
 				}
 				return InteractionResult.SUCCESS;
@@ -393,7 +415,7 @@ public abstract class AbstractKoboldEntity extends PathfinderMob implements Cros
 					AbstractKoboldEntity target = this.level().getNearestEntity(AbstractKoboldEntity.class, TargetingConditions.DEFAULT, this, this.getX(), this.getY(), this.getZ(), this.getBoundingBox().inflate(64.0D));
 					if (!this.isBaby() && target != null && !target.is(this) && this.breed <= 0) {
 						this.setBreed(20000);
-						if (!player.getAbilities().instabuild) {
+						if (!player.isCreative()) {
 							(player.getItemInHand(hand)).shrink(1);
 						}
 						return InteractionResult.SUCCESS;
@@ -402,7 +424,7 @@ public abstract class AbstractKoboldEntity extends PathfinderMob implements Cros
 					if (gem.getItem() instanceof AxeItem && hand != InteractionHand.MAIN_HAND) {
 						if (this instanceof Kobold) {
 							this.setItemInHand(InteractionHand.OFF_HAND, gem);
-							if (!player.getAbilities().instabuild) {
+							if (!player.isCreative()) {
 								(player.getItemInHand(hand)).shrink(1);
 							}
 							return InteractionResult.SUCCESS;
@@ -411,7 +433,7 @@ public abstract class AbstractKoboldEntity extends PathfinderMob implements Cros
 						if (this instanceof Kobold || this instanceof KoboldPirate || this instanceof KoboldEnchanter || this instanceof KoboldEngineer) {
 							gem.setCount(1);
 							this.setItemInHand(InteractionHand.OFF_HAND, gem);
-							if (!player.getAbilities().instabuild) {
+							if (!player.isCreative()) {
 								(player.getItemInHand(hand)).shrink(1);
 							}
 							return InteractionResult.SUCCESS;
@@ -477,23 +499,22 @@ public abstract class AbstractKoboldEntity extends PathfinderMob implements Cros
 			ItemStack extra = ProjectileWeaponItem.getHeldProjectile(this, weapon.getSupportedHeldProjectiles());
 			return net.minecraftforge.common.ForgeHooks.getProjectile(this, stack, extra.isEmpty() ? new ItemStack(Items.ARROW) : extra);
 		} else {
-			return net.minecraftforge.common.ForgeHooks.getProjectile(this, stack, ItemStack.EMPTY);
+			return super.getProjectile(stack);
 		}
 	}
 
 	@Override
 	public void baseTick() {
 		super.baseTick();
-		LevelAccessor world = this.level();
-		if (!world.isClientSide() && this.isAlive() && this.isEffectiveAi()) {
+		if (!this.level().isClientSide() && this.isAlive() && this.isEffectiveAi()) {
 			this.checkTrident();
 			if (this.cooldown > 0) {
 				--this.cooldown;
 			}
 			if (this.breed > 0) {
-				if (world instanceof ServerLevel lvl) {
+				if (this.level() instanceof ServerLevel lvl) {
 					if (this.breed > 18000) {
-						AbstractKoboldEntity target = world.getNearestEntity(AbstractKoboldEntity.class, TargetingConditions.DEFAULT, this, this.getX(), this.getY(), this.getZ(), this.getBoundingBox().inflate(64.0D));
+						AbstractKoboldEntity target = this.level().getNearestEntity(AbstractKoboldEntity.class, TargetingConditions.DEFAULT, this, this.getX(), this.getY(), this.getZ(), this.getBoundingBox().inflate(64.0D));
 						if (Mth.nextInt(this.random, 1, 10) > 8) {
 							double d = this.random.nextGaussian() * 0.02D;
 							lvl.sendParticles(ParticleTypes.HEART, this.getRandomX(1.0D), this.getRandomY() + 0.5D, this.getRandomZ(1.0D), 3, d, d, d, 0);
@@ -569,4 +590,4 @@ public abstract class AbstractKoboldEntity extends PathfinderMob implements Cros
 		builder = builder.add(Attributes.ARMOR, 2);
 		return builder;
 	}
-}
+}
