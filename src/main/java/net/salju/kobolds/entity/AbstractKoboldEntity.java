@@ -20,6 +20,7 @@ import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.TridentItem;
+import net.minecraft.world.item.TieredItem;
 import net.minecraft.world.item.SwordItem;
 import net.minecraft.world.item.ShieldItem;
 import net.minecraft.world.item.ProjectileWeaponItem;
@@ -263,29 +264,49 @@ public abstract class AbstractKoboldEntity extends PathfinderMob implements Cros
 
 	@Override
 	protected boolean canReplaceCurrentItem(ItemStack drop, ItemStack hand) {
-		if (drop.getItem() instanceof SwordItem && hand.getItem() instanceof SwordItem) {
-			SwordItem newbie = (SwordItem) drop.getItem();
-			SwordItem weapon = (SwordItem) hand.getItem();
-			if (newbie.getDamage() != weapon.getDamage()) {
-				return newbie.getDamage() > weapon.getDamage();
-			} else {
-				return this.canReplaceEqualItem(drop, hand);
+		if (drop.getItem() instanceof SwordItem && !(this instanceof KoboldWarrior)) {
+			if (hand.getItem() instanceof SwordItem) {
+				SwordItem newbie = (SwordItem) drop.getItem();
+				SwordItem weapon = (SwordItem) hand.getItem();
+				if (newbie.getDamage() != weapon.getDamage()) {
+					return newbie.getDamage() > weapon.getDamage();
+				} else {
+					return this.canReplaceEqualItem(drop, hand);
+				}
+			} else if (!(hand.getItem() instanceof BowItem || hand.getItem() instanceof CrossbowItem)) {
+				return (hand.isEmpty() ? this.trident.isEmpty() : true);
+			}
+		} else if (drop.getItem() instanceof AxeItem && this instanceof KoboldWarrior) {
+			if (hand.getItem() instanceof AxeItem) {
+				AxeItem newbie = (AxeItem) drop.getItem();
+				AxeItem weapon = (AxeItem) hand.getItem();
+				if (newbie.getAttackDamage() != weapon.getAttackDamage()) {
+					return newbie.getAttackDamage() > weapon.getAttackDamage();
+				} else {
+					return this.canReplaceEqualItem(drop, hand);
+				}
+			} else if (!(hand.getItem() instanceof BowItem || hand.getItem() instanceof CrossbowItem)) {
+				return (hand.isEmpty() ? this.trident.isEmpty() : true);
+			}
+		} else if (drop.getItem() instanceof TieredItem) {
+			if (!(hand.getItem() instanceof BowItem || hand.getItem() instanceof CrossbowItem || hand.getItem() instanceof TieredItem)) {
+				return (hand.isEmpty() ? this.trident.isEmpty() : true);
 			}
 		} else if (drop.getItem() instanceof CrossbowItem) {
 			if (hand.getItem() instanceof CrossbowItem) {
 				return this.canReplaceEqualItem(drop, hand);
 			} else if (hand.getItem() instanceof BowItem && !hand.isEnchanted() && drop.isEnchanted()) {
 				return true;
-			} else {
-				return false;
+			} else if (!(hand.getItem() instanceof BowItem || hand.getItem() instanceof TieredItem)) {
+				return (hand.isEmpty() ? this.trident.isEmpty() : true);
 			}
 		} else if (drop.getItem() instanceof BowItem) {
 			if (hand.getItem() instanceof BowItem) {
 				return this.canReplaceEqualItem(drop, hand);
 			} else if (hand.getItem() instanceof CrossbowItem && !hand.isEnchanted() && drop.isEnchanted()) {
 				return true;
-			} else {
-				return false;
+			} else if (!(hand.getItem() instanceof CrossbowItem || hand.getItem() instanceof TieredItem)) {
+				return (hand.isEmpty() ? this.trident.isEmpty() : true);
 			}
 		} else if (drop.getItem() instanceof ArmorItem) {
 			if (EnchantmentHelper.hasBindingCurse(hand)) {
@@ -302,21 +323,27 @@ public abstract class AbstractKoboldEntity extends PathfinderMob implements Cros
 				} else {
 					return this.canReplaceEqualItem(drop, hand);
 				}
-			} else {
-				return false;
 			}
-		} else if (drop.getItem() instanceof ShieldItem && hand.isEmpty() && this.trident.isEmpty()) {
+		} else if (drop.getItem() instanceof ShieldItem) {
+			if (hand.getItem() instanceof ShieldItem) {
+				return this.canReplaceEqualItem(drop, hand);
+			} else if (hand.isEmpty() && this.trident.isEmpty()) {
+				return true;
+			}
+		} else if (drop.getItem() instanceof TridentItem) {
+			if (hand.getItem() instanceof TridentItem && this.canReplaceEqualItem(drop, hand)) {
+				this.trident = drop;
+				return true;
+			} else if (hand.isEmpty() && this.trident.isEmpty()) {
+				this.primary = this.getMainHandItem();
+				this.trident = drop;
+				this.setItemInHand(InteractionHand.MAIN_HAND, ItemStack.EMPTY);
+				return true;
+			}
+		} else if (drop.getItem() == Items.EMERALD && hand.isEmpty() && !(this instanceof KoboldCaptain || this instanceof KoboldWarrior)) {
 			return true;
-		} else if (drop.getItem() instanceof TridentItem && hand.isEmpty() && this.trident.isEmpty()) {
-			this.primary = this.getMainHandItem();
-			this.trident = drop;
-			this.setItemInHand(InteractionHand.MAIN_HAND, ItemStack.EMPTY);
-			return true;
-		} else if (drop.getItem() == Items.EMERALD && hand.isEmpty() && !(this instanceof KoboldCaptain)) {
-			return true;
-		} else {
-			return false;
 		}
+		return false;
 	}
 
 	public void aiStep() {
@@ -590,4 +617,4 @@ public abstract class AbstractKoboldEntity extends PathfinderMob implements Cros
 		builder = builder.add(Attributes.ARMOR, 2);
 		return builder;
 	}
-}
+}

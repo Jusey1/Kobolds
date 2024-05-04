@@ -9,7 +9,6 @@ import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.SwordItem;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.item.ItemEntity;
@@ -114,36 +113,8 @@ public class KoboldRascal extends AbstractKoboldEntity {
 
 	@Override
 	protected boolean canReplaceCurrentItem(ItemStack drop, ItemStack hand) {
-		if (drop.getItem() instanceof SwordItem) {
-			if (!(hand.getItem() instanceof SwordItem)) {
-				return true;
-			} else {
-				SwordItem newbie = (SwordItem) drop.getItem();
-				SwordItem weapon = (SwordItem) hand.getItem();
-				if (newbie.getDamage() != weapon.getDamage()) {
-					return newbie.getDamage() > weapon.getDamage();
-				} else {
-					return this.canReplaceEqualItem(drop, hand);
-				}
-			}
-		} else if (drop.getItem() instanceof ArmorItem) {
-			if (EnchantmentHelper.hasBindingCurse(hand)) {
-				return false;
-			} else if (hand.isEmpty() || hand.getItem() instanceof BlockItem) {
-				return true;
-			} else if (hand.getItem() instanceof ArmorItem) {
-				ArmorItem newbie = (ArmorItem) drop.getItem();
-				ArmorItem worn = (ArmorItem) hand.getItem();
-				if (newbie.getDefense() != worn.getDefense()) {
-					return newbie.getDefense() > worn.getDefense();
-				} else if (newbie.getToughness() != worn.getToughness()) {
-					return newbie.getToughness() > worn.getToughness();
-				} else {
-					return this.canReplaceEqualItem(drop, hand);
-				}
-			} else {
-				return false;
-			}
+		if (drop.getItem() instanceof SwordItem || drop.getItem() instanceof ArmorItem) {
+			return super.canReplaceCurrentItem(drop, hand);
 		} else {
 			return false;
 		}
