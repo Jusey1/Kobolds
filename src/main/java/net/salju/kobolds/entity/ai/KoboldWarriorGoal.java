@@ -5,8 +5,7 @@ import net.salju.kobolds.entity.KoboldWarrior;
 import net.salju.kobolds.entity.AbstractKoboldEntity;
 import net.salju.kobolds.KoboldsMod;
 import net.minecraftforge.event.ForgeEventFactory;
-
-import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.AxeItem;

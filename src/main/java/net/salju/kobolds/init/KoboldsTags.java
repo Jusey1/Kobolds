@@ -10,4 +10,5 @@ public class KoboldsTags {
 	public static final TagKey<Item> CAPTAIN_TWO = ItemTags.create(new ResourceLocation("kobolds:captain_tier_two"));
 	public static final TagKey<Item> CAPTAIN_THREE = ItemTags.create(new ResourceLocation("kobolds:captain_tier_three"));
 	public static final TagKey<Item> RASCAL = ItemTags.create(new ResourceLocation("kobolds:rascal_items"));
+	public static final TagKey<Item> RANGED = ItemTags.create(new ResourceLocation("kobolds:usable_ranged_weapons"));
 }

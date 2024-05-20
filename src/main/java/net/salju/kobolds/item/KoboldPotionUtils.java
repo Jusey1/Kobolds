@@ -8,8 +8,7 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.util.Mth;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.CompoundTag;
-
-import javax.annotation.Nullable;
+import javax.annotation.Nullable;
 import java.util.List;
 import com.google.common.collect.Lists;
 

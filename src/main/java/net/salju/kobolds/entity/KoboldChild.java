@@ -60,17 +60,14 @@ public class KoboldChild extends AbstractKoboldEntity {
 	public void baseTick() {
 		super.baseTick();
 		LevelAccessor world = this.level();
-		double x = this.getX();
-		double y = this.getY();
-		double z = this.getZ();
 		if (!world.isClientSide()) {
 			if (this.grow < 24000 && (this.getDisplayName().getString()).equals(Component.translatable("entity.kobolds.kobold_child").getString())) {
 				++this.grow;
 			} else if (this.grow >= 24000) {
-				BlockPos pos = BlockPos.containing(x, y, z);
+				BlockPos pos = this.blockPosition();
 				this.discard();
 				if (world instanceof ServerLevel lvl) {
-					if (world.getBiome(BlockPos.containing(x, y, z)).is(BiomeTags.IS_JUNGLE)) {
+					if (world.getBiome(pos).is(BiomeTags.IS_JUNGLE)) {
 						if (Math.random() < 0.06) {
 							KoboldCaptain kobold = KoboldsMobs.KOBOLD_CAPTAIN.get().spawn(lvl, pos, MobSpawnType.BREEDING);
 						} else {
@@ -92,7 +89,7 @@ public class KoboldChild extends AbstractKoboldEntity {
 	public InteractionResult mobInteract(Player player, InteractionHand hand) {
 		ItemStack gem = player.getItemInHand(hand);
 		if (gem.is(Items.AMETHYST_SHARD)) {
-			if (!player.getAbilities().instabuild) {
+			if (!player.isCreative()) {
 				gem.shrink(1);
 			}
 			this.grow = this.grow + 1256;

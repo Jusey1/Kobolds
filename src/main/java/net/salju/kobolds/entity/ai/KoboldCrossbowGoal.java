@@ -14,7 +14,7 @@ import net.minecraft.util.TimeUtil;
 
 public class KoboldCrossbowGoal<T extends AbstractKoboldEntity & RangedAttackMob & CrossbowAttackMob> extends Goal {
 	public static final UniformInt PATHFINDING_DELAY_RANGE = TimeUtil.rangeOfSeconds(1, 2);
-	private final T mob;
+	private final T kobold;
 	private KoboldCrossbowGoal.CrossbowState crossbowState = KoboldCrossbowGoal.CrossbowState.UNCHARGED;
 	private final double speedModifier;
 	private final float attackRadiusSqr;
@@ -22,49 +22,52 @@ public class KoboldCrossbowGoal<T extends AbstractKoboldEntity & RangedAttackMob
 	private int attackDelay;
 	private int updatePathDelay;
 
-	public KoboldCrossbowGoal(T kobold, double d1, float f1) {
-		this.mob = kobold;
+	public KoboldCrossbowGoal(T t, double d1, float f1) {
+		this.kobold = t;
 		this.speedModifier = d1;
 		this.attackRadiusSqr = f1 * f1;
 		this.setFlags(EnumSet.of(Goal.Flag.MOVE, Goal.Flag.LOOK));
 	}
 
-	public boolean canUse() {
-		return this.isValidTarget() && this.isHoldingCrossbow();
-	}
-
-	private boolean isHoldingCrossbow() {
-		return this.mob.isHolding(is -> is.getItem() instanceof CrossbowItem);
-	}
-
-	public boolean canContinueToUse() {
-		return this.isValidTarget() && (this.canUse() || !this.mob.getNavigation().isDone()) && this.isHoldingCrossbow();
-	}
-
-	private boolean isValidTarget() {
-		return this.mob.getTarget() != null && this.mob.getTarget().isAlive();
-	}
-
-	public void stop() {
-		super.stop();
-		this.mob.setAggressive(false);
-		this.mob.setTarget((LivingEntity) null);
-		this.seeTime = 0;
-		if (this.mob.isUsingItem()) {
-			this.mob.stopUsingItem();
-			this.mob.setChargingCrossbow(false);
-			CrossbowItem.setCharged(this.mob.getUseItem(), false);
-		}
-	}
-
+	@Override
 	public boolean requiresUpdateEveryTick() {
 		return true;
 	}
 
+	@Override
+	public boolean canUse() {
+		return (kobold.getTarget() == null || !kobold.getTarget().isAlive()) ? false : this.isHoldingCrossbow();
+	}
+
+	@Override
+	public boolean canContinueToUse() {
+		return this.canUse();
+	}
+
+	@Override
+	public void start() {
+		super.start();
+		kobold.setAggressive(true);
+	}
+
+	@Override
+	public void stop() {
+		super.stop();
+		kobold.setAggressive(false);
+		kobold.setTarget(null);
+		this.seeTime = 0;
+		if (kobold.isUsingItem()) {
+			kobold.stopUsingItem();
+			kobold.setChargingCrossbow(false);
+			CrossbowItem.setCharged(kobold.getUseItem(), false);
+		}
+	}
+
+	@Override
 	public void tick() {
-		LivingEntity livingentity = this.mob.getTarget();
-		if (livingentity != null) {
-			boolean flag = this.mob.getSensing().hasLineOfSight(livingentity);
+		LivingEntity target = kobold.getTarget();
+		if (target != null) {
+			boolean flag = kobold.getSensing().hasLineOfSight(target);
 			boolean flag1 = this.seeTime > 0;
 			if (flag != flag1) {
 				this.seeTime = 0;
@@ -74,36 +77,36 @@ public class KoboldCrossbowGoal<T extends AbstractKoboldEntity & RangedAttackMob
 			} else {
 				--this.seeTime;
 			}
-			double d0 = this.mob.distanceToSqr(livingentity);
+			double d0 = kobold.distanceToSqr(target);
 			boolean flag2 = (d0 > (double) this.attackRadiusSqr || this.seeTime < 5) && this.attackDelay == 0;
 			if (flag2) {
 				--this.updatePathDelay;
 				if (this.updatePathDelay <= 0) {
-					this.mob.getNavigation().moveTo(livingentity, this.canRun() ? this.speedModifier : this.speedModifier * 0.5D);
-					this.updatePathDelay = PATHFINDING_DELAY_RANGE.sample(this.mob.getRandom());
+					kobold.getNavigation().moveTo(target, this.canRun() ? this.speedModifier : this.speedModifier * 0.5D);
+					this.updatePathDelay = PATHFINDING_DELAY_RANGE.sample(kobold.getRandom());
 				}
 			} else {
 				this.updatePathDelay = 0;
-				this.mob.getNavigation().stop();
+				kobold.getNavigation().stop();
 			}
-			this.mob.getLookControl().setLookAt(livingentity, 30.0F, 30.0F);
+			kobold.getLookControl().setLookAt(target, 30.0F, 30.0F);
 			if (this.crossbowState == KoboldCrossbowGoal.CrossbowState.UNCHARGED) {
 				if (!flag2) {
-					this.mob.startUsingItem(ProjectileUtil.getWeaponHoldingHand(this.mob, item -> item instanceof CrossbowItem));
+					kobold.startUsingItem(ProjectileUtil.getWeaponHoldingHand(kobold, item -> item instanceof CrossbowItem));
 					this.crossbowState = KoboldCrossbowGoal.CrossbowState.CHARGING;
-					this.mob.setChargingCrossbow(true);
+					kobold.setChargingCrossbow(true);
 				}
 			} else if (this.crossbowState == KoboldCrossbowGoal.CrossbowState.CHARGING) {
-				if (!this.mob.isUsingItem()) {
+				if (!kobold.isUsingItem()) {
 					this.crossbowState = KoboldCrossbowGoal.CrossbowState.UNCHARGED;
 				}
-				int i = this.mob.getTicksUsingItem();
-				ItemStack itemstack = this.mob.getUseItem();
-				if (i >= CrossbowItem.getChargeDuration(itemstack)) {
-					this.mob.releaseUsingItem();
+				int i = kobold.getTicksUsingItem();
+				ItemStack stack = kobold.getUseItem();
+				if (i >= CrossbowItem.getChargeDuration(stack)) {
+					kobold.releaseUsingItem();
 					this.crossbowState = KoboldCrossbowGoal.CrossbowState.CHARGED;
-					this.attackDelay = 20 + this.mob.getRandom().nextInt(20);
-					this.mob.setChargingCrossbow(false);
+					this.attackDelay = 20 + kobold.getRandom().nextInt(20);
+					kobold.setChargingCrossbow(false);
 				}
 			} else if (this.crossbowState == KoboldCrossbowGoal.CrossbowState.CHARGED) {
 				--this.attackDelay;
@@ -111,12 +114,16 @@ public class KoboldCrossbowGoal<T extends AbstractKoboldEntity & RangedAttackMob
 					this.crossbowState = KoboldCrossbowGoal.CrossbowState.READY_TO_ATTACK;
 				}
 			} else if (this.crossbowState == KoboldCrossbowGoal.CrossbowState.READY_TO_ATTACK && flag) {
-				this.mob.performRangedAttack(livingentity, 1.0F);
-				ItemStack itemstack1 = this.mob.getItemInHand(ProjectileUtil.getWeaponHoldingHand(this.mob, item -> item instanceof CrossbowItem));
-				CrossbowItem.setCharged(itemstack1, false);
+				kobold.performRangedAttack(target, 1.0F);
+				ItemStack stack = kobold.getItemInHand(ProjectileUtil.getWeaponHoldingHand(kobold, item -> item instanceof CrossbowItem));
+				CrossbowItem.setCharged(stack, false);
 				this.crossbowState = KoboldCrossbowGoal.CrossbowState.UNCHARGED;
 			}
 		}
+	}
+
+	private boolean isHoldingCrossbow() {
+		return kobold.isHolding(stack -> stack.getItem() instanceof CrossbowItem);
 	}
 
 	private boolean canRun() {

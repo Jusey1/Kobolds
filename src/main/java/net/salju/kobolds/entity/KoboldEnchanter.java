@@ -1,5 +1,6 @@
 package net.salju.kobolds.entity;
 
+import net.salju.kobolds.entity.ai.KoboldPotionGoal;
 import net.salju.kobolds.entity.ai.KoboldEnchanterTradeGoal;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.item.Items;
@@ -18,6 +19,7 @@ public class KoboldEnchanter extends AbstractKoboldEntity {
 		super.registerGoals();
 		this.goalSelector.addGoal(0, new PanicGoal(this, 1.2));
 		this.goalSelector.addGoal(1, new KoboldEnchanterTradeGoal(this, "kobolds:gameplay/enchanter_loot"));
+		this.goalSelector.addGoal(1, new KoboldPotionGoal(this));
 	}
 
 	@Override

@@ -1,9 +1,8 @@
 package net.salju.kobolds.entity.ai;
 
+import net.salju.kobolds.init.KoboldsTags;
 import net.salju.kobolds.entity.AbstractKoboldEntity;
-import net.minecraft.world.item.CrossbowItem;
-import net.minecraft.world.item.BowItem;
-import net.minecraft.world.entity.ai.goal.MeleeAttackGoal;
+import net.minecraft.world.entity.ai.goal.MeleeAttackGoal;
 
 public class KoboldMeleeGoal<T extends AbstractKoboldEntity> extends MeleeAttackGoal {
 	private final T kobold;
@@ -24,7 +23,7 @@ public class KoboldMeleeGoal<T extends AbstractKoboldEntity> extends MeleeAttack
 	}
 
 	public boolean hasRightWeapon() {
-		if (kobold.getMainHandItem().getItem() instanceof CrossbowItem || kobold.getMainHandItem().getItem() instanceof BowItem) {
+		if (kobold.getMainHandItem().is(KoboldsTags.RANGED)) {
 			return false;
 		} else {
 			return !kobold.getMainHandItem().isEmpty();

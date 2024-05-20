@@ -1,5 +1,7 @@
 package net.salju.kobolds.entity;
 
+import net.salju.kobolds.item.KoboldPotionUtils;
+import net.salju.kobolds.init.KoboldsTags;
 import net.salju.kobolds.init.KoboldsModSounds;
 import net.salju.kobolds.init.KoboldsMobs;
 import net.salju.kobolds.init.KoboldsItems;
@@ -7,10 +9,11 @@ import net.salju.kobolds.entity.ai.KoboldTridentGoal;
 import net.salju.kobolds.entity.ai.KoboldShieldGoal;
 import net.salju.kobolds.entity.ai.KoboldRevengeGoal;
 import net.salju.kobolds.entity.ai.KoboldMeleeGoal;
-import net.salju.kobolds.entity.ai.KoboldHealGoal;
+import net.salju.kobolds.entity.ai.KoboldPotionGoal;
 import net.salju.kobolds.entity.ai.KoboldCrossbowGoal;
 import net.salju.kobolds.entity.ai.KoboldBowGoal;
 import net.salju.kobolds.entity.ai.KoboldAttackSelector;
+import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.event.ForgeEventFactory;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
@@ -64,7 +67,6 @@ import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.DifficultyInstance;
-import net.minecraft.world.Difficulty;
 import net.minecraft.util.RandomSource;
 import net.minecraft.util.Mth;
 import net.minecraft.sounds.SoundEvents;
@@ -90,6 +92,7 @@ public abstract class AbstractKoboldEntity extends PathfinderMob implements Cros
 	private boolean partyKobold;
 	private int breed;
 	private int cooldown;
+	private int potion;
 	@Nullable
 	private BlockPos jukebox;
 
@@ -104,14 +107,6 @@ public abstract class AbstractKoboldEntity extends PathfinderMob implements Cros
 	protected void registerGoals() {
 		super.registerGoals();
 		this.goalSelector.addGoal(0, new OpenDoorGoal(this, true));
-		this.targetSelector.addGoal(0, new KoboldRevengeGoal(this));
-		this.goalSelector.addGoal(1, new KoboldShieldGoal(this));
-		this.goalSelector.addGoal(1, new KoboldHealGoal(this));
-		this.goalSelector.addGoal(1, new KoboldTridentGoal(this, 1.0D, 40, 12.0F));
-		this.goalSelector.addGoal(1, new KoboldCrossbowGoal<>(this, 1.0D, 12.0F));
-		this.goalSelector.addGoal(1, new KoboldBowGoal<>(this, 1.0D, 20, 15.0F));
-		this.goalSelector.addGoal(2, new KoboldMeleeGoal(this, 1.2D, false));
-		this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, LivingEntity.class, 12, true, false, new KoboldAttackSelector(this)));
 		this.goalSelector.addGoal(3, new RandomStrollGoal(this, 1));
 		this.goalSelector.addGoal(3, new LookAtPlayerGoal(this, LivingEntity.class, (float) 6));
 		this.goalSelector.addGoal(3, new RandomLookAroundGoal(this));
@@ -128,31 +123,20 @@ public abstract class AbstractKoboldEntity extends PathfinderMob implements Cros
 		}
 		tag.putInt("Breed", this.breed);
 		tag.putInt("CD", this.cooldown);
+		tag.putInt("PCD", this.potion);
 	}
 
 	@Override
 	public void readAdditionalSaveData(CompoundTag tag) {
 		super.readAdditionalSaveData(tag);
-		if (tag.contains("Primary")) {
-			ItemStack stack = ItemStack.of(tag.getCompound("Primary"));
-			this.primary = stack;
-		}
-		if (tag.contains("Trident")) {
-			ItemStack stack = ItemStack.of(tag.getCompound("Trident"));
-			this.trident = stack;
-		}
+		this.primary = ItemStack.of(tag.getCompound("Primary"));
+		this.trident = ItemStack.of(tag.getCompound("Trident"));
 		if (tag.contains("TridentUUID")) {
-			UUID saved = tag.getUUID("TridentUUID");
-			this.thrownTrident = saved;
+			this.thrownTrident = tag.getUUID("TridentUUID");
 		}
-		if (tag.contains("Breed")) {
-			int saved = tag.getInt("Breed");
-			this.breed = saved;
-		}
-		if (tag.contains("CD")) {
-			int saved = tag.getInt("CD");
-			this.cooldown = saved;
-		}
+		this.breed = tag.getInt("Breed");
+		this.cooldown = tag.getInt("CD");
+		this.potion = tag.getInt("PCD");
 	}
 
 	@Override
@@ -264,7 +248,7 @@ public abstract class AbstractKoboldEntity extends PathfinderMob implements Cros
 
 	@Override
 	protected boolean canReplaceCurrentItem(ItemStack drop, ItemStack hand) {
-		if (drop.getItem() instanceof SwordItem && !(this instanceof KoboldWarrior)) {
+		if (drop.getItem() instanceof SwordItem) {
 			if (hand.getItem() instanceof SwordItem) {
 				SwordItem newbie = (SwordItem) drop.getItem();
 				SwordItem weapon = (SwordItem) hand.getItem();
@@ -273,10 +257,10 @@ public abstract class AbstractKoboldEntity extends PathfinderMob implements Cros
 				} else {
 					return this.canReplaceEqualItem(drop, hand);
 				}
-			} else if (!(hand.getItem() instanceof BowItem || hand.getItem() instanceof CrossbowItem)) {
+			} else if (!(hand.getItem() instanceof CrossbowItem || hand.getItem() instanceof BowItem)) {
 				return (hand.isEmpty() ? this.trident.isEmpty() : true);
 			}
-		} else if (drop.getItem() instanceof AxeItem && this instanceof KoboldWarrior) {
+		} else if (drop.getItem() instanceof AxeItem) {
 			if (hand.getItem() instanceof AxeItem) {
 				AxeItem newbie = (AxeItem) drop.getItem();
 				AxeItem weapon = (AxeItem) hand.getItem();
@@ -285,27 +269,13 @@ public abstract class AbstractKoboldEntity extends PathfinderMob implements Cros
 				} else {
 					return this.canReplaceEqualItem(drop, hand);
 				}
-			} else if (!(hand.getItem() instanceof BowItem || hand.getItem() instanceof CrossbowItem)) {
+			} else if (!(hand.getItem() instanceof CrossbowItem || hand.getItem() instanceof BowItem)) {
 				return (hand.isEmpty() ? this.trident.isEmpty() : true);
 			}
-		} else if (drop.getItem() instanceof TieredItem) {
-			if (!(hand.getItem() instanceof BowItem || hand.getItem() instanceof CrossbowItem || hand.getItem() instanceof TieredItem)) {
-				return (hand.isEmpty() ? this.trident.isEmpty() : true);
-			}
-		} else if (drop.getItem() instanceof CrossbowItem) {
-			if (hand.getItem() instanceof CrossbowItem) {
+		} else if (drop.getItem() instanceof CrossbowItem || drop.getItem() instanceof BowItem) {
+			if (hand.getItem() instanceof CrossbowItem || hand.getItem() instanceof BowItem) {
 				return this.canReplaceEqualItem(drop, hand);
-			} else if (hand.getItem() instanceof BowItem && !hand.isEnchanted() && drop.isEnchanted()) {
-				return true;
-			} else if (!(hand.getItem() instanceof BowItem || hand.getItem() instanceof TieredItem)) {
-				return (hand.isEmpty() ? this.trident.isEmpty() : true);
-			}
-		} else if (drop.getItem() instanceof BowItem) {
-			if (hand.getItem() instanceof BowItem) {
-				return this.canReplaceEqualItem(drop, hand);
-			} else if (hand.getItem() instanceof CrossbowItem && !hand.isEnchanted() && drop.isEnchanted()) {
-				return true;
-			} else if (!(hand.getItem() instanceof CrossbowItem || hand.getItem() instanceof TieredItem)) {
+			} else if (!(hand.getItem() instanceof TieredItem)) {
 				return (hand.isEmpty() ? this.trident.isEmpty() : true);
 			}
 		} else if (drop.getItem() instanceof ArmorItem) {
@@ -376,6 +346,10 @@ public abstract class AbstractKoboldEntity extends PathfinderMob implements Cros
 		this.breed = i;
 	}
 
+	public void setPotionCD(int i) {
+		this.potion = i;
+	}
+
 	public boolean isPartyKobold() {
 		return this.partyKobold;
 	}
@@ -390,6 +364,10 @@ public abstract class AbstractKoboldEntity extends PathfinderMob implements Cros
 
 	public int getBreed() {
 		return this.breed;
+	}
+
+	public int getPotionCD() {
+		return this.potion;
 	}
 
 	@Override
@@ -410,7 +388,7 @@ public abstract class AbstractKoboldEntity extends PathfinderMob implements Cros
 	@Override
 	public void die(DamageSource source) {
 		if (source.getDirectEntity() instanceof Zombie) {
-			if (!this.isBaby() && this.level().getDifficulty() == Difficulty.HARD || this.level().getDifficulty() == Difficulty.NORMAL) {
+			if (!this.isBaby()) {
 				this.playSound(SoundEvents.ZOMBIE_VILLAGER_CONVERTED, 1.0F, 1.0F);
 				if (this.level() instanceof ServerLevel lvl) {
 					KoboldZombie zombo = this.convertTo(KoboldsMobs.KOBOLD_ZOMBIE.get(), true);
@@ -428,43 +406,36 @@ public abstract class AbstractKoboldEntity extends PathfinderMob implements Cros
 			if (player.getMainHandItem().isEmpty() && player.getOffhandItem().isEmpty()) {
 				this.playSound(KoboldsModSounds.KOBOLD_PURR.get(), 1.0F, (this.isBaby() ? 1.2F : 1.0F));
 				return InteractionResult.SUCCESS;
-			} else if (gem.getItem() == KoboldsItems.KOBOLD_SPAWN_EGG.get() && !(this instanceof KoboldChild)) {
+			} else if (gem.is(KoboldsItems.KOBOLD_SPAWN_EGG.get()) && !this.isBaby()) {
 				if (this.level() instanceof ServerLevel lvl) {
 					BlockPos spawn = BlockPos.containing(this.getX(), this.getY(), this.getZ());
 					KoboldChild baby = KoboldsMobs.KOBOLD_CHILD.get().spawn(lvl, spawn, MobSpawnType.BREEDING);
 				}
 				if (!player.isCreative()) {
-					(player.getItemInHand(hand)).shrink(1);
+					player.getItemInHand(hand).shrink(1);
 				}
 				return InteractionResult.SUCCESS;
-			} else if (this.isEffectiveAi() && !this.level().isClientSide()) {
-				if (gem.is(Items.AMETHYST_SHARD)) {
-					AbstractKoboldEntity target = this.level().getNearestEntity(AbstractKoboldEntity.class, TargetingConditions.DEFAULT, this, this.getX(), this.getY(), this.getZ(), this.getBoundingBox().inflate(64.0D));
-					if (!this.isBaby() && target != null && !target.is(this) && this.breed <= 0) {
-						this.setBreed(20000);
+			} else if (this.isEffectiveAi() && !this.level().isClientSide() && !this.isBaby()) {
+				if (gem.is(Items.AMETHYST_SHARD) && this.breed <= 0) {
+					this.setBreed(20000);
+					if (!player.isCreative()) {
+						player.getItemInHand(hand).shrink(1);
+					}
+					return InteractionResult.SUCCESS;
+				} else if (this.getOffhandItem().isEmpty()) {
+					if (gem.getItem() instanceof AxeItem && hand != InteractionHand.MAIN_HAND && this instanceof Kobold) {
+						this.setItemInHand(InteractionHand.OFF_HAND, gem);
 						if (!player.isCreative()) {
-							(player.getItemInHand(hand)).shrink(1);
+							player.getItemInHand(hand).shrink(1);
 						}
 						return InteractionResult.SUCCESS;
-					}
-				} else if (this.getOffhandItem().isEmpty()) {
-					if (gem.getItem() instanceof AxeItem && hand != InteractionHand.MAIN_HAND) {
-						if (this instanceof Kobold) {
-							this.setItemInHand(InteractionHand.OFF_HAND, gem);
-							if (!player.isCreative()) {
-								(player.getItemInHand(hand)).shrink(1);
-							}
-							return InteractionResult.SUCCESS;
+					} else if (gem.is(Items.EMERALD) && (this instanceof Kobold || this instanceof KoboldPirate || this instanceof KoboldEnchanter || this instanceof KoboldEngineer)) {
+						gem.setCount(1);
+						this.setItemInHand(InteractionHand.OFF_HAND, gem);
+						if (!player.isCreative()) {
+							player.getItemInHand(hand).shrink(1);
 						}
-					} else if (gem.is(Items.EMERALD)) {
-						if (this instanceof Kobold || this instanceof KoboldPirate || this instanceof KoboldEnchanter || this instanceof KoboldEngineer) {
-							gem.setCount(1);
-							this.setItemInHand(InteractionHand.OFF_HAND, gem);
-							if (!player.isCreative()) {
-								(player.getItemInHand(hand)).shrink(1);
-							}
-							return InteractionResult.SUCCESS;
-						}
+						return InteractionResult.SUCCESS;
 					}
 				}
 			}
@@ -475,6 +446,7 @@ public abstract class AbstractKoboldEntity extends PathfinderMob implements Cros
 	@Override
 	public SpawnGroupData finalizeSpawn(ServerLevelAccessor world, DifficultyInstance difficulty, MobSpawnType reason, @Nullable SpawnGroupData data, @Nullable CompoundTag tag) {
 		this.populateDefaultEquipmentSlots(world.getRandom(), difficulty);
+		this.populateDefaultEquipmentEnchantments(world.getRandom(), difficulty);
 		if (this instanceof KoboldRascal rascal) {
 			rascal.setDespawnDelay(24000);
 			rascal.addEffect(new MobEffectInstance(MobEffects.INVISIBILITY, rascal.getDespawnDelay(), 0));
@@ -484,27 +456,17 @@ public abstract class AbstractKoboldEntity extends PathfinderMob implements Cros
 
 	@Override
 	protected void populateDefaultEquipmentSlots(RandomSource randy, DifficultyInstance souls) {
-		ItemStack sword = (EnchantmentHelper.enchantItem(randy, new ItemStack(KoboldsItems.KOBOLD_IRON_SWORD.get()), 21, false));
-		ItemStack crossbow = (EnchantmentHelper.enchantItem(randy, new ItemStack(Items.CROSSBOW), 21, false));
 		if (this instanceof KoboldWarrior) {
 			this.setItemSlot(EquipmentSlot.MAINHAND, new ItemStack(KoboldsItems.KOBOLD_IRON_AXE.get()));
 		} else if (this instanceof KoboldRascal || this instanceof KoboldCaptain) {
-			this.setItemSlot(EquipmentSlot.MAINHAND, sword);
+			this.setItemSlot(EquipmentSlot.MAINHAND, new ItemStack(KoboldsItems.KOBOLD_IRON_SWORD.get()));
 		} else if (this instanceof KoboldEngineer) {
-			this.setItemSlot(EquipmentSlot.MAINHAND, crossbow);
+			this.setItemSlot(EquipmentSlot.MAINHAND, new ItemStack(Items.CROSSBOW));
 		} else if (this instanceof Kobold || this instanceof KoboldPirate) {
 			if (Math.random() >= 0.6) {
-				if (Math.random() >= 0.15) {
-					this.setItemSlot(EquipmentSlot.MAINHAND, new ItemStack(Items.CROSSBOW));
-				} else {
-					this.setItemSlot(EquipmentSlot.MAINHAND, crossbow);
-				}
+				this.setItemSlot(EquipmentSlot.MAINHAND, new ItemStack(Items.CROSSBOW));
 			} else {
-				if (Math.random() >= 0.15) {
-					this.setItemSlot(EquipmentSlot.MAINHAND, new ItemStack(KoboldsItems.KOBOLD_IRON_SWORD.get()));
-				} else {
-					this.setItemSlot(EquipmentSlot.MAINHAND, sword);
-				}
+				this.setItemSlot(EquipmentSlot.MAINHAND, new ItemStack(KoboldsItems.KOBOLD_IRON_SWORD.get()));
 			}
 		}
 		this.setDropChance(EquipmentSlot.MAINHAND, 0.0F);
@@ -512,6 +474,7 @@ public abstract class AbstractKoboldEntity extends PathfinderMob implements Cros
 			this.setItemSlot(EquipmentSlot.OFFHAND, new ItemStack(Items.SHIELD));
 		} else if (this instanceof KoboldPirate) {
 			if (Math.random() >= 0.75) {
+				this.primary = this.getMainHandItem();
 				this.setItemSlot(EquipmentSlot.OFFHAND, new ItemStack(Items.TRIDENT));
 				this.setItemSlot(EquipmentSlot.MAINHAND, ItemStack.EMPTY);
 				this.trident = this.getOffhandItem();
@@ -524,7 +487,7 @@ public abstract class AbstractKoboldEntity extends PathfinderMob implements Cros
 	public ItemStack getProjectile(ItemStack stack) {
 		if (stack.getItem() instanceof ProjectileWeaponItem weapon) {
 			ItemStack extra = ProjectileWeaponItem.getHeldProjectile(this, weapon.getSupportedHeldProjectiles());
-			return net.minecraftforge.common.ForgeHooks.getProjectile(this, stack, extra.isEmpty() ? new ItemStack(Items.ARROW) : extra);
+			return ForgeHooks.getProjectile(this, stack, extra.isEmpty() ? new ItemStack(Items.ARROW) : extra);
 		} else {
 			return super.getProjectile(stack);
 		}
@@ -537,6 +500,11 @@ public abstract class AbstractKoboldEntity extends PathfinderMob implements Cros
 			this.checkTrident();
 			if (this.cooldown > 0) {
 				--this.cooldown;
+			}
+			if (this.potion > 0) {
+				--this.potion;
+			} else if (this.getHealth() < 12) {
+				this.givePotion(KoboldPotionUtils.makePotion(new ItemStack(KoboldsItems.KOBOLD_POTION.get()), MobEffects.HEAL, MobEffects.REGENERATION, 1, 900), 900);
 			}
 			if (this.breed > 0) {
 				if (this.level() instanceof ServerLevel lvl) {
@@ -573,10 +541,30 @@ public abstract class AbstractKoboldEntity extends PathfinderMob implements Cros
 
 	@Override
 	public boolean hurt(DamageSource source, float amount) {
-		if (source.getEntity() instanceof LivingEntity target && target.canDisableShield() && this.isBlocking()) {
+		if (!this.level().isClientSide() && this.isAlive() && this.isEffectiveAi() && this.getPotionCD() <= 0) {
+			if ((source.is(DamageTypes.ON_FIRE) || source.is(DamageTypes.LAVA)) && !this.hasEffect(MobEffects.FIRE_RESISTANCE)) {
+				this.givePotion(KoboldPotionUtils.makePotion(new ItemStack(KoboldsItems.KOBOLD_POTION.get()), MobEffects.FIRE_RESISTANCE, null, 3600, 0), 120);
+			} else if (source.is(DamageTypes.DROWN) && !this.hasEffect(MobEffects.WATER_BREATHING)) {
+				this.givePotion(KoboldPotionUtils.makePotion(new ItemStack(KoboldsItems.KOBOLD_POTION.get()), MobEffects.WATER_BREATHING, null, 3600, 0), 120);
+			}
+		}
+		if (this.isBlocking() && source.getEntity() instanceof LivingEntity target && target.canDisableShield()) {
 			this.setCD(100);
 		}
 		return ((source.getEntity() instanceof AbstractKoboldEntity || source.is(DamageTypes.IN_FIRE)) ? false : super.hurt(source, amount));
+	}
+
+	protected void givePotion(ItemStack stack, int i) {
+		if (this.getOffhandItem().getItem() instanceof TridentItem || this.getOffhandItem().getItem() instanceof ShieldItem) {
+			if (!this.getMainHandItem().isEmpty()) {
+				this.primary = this.getMainHandItem();
+			}
+			this.setItemInHand(InteractionHand.MAIN_HAND, stack);
+			this.setPotionCD(i);
+		} else if (this.getOffhandItem().isEmpty()) {
+			this.setItemInHand(InteractionHand.OFF_HAND, stack);
+			this.setPotionCD(i);
+		}
 	}
 
 	protected void checkTrident() {
@@ -604,9 +592,12 @@ public abstract class AbstractKoboldEntity extends PathfinderMob implements Cros
 		}
 	}
 
+	public ItemStack getPrimaryWeapon() {
+		return this.primary;
+	}
+
 	public static List<ItemStack> getTradeItems(AbstractKoboldEntity kobold, String table) {
-		return kobold.level().getServer().getLootData().getLootTable(new ResourceLocation(table))
-				.getRandomItems((new LootParams.Builder((ServerLevel) kobold.level())).withParameter(LootContextParams.THIS_ENTITY, kobold).create(LootContextParamSets.EMPTY));
+		return kobold.level().getServer().getLootData().getLootTable(new ResourceLocation(table)).getRandomItems((new LootParams.Builder((ServerLevel) kobold.level())).withParameter(LootContextParams.THIS_ENTITY, kobold).create(LootContextParamSets.EMPTY));
 	}
 
 	public static AttributeSupplier.Builder createAttributes() {

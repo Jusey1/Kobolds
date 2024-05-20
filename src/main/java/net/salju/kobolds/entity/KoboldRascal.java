@@ -3,6 +3,9 @@ package net.salju.kobolds.entity;
 import net.salju.kobolds.init.KoboldsTags;
 import net.salju.kobolds.init.KoboldsModSounds;
 import net.salju.kobolds.init.KoboldsItems;
+import net.salju.kobolds.entity.ai.KoboldRevengeGoal;
+import net.salju.kobolds.entity.ai.KoboldPotionGoal;
+import net.salju.kobolds.entity.ai.KoboldMeleeGoal;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
@@ -25,12 +28,20 @@ import net.minecraft.nbt.CompoundTag;
 import java.util.Optional;
 
 public class KoboldRascal extends AbstractKoboldEntity {
+	public boolean isFound;
+	private int despawnDelay;
+
 	public KoboldRascal(EntityType<KoboldRascal> type, Level world) {
 		super(type, world);
 	}
 
-	public boolean isFound;
-	private int despawnDelay;
+	@Override
+	protected void registerGoals() {
+		super.registerGoals();
+		this.targetSelector.addGoal(0, new KoboldRevengeGoal(this));
+		this.goalSelector.addGoal(1, new KoboldPotionGoal(this));
+		this.goalSelector.addGoal(2, new KoboldMeleeGoal(this, 1.2D, false));
+	}
 
 	@Override
 	public void baseTick() {
@@ -38,14 +49,6 @@ public class KoboldRascal extends AbstractKoboldEntity {
 		if (!this.level().isClientSide && --this.despawnDelay <= 0) {
 			this.discard();
 		}
-	}
-
-	public void setDespawnDelay(int i) {
-		this.despawnDelay = i;
-	}
-
-	public int getDespawnDelay() {
-		return this.despawnDelay;
 	}
 
 	@Override
@@ -119,4 +122,12 @@ public class KoboldRascal extends AbstractKoboldEntity {
 			return false;
 		}
 	}
-}
+
+	public void setDespawnDelay(int i) {
+		this.despawnDelay = i;
+	}
+
+	public int getDespawnDelay() {
+		return this.despawnDelay;
+	}
+}

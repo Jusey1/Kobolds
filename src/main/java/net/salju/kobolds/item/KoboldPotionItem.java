@@ -3,8 +3,7 @@ package net.salju.kobolds.item;
 import net.salju.kobolds.init.KoboldsItems;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.api.distmarker.Dist;
-
-import net.minecraft.world.level.Level;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.item.alchemy.PotionUtils;
 import net.minecraft.world.item.UseAnim;
 import net.minecraft.world.item.TooltipFlag;
@@ -21,8 +20,7 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.network.chat.Component;
-
-import java.util.List;
+import java.util.List;
 
 public class KoboldPotionItem extends Item {
 	public KoboldPotionItem(Item.Properties props) {

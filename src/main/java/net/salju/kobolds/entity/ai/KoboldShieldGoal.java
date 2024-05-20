@@ -26,16 +26,18 @@ public class KoboldShieldGoal extends Goal {
 
 	@Override
 	public void start() {
+		super.start();
 		kobold.startUsingItem(InteractionHand.OFF_HAND);
 	}
 
 	@Override
 	public void stop() {
+		super.stop();
 		kobold.stopUsingItem();
 	}
 
 	protected boolean raiseShield() {
-		if (kobold.getTarget() != null) {
+		if (kobold.getTarget() != null && kobold.getTarget().isAlive()) {
 			LivingEntity target = kobold.getTarget();
 			if (target instanceof RangedAttackMob && kobold.distanceTo(target) >= 0.2D) {
 				return true;

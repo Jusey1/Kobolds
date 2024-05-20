@@ -1,10 +1,12 @@
 package net.salju.kobolds.client.model;
 
+import net.salju.kobolds.init.KoboldsItems;
+import net.salju.kobolds.init.KoboldsTags;
 import net.salju.kobolds.entity.AbstractKoboldEntity;
+import net.minecraft.world.item.BowItem;
+import net.minecraft.world.item.CrossbowItem;
 import net.minecraft.world.item.TridentItem;
 import net.minecraft.world.item.ShieldItem;
-import net.minecraft.world.item.CrossbowItem;
-import net.minecraft.world.item.BowItem;
 import net.minecraft.world.entity.HumanoidArm;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.util.Mth;
@@ -37,15 +39,10 @@ public class KoboldModel<T extends AbstractKoboldEntity> extends HumanoidModel<T
 	public static MeshDefinition createMesh(CubeDeformation cube, float f1) {
 		MeshDefinition meshdefinition = HumanoidModel.createMesh(CubeDeformation.NONE, 0.0F);
 		PartDefinition partdefinition = meshdefinition.getRoot();
-		PartDefinition head = partdefinition.addOrReplaceChild("head", CubeListBuilder.create().texOffs(0, 0).addBox(-3.5F, -7.0F, -3.5F, 7.0F, 7.0F, 7.0F, new CubeDeformation(0.0F)).texOffs(22, 0)
-				.addBox(-2.5F, -3.0F, -6.5F, 5.0F, 3.0F, 3.0F, new CubeDeformation(0.0F)).texOffs(1, 3).addBox(-0.5F, -3.85F, -5.5F, 1.0F, 1.0F, 2.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 4.0F, -0.5F));
-		PartDefinition hat = partdefinition.addOrReplaceChild("hat",
-				CubeListBuilder.create().texOffs(0, 50).addBox(-3.5F, -7.0F, -3.5F, 7.0F, 7.0F, 7.0F, new CubeDeformation(0.5F)).texOffs(17, 52).addBox(-6.0F, -5.2F, -6.0F, 12.0F, 0.0F, 12.0F, new CubeDeformation(0.0F)),
-				PartPose.offset(0.0F, 4.0F, -0.5F));
-		PartDefinition leftHorn = head.addOrReplaceChild("left_horn", CubeListBuilder.create().texOffs(36, 0).addBox(-0.5F, -4.0F, -1.0F, 2.0F, 5.0F, 2.0F, new CubeDeformation(0.0F)),
-				PartPose.offsetAndRotation(1.5F, -7.0F, 2.0F, -0.6109F, 0.3054F, 0.1745F));
-		PartDefinition rightHorn = head.addOrReplaceChild("right_horn", CubeListBuilder.create().texOffs(45, 0).addBox(-1.5F, -4.0F, -1.0F, 2.0F, 5.0F, 2.0F, new CubeDeformation(0.0F)),
-				PartPose.offsetAndRotation(-1.5F, -7.0F, 2.0F, -0.6109F, -0.3054F, -0.1745F));
+		PartDefinition head = partdefinition.addOrReplaceChild("head", CubeListBuilder.create().texOffs(0, 0).addBox(-3.5F, -7.0F, -3.5F, 7.0F, 7.0F, 7.0F, new CubeDeformation(0.0F)).texOffs(22, 0).addBox(-2.5F, -3.0F, -6.5F, 5.0F, 3.0F, 3.0F, new CubeDeformation(0.0F)).texOffs(1, 3).addBox(-0.5F, -3.85F, -5.5F, 1.0F, 1.0F, 2.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 4.0F, -0.5F));
+		PartDefinition hat = partdefinition.addOrReplaceChild("hat", CubeListBuilder.create().texOffs(0, 50).addBox(-3.5F, -7.0F, -3.5F, 7.0F, 7.0F, 7.0F, new CubeDeformation(0.5F)).texOffs(17, 52).addBox(-6.0F, -5.2F, -6.0F, 12.0F, 0.0F, 12.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 4.0F, -0.5F));
+		PartDefinition leftHorn = head.addOrReplaceChild("left_horn", CubeListBuilder.create().texOffs(36, 0).addBox(-0.5F, -4.0F, -1.0F, 2.0F, 5.0F, 2.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(1.5F, -7.0F, 2.0F, -0.6109F, 0.3054F, 0.1745F));
+		PartDefinition rightHorn = head.addOrReplaceChild("right_horn", CubeListBuilder.create().texOffs(45, 0).addBox(-1.5F, -4.0F, -1.0F, 2.0F, 5.0F, 2.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(-1.5F, -7.0F, 2.0F, -0.6109F, -0.3054F, -0.1745F));
 		PartDefinition rightArm = partdefinition.addOrReplaceChild("right_arm", CubeListBuilder.create().texOffs(46, 16).addBox(-3.0F, -0.85F, -1.5F, 3.0F, 10.0F, 3.0F, new CubeDeformation(0.0F)), PartPose.offset(-3.0F, 5.0F, 0.0F));
 		PartDefinition leftArm = partdefinition.addOrReplaceChild("left_arm", CubeListBuilder.create().texOffs(33, 16).addBox(0.0F, -0.85F, -1.5F, 3.0F, 10.0F, 3.0F, new CubeDeformation(0.0F)), PartPose.offset(3.0F, 5.0F, 0.0F));
 		PartDefinition rightLeg = partdefinition.addOrReplaceChild("right_leg", CubeListBuilder.create().texOffs(13, 31).addBox(-1.5F, 0.0F, -1.5F, 3.0F, 10.0F, 3.0F, new CubeDeformation(0.0F)), PartPose.offset(-1.5F, 14.0F, 0.0F));
@@ -89,52 +86,56 @@ public class KoboldModel<T extends AbstractKoboldEntity> extends HumanoidModel<T
 			this.hat.xRot += Mth.cos(ageInTicks * 0.4F) * 0.04F + 0.04F;
 		}
 		if (kobold.hasItemInSlot(EquipmentSlot.MAINHAND)) {
-			if (kobold.isAggressive()) {
+			if (kobold.getMainHandItem().is(KoboldsItems.KOBOLD_POTION.get())) {
 				if (kobold.isLeftHanded()) {
-					if (kobold.getMainHandItem().getItem() instanceof BowItem) {
-						this.leftArm.xRot = -1.4399F;
-						this.leftArm.yRot = 0.2618F;
-						this.rightArm.xRot = -1.3963F;
-						this.rightArm.yRot = -0.3054F;
+					this.leftArm.xRot = -0.8727F;
+					this.leftArm.yRot = 0.0873F;
+					this.head.xRot = -0.2618F;
+					this.head.xRot = 0.1745F;
+					this.hat.xRot = -0.2618F;
+					this.hat.xRot = 0.1745F;
+				} else {
+					this.rightArm.xRot = -0.8727F;
+					this.rightArm.yRot = 0.0873F;
+					this.head.xRot = -0.2618F;
+					this.head.xRot = 0.1745F;
+					this.hat.xRot = -0.2618F;
+					this.hat.xRot = 0.1745F;
+				}
+			} else if (kobold.isAggressive()) {
+				if (kobold.isLeftHanded()) {
+					if (kobold.getMainHandItem().getItem() instanceof CrossbowItem || kobold.getMainHandItem().getItem() instanceof BowItem || kobold.getMainHandItem().is(KoboldsTags.RANGED)) {
+						if (kobold.isCharging()) {
+							this.leftArm.xRot = -0.6981F;
+							this.leftArm.yRot = 0.3491F;
+							this.rightArm.xRot = -1.1345F;
+							this.rightArm.yRot = -0.5672F;
+						} else {
+							this.leftArm.xRot = -1.4399F;
+							this.leftArm.yRot = 0.2618F;
+							this.rightArm.xRot = -1.3963F;
+							this.rightArm.yRot = -0.3054F;
+						}
 					} else {
 						this.leftArm.xRot = -2.0944F;
 						this.leftArm.yRot = -0.1745F;
 					}
 				} else {
-					if (kobold.getMainHandItem().getItem() instanceof BowItem) {
-						this.rightArm.xRot = -1.4399F;
-						this.rightArm.yRot = -0.2618F;
-						this.leftArm.xRot = -1.3963F;
-						this.leftArm.yRot = 0.3054F;
+					if (kobold.getMainHandItem().getItem() instanceof CrossbowItem || kobold.getMainHandItem().getItem() instanceof BowItem || kobold.getMainHandItem().is(KoboldsTags.RANGED)) {
+						if (kobold.isCharging()) {
+							this.rightArm.xRot = -0.6981F;
+							this.rightArm.yRot = -0.3491F;
+							this.leftArm.xRot = -1.1345F;
+							this.leftArm.yRot = 0.5672F;
+						} else {
+							this.rightArm.xRot = -1.4399F;
+							this.rightArm.yRot = -0.2618F;
+							this.leftArm.xRot = -1.3963F;
+							this.leftArm.yRot = 0.3054F;
+						}
 					} else {
 						this.rightArm.xRot = -2.0944F;
 						this.rightArm.yRot = 0.1745F;
-					}
-				}
-			} else if (kobold.getMainHandItem().getItem() instanceof CrossbowItem) {
-				if (kobold.isLeftHanded()) {
-					if (kobold.isCharging()) {
-						this.leftArm.xRot = -0.6981F;
-						this.leftArm.yRot = 0.3491F;
-						this.rightArm.xRot = -1.1345F;
-						this.rightArm.yRot = -0.5672F;
-					} else if (CrossbowItem.isCharged(kobold.getMainHandItem())) {
-						this.leftArm.xRot = -1.4399F;
-						this.leftArm.yRot = 0.2618F;
-						this.rightArm.xRot = -1.3963F;
-						this.rightArm.yRot = -0.3054F;
-					}
-				} else {
-					if (kobold.isCharging()) {
-						this.rightArm.xRot = -0.6981F;
-						this.rightArm.yRot = -0.3491F;
-						this.leftArm.xRot = -1.1345F;
-						this.leftArm.yRot = 0.5672F;
-					} else if (CrossbowItem.isCharged(kobold.getMainHandItem())) {
-						this.rightArm.xRot = -1.4399F;
-						this.rightArm.yRot = -0.2618F;
-						this.leftArm.xRot = -1.3963F;
-						this.leftArm.yRot = 0.3054F;
 					}
 				}
 			}
