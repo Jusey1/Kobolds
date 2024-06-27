@@ -34,6 +34,8 @@ public class KoboldsEvents {
 	public static void onAttackTarget(LivingChangeTargetEvent event) {
 		if (event.getEntity() instanceof Zombie && event.getNewTarget() instanceof KoboldRascal && event.getEntity().getLastHurtByMob() != event.getNewTarget()) {
 			event.setCanceled(true);
+		} else if (event.getEntity() instanceof AbstractKoboldEntity && event.getNewTarget() instanceof AbstractKoboldEntity) {
+			event.setCanceled(true);
 		}
 	}
 

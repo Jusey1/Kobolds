@@ -4,15 +4,13 @@ import net.salju.kobolds.entity.KoboldZombie;
 import net.salju.kobolds.client.renderer.layers.KoboldZombieEyesLayer;
 import net.salju.kobolds.client.model.ZomboldModel;
 import net.salju.kobolds.client.model.KoboldArmorModel;
-
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.client.renderer.entity.layers.ItemInHandLayer;
 import net.minecraft.client.renderer.entity.layers.HumanoidArmorLayer;
 import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.MultiBufferSource;
-
-import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 
 public class KoboldZombieRenderer extends MobRenderer<KoboldZombie, ZomboldModel<KoboldZombie>> {
 	public KoboldZombieRenderer(EntityRendererProvider.Context context) {
@@ -23,8 +21,12 @@ public class KoboldZombieRenderer extends MobRenderer<KoboldZombie, ZomboldModel
 	}
 
 	@Override
-	public ResourceLocation getTextureLocation(KoboldZombie entity) {
-		return new ResourceLocation("kobolds:textures/entity/kobold_zombie.png");
+	public ResourceLocation getTextureLocation(KoboldZombie zombo) {
+		if (zombo.getDisplayName().getString().equals("James") && zombo.getZomboType() == "enchanter") {
+			return new ResourceLocation("kobolds:textures/entity/undead/zombie_james.png");
+		} else {
+			return new ResourceLocation("kobolds:textures/entity/undead/zombie_" + zombo.getZomboType() + ".png");
+		}
 	}
 
 	@Override
@@ -33,12 +35,12 @@ public class KoboldZombieRenderer extends MobRenderer<KoboldZombie, ZomboldModel
 	}
 
 	@Override
-	public void render(KoboldZombie kobold, float f1, float f2, PoseStack stack, MultiBufferSource buffer, int inty) {
+	public void render(KoboldZombie zombo, float f1, float f2, PoseStack stack, MultiBufferSource buffer, int i) {
 		stack.pushPose();
 		stack.translate(-0.025, 0, 0);
-		float scale = 0.875F;
+		float scale = (zombo.isBaby() ? 0.45F : 0.875F);
 		stack.scale(scale, scale, scale);
-		super.render(kobold, f1, f2, stack, buffer, inty);
+		super.render(zombo, f1, f2, stack, buffer, i);
 		stack.popPose();
 	}
 }

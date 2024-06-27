@@ -13,7 +13,7 @@ public class KoboldRevengeGoal extends HurtByTargetGoal {
 	@Override
 	public void start() {
 		super.start();
-		for (AbstractKoboldEntity kobolds : this.mob.level().getEntitiesOfClass(AbstractKoboldEntity.class, this.mob.getBoundingBox().inflate(32.0D), (kobold) -> kobold.getTarget() == null)) {
+		for (AbstractKoboldEntity kobolds : this.mob.level().getEntitiesOfClass(AbstractKoboldEntity.class, this.mob.getBoundingBox().inflate(32.0D), kobold -> (kobold.getTarget() == null || !kobold.getTarget().isAlive()))) {
 			if (!(this.mob.level().getDifficulty() == Difficulty.PEACEFUL)) {
 				kobolds.setTarget(this.mob.getTarget());
 			}

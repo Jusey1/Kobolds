@@ -31,14 +31,14 @@ public class KoboldEyesLayer<T extends AbstractKoboldEntity, M extends KoboldMod
 
 	@Override
 	public RenderType renderType() {
-		return RenderType.eyes(new ResourceLocation("kobolds:textures/entity/kobold_eyes.png"));
+		return RenderType.eyes(new ResourceLocation("kobolds:textures/entity/eyes/base.png"));
 	}
 
 	public RenderType renderDiamondType() {
-		return RenderType.eyes(new ResourceLocation("kobolds:textures/entity/kobold_eyes_diamond.png"));
+		return RenderType.eyes(new ResourceLocation("kobolds:textures/entity/eyes/diamond.png"));
 	}
 
 	public RenderType renderPopperType() {
-		return RenderType.eyes(new ResourceLocation("kobolds:textures/entity/kobold_eyes_popper.png"));
+		return RenderType.eyes(new ResourceLocation("kobolds:textures/entity/eyes/popper.png"));
 	}
 }

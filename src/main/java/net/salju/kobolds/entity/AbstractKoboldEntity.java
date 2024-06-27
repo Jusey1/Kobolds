@@ -387,13 +387,20 @@ public abstract class AbstractKoboldEntity extends PathfinderMob implements Cros
 
 	@Override
 	public void die(DamageSource source) {
-		if (source.getDirectEntity() instanceof Zombie) {
-			if (!this.isBaby()) {
-				this.playSound(SoundEvents.ZOMBIE_VILLAGER_CONVERTED, 1.0F, 1.0F);
-				if (this.level() instanceof ServerLevel lvl) {
-					KoboldZombie zombo = this.convertTo(KoboldsMobs.KOBOLD_ZOMBIE.get(), true);
-					ForgeEventFactory.onLivingConvert(this, zombo);
+		if (source.getDirectEntity() instanceof Zombie && !this.isBaby()) {
+			this.playSound(SoundEvents.ZOMBIE_VILLAGER_CONVERTED, 1.0F, 1.0F);
+			if (this.level() instanceof ServerLevel lvl) {
+				InteractionHand hand = ProjectileUtil.getWeaponHoldingHand(this, stack -> stack == KoboldsItems.KOBOLD_POTION.get());
+				if (this.getItemInHand(hand).is(KoboldsItems.KOBOLD_POTION.get())) {
+					if (this.getOffhandItem().getItem() instanceof ShieldItem) {
+						this.setItemInHand(hand, this.getPrimaryWeapon());
+					} else {
+						this.setItemInHand(hand, ItemStack.EMPTY);
+					}
 				}
+				KoboldZombie zombo = this.convertTo(KoboldsMobs.KOBOLD_ZOMBIE.get(), true);
+				zombo.setZombo(this);
+				ForgeEventFactory.onLivingConvert(this, zombo);
 			}
 		}
 		super.die(source);

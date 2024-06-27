@@ -24,7 +24,7 @@ public class KoboldAttackSelector implements Predicate<LivingEntity> {
 			if (kobold instanceof KoboldWarrior) {
 				return (target instanceof Zombie || target instanceof AbstractSkeleton || target instanceof Spider || target instanceof Raider);
 			} else {
-				return (target instanceof Zombie || target instanceof Silverfish);
+				return (target instanceof Zombie || target instanceof Silverfish || target instanceof Raider);
 			}
 		}
 		return false;

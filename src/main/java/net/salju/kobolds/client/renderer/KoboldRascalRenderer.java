@@ -4,15 +4,13 @@ import net.salju.kobolds.entity.KoboldRascal;
 import net.salju.kobolds.client.renderer.layers.KoboldEyesLayer;
 import net.salju.kobolds.client.model.RascalModel;
 import net.salju.kobolds.client.model.KoboldArmorModel;
-
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.client.renderer.entity.layers.ItemInHandLayer;
 import net.minecraft.client.renderer.entity.layers.HumanoidArmorLayer;
 import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.MultiBufferSource;
-
-import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 
 public class KoboldRascalRenderer extends MobRenderer<KoboldRascal, RascalModel<KoboldRascal>> {
 	public KoboldRascalRenderer(EntityRendererProvider.Context context) {
@@ -30,7 +28,7 @@ public class KoboldRascalRenderer extends MobRenderer<KoboldRascal, RascalModel<
 
 	@Override
 	public ResourceLocation getTextureLocation(KoboldRascal entity) {
-		return new ResourceLocation("kobolds:textures/entity/kobold_rascal.png");
+		return new ResourceLocation("kobolds:textures/entity/kobolds/rascal.png");
 	}
 
 	@Override

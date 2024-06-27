@@ -24,7 +24,7 @@ public class KoboldPirateRenderer extends MobRenderer<KoboldPirate, KoboldModel<
 
 	@Override
 	public ResourceLocation getTextureLocation(KoboldPirate entity) {
-		return new ResourceLocation("kobolds:textures/entity/kobold_pirate.png");
+		return new ResourceLocation("kobolds:textures/entity/kobolds/pirate.png");
 	}
 
 	@Override

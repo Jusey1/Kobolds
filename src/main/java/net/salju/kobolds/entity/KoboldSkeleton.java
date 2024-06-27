@@ -41,7 +41,7 @@ public class KoboldSkeleton extends AbstractSkeleton implements CrossbowAttackMo
 
 	public KoboldSkeleton(EntityType<KoboldSkeleton> type, Level world) {
 		super(type, world);
-		getEyePosition(0.5F);
+		this.getEyePosition(0.5F);
 	}
 
 	@Override
@@ -82,6 +82,7 @@ public class KoboldSkeleton extends AbstractSkeleton implements CrossbowAttackMo
 	@Override
 	public SpawnGroupData finalizeSpawn(ServerLevelAccessor world, DifficultyInstance difficulty, MobSpawnType reason, @Nullable SpawnGroupData livingdata, @Nullable CompoundTag tag) {
 		this.populateDefaultEquipmentSlots(world.getRandom(), difficulty);
+		this.populateDefaultEquipmentEnchantments(world.getRandom(), difficulty);
 		return super.finalizeSpawn(world, difficulty, reason, livingdata, tag);
 	}
 
@@ -89,7 +90,6 @@ public class KoboldSkeleton extends AbstractSkeleton implements CrossbowAttackMo
 	protected void populateDefaultEquipmentSlots(RandomSource randy, DifficultyInstance souls) {
 		this.setItemSlot(EquipmentSlot.MAINHAND, new ItemStack(Items.CROSSBOW));
 		this.setDropChance(EquipmentSlot.MAINHAND, 0.25F);
-		this.populateDefaultEquipmentEnchantments(randy, souls);
 	}
 
 	@Override

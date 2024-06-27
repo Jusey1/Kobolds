@@ -3,15 +3,13 @@ package net.salju.kobolds.client.renderer;
 import net.salju.kobolds.entity.KoboldSkeleton;
 import net.salju.kobolds.client.model.SkeleboldModel;
 import net.salju.kobolds.client.model.KoboldArmorModel;
-
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.client.renderer.entity.layers.ItemInHandLayer;
 import net.minecraft.client.renderer.entity.layers.HumanoidArmorLayer;
 import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.MultiBufferSource;
-
-import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 
 public class KoboldSkeletonRenderer extends MobRenderer<KoboldSkeleton, SkeleboldModel<KoboldSkeleton>> {
 	public KoboldSkeletonRenderer(EntityRendererProvider.Context context) {
@@ -22,7 +20,7 @@ public class KoboldSkeletonRenderer extends MobRenderer<KoboldSkeleton, Skelebol
 
 	@Override
 	public ResourceLocation getTextureLocation(KoboldSkeleton entity) {
-		return new ResourceLocation("kobolds:textures/entity/kobold_skeleton.png");
+		return new ResourceLocation("kobolds:textures/entity/undead/skeleton.png");
 	}
 
 	@Override

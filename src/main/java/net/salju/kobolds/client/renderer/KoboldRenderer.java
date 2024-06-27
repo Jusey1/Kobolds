@@ -25,9 +25,9 @@ public class KoboldRenderer extends MobRenderer<Kobold, KoboldModel<Kobold>> {
 	@Override
 	public ResourceLocation getTextureLocation(Kobold kobold) {
 		if (kobold.getDisplayName().getString().equals("Popper")) {
-			return new ResourceLocation("kobolds:textures/entity/kobold_popper.png");
+			return new ResourceLocation("kobolds:textures/entity/special/popper.png");
 		} else {
-			return new ResourceLocation("kobolds:textures/entity/kobold_base.png");
+			return new ResourceLocation("kobolds:textures/entity/kobolds/base.png");
 		}
 	}
 

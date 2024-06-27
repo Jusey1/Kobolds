@@ -24,11 +24,11 @@ public class KoboldEngineerRenderer extends MobRenderer<KoboldEngineer, KoboldMo
 	@Override
 	public ResourceLocation getTextureLocation(KoboldEngineer kobold) {
 		if (kobold.getDisplayName().getString().equals("Dell") || kobold.getDisplayName().getString().equals("Conagher") || kobold.getDisplayName().getString().equals("Dell Conagher")) {
-			return new ResourceLocation("kobolds:textures/entity/kobold_engineer_tf2.png");
+			return new ResourceLocation("kobolds:textures/entity/special/dell.png");
 		} else if (kobold.getDisplayName().getString().equals("Popper")) {
-			return new ResourceLocation("kobolds:textures/entity/kobold_popper.png");
+			return new ResourceLocation("kobolds:textures/entity/special/popper.png");
 		} else {
-			return new ResourceLocation("kobolds:textures/entity/kobold_engineer.png");
+			return new ResourceLocation("kobolds:textures/entity/kobolds/engineer.png");
 		}
 	}
 

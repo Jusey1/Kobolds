@@ -2,15 +2,13 @@ package net.salju.kobolds.client.renderer.layers;
 
 import net.salju.kobolds.entity.AbstractKoboldEntity;
 import net.salju.kobolds.client.model.KoboldModel;
-
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.renderer.entity.layers.EyesLayer;
 import net.minecraft.client.renderer.entity.RenderLayerParent;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.MultiBufferSource;
-
-import com.mojang.blaze3d.vertex.VertexConsumer;
+import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.blaze3d.vertex.PoseStack;
 
 public class KoboldPirateEyesLayer<T extends AbstractKoboldEntity, M extends KoboldModel<T>> extends EyesLayer<T, M> {
@@ -29,10 +27,10 @@ public class KoboldPirateEyesLayer<T extends AbstractKoboldEntity, M extends Kob
 
 	@Override
 	public RenderType renderType() {
-		return RenderType.eyes(new ResourceLocation("kobolds:textures/entity/kobold_eyes_pirate.png"));
+		return RenderType.eyes(new ResourceLocation("kobolds:textures/entity/eyes/base_pirate.png"));
 	}
 
 	public RenderType renderDiamondType() {
-		return RenderType.eyes(new ResourceLocation("kobolds:textures/entity/kobold_eyes_pirate_diamond.png"));
+		return RenderType.eyes(new ResourceLocation("kobolds:textures/entity/eyes/diamond_pirate.png"));
 	}
 }
