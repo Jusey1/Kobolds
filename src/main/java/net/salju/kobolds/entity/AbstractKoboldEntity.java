@@ -1,20 +1,11 @@
 package net.salju.kobolds.entity;
 
 import net.salju.kobolds.item.KoboldPotionUtils;
-import net.salju.kobolds.init.KoboldsTags;
 import net.salju.kobolds.init.KoboldsModSounds;
 import net.salju.kobolds.init.KoboldsMobs;
 import net.salju.kobolds.init.KoboldsItems;
-import net.salju.kobolds.entity.ai.KoboldTridentGoal;
-import net.salju.kobolds.entity.ai.KoboldShieldGoal;
-import net.salju.kobolds.entity.ai.KoboldRevengeGoal;
-import net.salju.kobolds.entity.ai.KoboldMeleeGoal;
-import net.salju.kobolds.entity.ai.KoboldPotionGoal;
-import net.salju.kobolds.entity.ai.KoboldCrossbowGoal;
-import net.salju.kobolds.entity.ai.KoboldBowGoal;
-import net.salju.kobolds.entity.ai.KoboldAttackSelector;
-import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.event.ForgeEventFactory;
+import net.minecraftforge.common.ForgeHooks;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
 import net.minecraft.world.level.storage.loot.LootParams;
@@ -44,7 +35,6 @@ import net.minecraft.world.entity.monster.RangedAttackMob;
 import net.minecraft.world.entity.monster.CrossbowAttackMob;
 import net.minecraft.world.entity.ai.targeting.TargetingConditions;
 import net.minecraft.world.entity.ai.navigation.GroundPathNavigation;
-import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
 import net.minecraft.world.entity.ai.goal.RandomStrollGoal;
 import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
 import net.minecraft.world.entity.ai.goal.OpenDoorGoal;
@@ -206,8 +196,8 @@ public abstract class AbstractKoboldEntity extends PathfinderMob implements Cros
 		return this.entityData.get(DATA_CHARGING_STATE);
 	}
 
-	public void setChargingCrossbow(boolean charging) {
-		this.entityData.set(DATA_CHARGING_STATE, charging);
+	public void setChargingCrossbow(boolean check) {
+		this.entityData.set(DATA_CHARGING_STATE, check);
 	}
 
 	@Override

@@ -1,7 +1,6 @@
 package net.salju.kobolds.entity;
 
 import net.salju.kobolds.init.KoboldsMobs;
-import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.ItemStack;
@@ -48,10 +47,12 @@ public class KoboldChild extends AbstractKoboldEntity {
 		}
 	}
 
+	@Override
 	public boolean isBaby() {
 		return true;
 	}
 
+	@Override
 	protected float getStandingEyeHeight(Pose pose, EntityDimensions size) {
 		return this.isBaby() ? 0.66F : 1.26F;
 	}
@@ -59,15 +60,14 @@ public class KoboldChild extends AbstractKoboldEntity {
 	@Override
 	public void baseTick() {
 		super.baseTick();
-		LevelAccessor world = this.level();
-		if (!world.isClientSide()) {
+		if (!this.level().isClientSide()) {
 			if (this.grow < 24000 && (this.getDisplayName().getString()).equals(Component.translatable("entity.kobolds.kobold_child").getString())) {
 				++this.grow;
 			} else if (this.grow >= 24000) {
 				BlockPos pos = this.blockPosition();
 				this.discard();
-				if (world instanceof ServerLevel lvl) {
-					if (world.getBiome(pos).is(BiomeTags.IS_JUNGLE)) {
+				if (this.level() instanceof ServerLevel lvl) {
+					if (this.level().getBiome(pos).is(BiomeTags.IS_JUNGLE)) {
 						if (Math.random() < 0.06) {
 							KoboldCaptain kobold = KoboldsMobs.KOBOLD_CAPTAIN.get().spawn(lvl, pos, MobSpawnType.BREEDING);
 						} else {

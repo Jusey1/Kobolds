@@ -80,16 +80,16 @@ public class KoboldSkeleton extends AbstractSkeleton implements CrossbowAttackMo
 	}
 
 	@Override
-	public SpawnGroupData finalizeSpawn(ServerLevelAccessor world, DifficultyInstance difficulty, MobSpawnType reason, @Nullable SpawnGroupData livingdata, @Nullable CompoundTag tag) {
+	public SpawnGroupData finalizeSpawn(ServerLevelAccessor world, DifficultyInstance difficulty, MobSpawnType reason, @Nullable SpawnGroupData data, @Nullable CompoundTag tag) {
 		this.populateDefaultEquipmentSlots(world.getRandom(), difficulty);
 		this.populateDefaultEquipmentEnchantments(world.getRandom(), difficulty);
-		return super.finalizeSpawn(world, difficulty, reason, livingdata, tag);
+		return super.finalizeSpawn(world, difficulty, reason, data, tag);
 	}
 
 	@Override
 	protected void populateDefaultEquipmentSlots(RandomSource randy, DifficultyInstance souls) {
 		this.setItemSlot(EquipmentSlot.MAINHAND, new ItemStack(Items.CROSSBOW));
-		this.setDropChance(EquipmentSlot.MAINHAND, 0.25F);
+		this.setDropChance(EquipmentSlot.MAINHAND, 0.15F);
 	}
 
 	@Override
@@ -112,6 +112,7 @@ public class KoboldSkeleton extends AbstractSkeleton implements CrossbowAttackMo
 		return SoundEvents.SKELETON_STEP;
 	}
 
+	@Override
 	protected float getStandingEyeHeight(Pose pose, EntityDimensions size) {
 		return this.isBaby() ? 0.66F : 1.26F;
 	}

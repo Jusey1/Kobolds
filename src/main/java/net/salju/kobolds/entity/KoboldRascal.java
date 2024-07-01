@@ -130,4 +130,4 @@ public class KoboldRascal extends AbstractKoboldEntity {
 	public int getDespawnDelay() {
 		return this.despawnDelay;
 	}
-}
+}
