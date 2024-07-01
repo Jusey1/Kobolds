@@ -20,6 +20,20 @@
         },
         {
           "type": "minecraft:item",
+          "name": "minecraft:tuff",
+          "weight": 7,
+          "functions": [
+            {
+              "function": "set_count",
+              "count": {
+                "min": 12,
+                "max": 24
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
           "name": "minecraft:andesite",
           "weight": 7,
           "functions": [
