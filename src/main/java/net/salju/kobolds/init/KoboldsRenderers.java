@@ -37,6 +37,6 @@ public class KoboldsRenderers {
 
 	@SubscribeEvent
 	public static void clientSetupEvent(FMLClientSetupEvent event) {
-		event.enqueueWork(() -> SkullBlockRenderer.SKIN_BY_TYPE.put(KoboldSkull.Types.SKELEBOLD, new ResourceLocation("kobolds:textures/entity/kobold_skeleton.png")));
+		event.enqueueWork(() -> SkullBlockRenderer.SKIN_BY_TYPE.put(KoboldSkull.Types.SKELEBOLD, new ResourceLocation("kobolds:textures/entity/undead/skeleton.png")));
 	}
 }
