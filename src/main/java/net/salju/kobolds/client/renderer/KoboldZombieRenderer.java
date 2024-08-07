@@ -1,5 +1,6 @@
 package net.salju.kobolds.client.renderer;
 
+import net.salju.kobolds.init.KoboldsModels;
 import net.salju.kobolds.entity.KoboldZombie;
 import net.salju.kobolds.client.renderer.layers.KoboldZombieEyesLayer;
 import net.salju.kobolds.client.model.ZomboldModel;
@@ -14,10 +15,10 @@ import net.minecraft.client.renderer.MultiBufferSource;
 
 public class KoboldZombieRenderer extends MobRenderer<KoboldZombie, ZomboldModel<KoboldZombie>> {
 	public KoboldZombieRenderer(EntityRendererProvider.Context context) {
-		super(context, new ZomboldModel(context.bakeLayer(ZomboldModel.ZOMBOLD_MODEL)), 0.36f);
+		super(context, new ZomboldModel(context.bakeLayer(KoboldsModels.ZOMBOLD)), 0.36f);
 		this.addLayer(new ItemInHandLayer<KoboldZombie, ZomboldModel<KoboldZombie>>(this, context.getItemInHandRenderer()));
 		this.addLayer(new KoboldZombieEyesLayer<>(this));
-		this.addLayer(new HumanoidArmorLayer(this, new KoboldArmorModel(context.bakeLayer(KoboldArmorModel.KOBOLD_ARMOR_INNER_MODEL)), new KoboldArmorModel(context.bakeLayer(KoboldArmorModel.KOBOLD_ARMOR_OUTER_MODEL)), context.getModelManager()));
+		this.addLayer(new HumanoidArmorLayer(this, new KoboldArmorModel(context.bakeLayer(KoboldsModels.KOBOLD_ARMOR_INNER)), new KoboldArmorModel(context.bakeLayer(KoboldsModels.KOBOLD_ARMOR_OUTER)), context.getModelManager()));
 	}
 
 	@Override

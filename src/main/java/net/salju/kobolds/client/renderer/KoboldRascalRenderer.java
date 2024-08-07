@@ -1,5 +1,6 @@
 package net.salju.kobolds.client.renderer;
 
+import net.salju.kobolds.init.KoboldsModels;
 import net.salju.kobolds.entity.KoboldRascal;
 import net.salju.kobolds.client.renderer.layers.KoboldEyesLayer;
 import net.salju.kobolds.client.model.RascalModel;
@@ -14,7 +15,7 @@ import net.minecraft.client.renderer.MultiBufferSource;
 
 public class KoboldRascalRenderer extends MobRenderer<KoboldRascal, RascalModel<KoboldRascal>> {
 	public KoboldRascalRenderer(EntityRendererProvider.Context context) {
-		super(context, new RascalModel(context.bakeLayer(RascalModel.RASCAL_MODEL)), 0.36f);
+		super(context, new RascalModel(context.bakeLayer(KoboldsModels.KOBOLD_RASCAL)), 0.36f);
 		this.addLayer(new KoboldEyesLayer<>(this));
 		this.addLayer(new ItemInHandLayer<KoboldRascal, RascalModel<KoboldRascal>>(this, context.getItemInHandRenderer()) {
 			public void render(PoseStack pose, MultiBufferSource buffer, int inty, KoboldRascal kobold, float f1, float f2, float f3, float f4, float f5, float f6) {
@@ -23,7 +24,7 @@ public class KoboldRascalRenderer extends MobRenderer<KoboldRascal, RascalModel<
 				}
 			}
 		});
-		this.addLayer(new HumanoidArmorLayer(this, new KoboldArmorModel(context.bakeLayer(KoboldArmorModel.KOBOLD_ARMOR_INNER_MODEL)), new KoboldArmorModel(context.bakeLayer(KoboldArmorModel.KOBOLD_ARMOR_OUTER_MODEL)), context.getModelManager()));
+		this.addLayer(new HumanoidArmorLayer(this, new KoboldArmorModel(context.bakeLayer(KoboldsModels.KOBOLD_ARMOR_INNER)), new KoboldArmorModel(context.bakeLayer(KoboldsModels.KOBOLD_ARMOR_OUTER)), context.getModelManager()));
 	}
 
 	@Override

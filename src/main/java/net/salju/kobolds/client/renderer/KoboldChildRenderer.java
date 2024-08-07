@@ -1,5 +1,6 @@
 package net.salju.kobolds.client.renderer;
 
+import net.salju.kobolds.init.KoboldsModels;
 import net.salju.kobolds.entity.KoboldChild;
 import net.salju.kobolds.client.renderer.layers.KoboldEyesLayer;
 import net.salju.kobolds.client.model.KoboldChildModel;
@@ -11,7 +12,7 @@ import net.minecraft.client.renderer.MultiBufferSource;
 
 public class KoboldChildRenderer extends MobRenderer<KoboldChild, KoboldChildModel<KoboldChild>> {
 	public KoboldChildRenderer(EntityRendererProvider.Context context) {
-		super(context, new KoboldChildModel(context.bakeLayer(KoboldChildModel.KOBOLD_CHILD_MODEL)), 0.36f);
+		super(context, new KoboldChildModel(context.bakeLayer(KoboldsModels.KOBOLD_CHILD)), 0.36f);
 		this.addLayer(new KoboldEyesLayer<>(this));
 	}
 

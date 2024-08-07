@@ -1,6 +1,5 @@
 package net.salju.kobolds.item;
 
-import net.salju.kobolds.init.KoboldsItems;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraft.world.level.Level;
@@ -77,13 +76,10 @@ public class KoboldPotionItem extends Item {
 		if (stack.isEmpty()) {
 			return empty;
 		} else {
-			if (target instanceof Player player && !player.getAbilities().instabuild) {
-				if (stack.getItem() == KoboldsItems.KOBOLD_POTION_INFINITY.get()) {
-					player.getCooldowns().addCooldown(stack.getItem(), 240);
-				} else {
-					stack.shrink(1);
-					if (!player.getInventory().add(empty))
-						player.drop(empty, false);
+			if (target instanceof Player player && !player.isCreative()) {
+				stack.shrink(1);
+				if (!player.getInventory().add(empty)) {
+					player.drop(empty, false);
 				}
 			}
 			return stack;

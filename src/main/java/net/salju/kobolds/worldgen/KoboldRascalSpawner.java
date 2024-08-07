@@ -2,8 +2,7 @@ package net.salju.kobolds.worldgen;
 
 import net.salju.kobolds.init.KoboldsMobs;
 import net.salju.kobolds.entity.KoboldRascal;
-
-import net.minecraft.world.level.NaturalSpawner;
+import net.minecraft.world.level.NaturalSpawner;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.GameRules;
@@ -15,8 +14,7 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.util.Mth;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.core.BlockPos;
-
-import javax.annotation.Nullable;
+import javax.annotation.Nullable;
 
 public class KoboldRascalSpawner {
 	private final RandomSource randy = RandomSource.create();

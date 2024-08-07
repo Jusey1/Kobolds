@@ -2,18 +2,15 @@ package net.salju.kobolds.init;
 
 import net.salju.kobolds.item.KoboldPotionUtils;
 import net.salju.kobolds.KoboldsMod;
-
-import net.minecraftforge.registries.RegistryObject;
+import net.minecraftforge.registries.RegistryObject;
 import net.minecraftforge.registries.DeferredRegister;
-
-import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.network.chat.Component;
 import net.minecraft.core.registries.Registries;
-
-import java.util.List;
+import java.util.List;
 
 public class KoboldsTabs {
 	public static final DeferredRegister<CreativeModeTab> REGISTRY = DeferredRegister.create(Registries.CREATIVE_MODE_TAB, KoboldsMod.MODID);
@@ -40,10 +37,9 @@ public class KoboldsTabs {
 			}).build());
 			
 	public static final RegistryObject<CreativeModeTab> KOBOLDS_POTS = REGISTRY.register("kobolds_pots",
-			() -> CreativeModeTab.builder().title(Component.translatable("itemGroup.kobolds_pots")).icon(() -> new ItemStack(KoboldsItems.KOBOLD_POTION_INFINITY.get())).displayItems((parameters, tabData) -> {
+			() -> CreativeModeTab.builder().title(Component.translatable("itemGroup.kobolds_pots")).icon(() -> new ItemStack(KoboldsItems.KOBOLD_POTION.get())).displayItems((parameters, tabData) -> {
 				List<MobEffect> commons = KoboldPotionUtils.getCommon();
 				List<MobEffect> specials = KoboldPotionUtils.getSpecial();
-				tabData.accept(KoboldsItems.KOBOLD_POTION_INFINITY.get());
 				tabData.accept(KoboldPotionUtils.makePotion(new ItemStack(KoboldsItems.KOBOLD_POTION.get()), MobEffects.HEAL, MobEffects.REGENERATION, 1, 900));
 				for (MobEffect effect : commons) {
 					tabData.accept(KoboldPotionUtils.makePotion(new ItemStack(KoboldsItems.KOBOLD_POTION.get()), effect, null, 3600, 0));

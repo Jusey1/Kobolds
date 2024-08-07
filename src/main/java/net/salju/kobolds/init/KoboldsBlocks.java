@@ -3,12 +3,10 @@ package net.salju.kobolds.init;
 import net.salju.kobolds.block.KoboldWallSkull;
 import net.salju.kobolds.block.KoboldSkull;
 import net.salju.kobolds.KoboldsMod;
-
-import net.minecraftforge.registries.RegistryObject;
+import net.minecraftforge.registries.RegistryObject;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.DeferredRegister;
-
-import net.minecraft.world.level.material.PushReaction;
+import net.minecraft.world.level.material.PushReaction;
 import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.level.block.state.properties.NoteBlockInstrument;
 import net.minecraft.world.level.block.state.BlockBehaviour;

@@ -1,5 +1,6 @@
 package net.salju.kobolds.worldgen;
 
+import net.salju.kobolds.init.KoboldsTags;
 import net.salju.kobolds.init.KoboldsStructures;
 import net.minecraft.world.level.levelgen.structure.pools.StructureTemplatePool;
 import net.minecraft.world.level.levelgen.structure.pools.JigsawPlacement;
@@ -49,10 +50,10 @@ public class AbstractKoboldStructure extends Structure {
 	@Override
 	public Optional<Structure.GenerationStub> findGenerationPoint(Structure.GenerationContext context) {
 		BlockPos pos = new BlockPos(context.chunkPos().getMinBlockX(), this.startHeight.sample(context.random(), new WorldGenerationContext(context.chunkGenerator(), context.heightAccessor())), context.chunkPos().getMinBlockZ());
-		if ((!underBiomes.isEmpty() && !underCheck(context, pos)) || waterCheck(context, pos)) {
+		if (!underCheck(context, pos) || waterCheck(context, pos)) {
 			return Optional.empty();
 		}
-		return JigsawPlacement.addPieces(context, this.startPool, Optional.empty(), 1, pos, false, heightmap, 80);
+		return JigsawPlacement.addPieces(context, this.startPool, Optional.empty(), 7, pos, false, heightmap, 120);
 	}
 
 	@Override
@@ -65,7 +66,11 @@ public class AbstractKoboldStructure extends Structure {
 			for (int x = context.chunkPos().x - 1; x <= context.chunkPos().x + 1; x++) {
 				for (int z = context.chunkPos().z - 1; z <= context.chunkPos().z + 1; z++) {
 					Holder<Biome> biome = context.biomeSource().getNoiseBiome(QuartPos.fromSection(x), QuartPos.fromBlock(pos.getY()), QuartPos.fromSection(z), context.randomState().sampler());
-					if (biome.is(TagKey.create(Registries.BIOME, underBiomes.get()))) {
+					if (!underBiomes.isEmpty()) {
+						if (biome.is(TagKey.create(Registries.BIOME, underBiomes.get()))) {
+							return true;
+						}
+					} else if (biome.is(KoboldsTags.BIOMES)) {
 						return true;
 					}
 				}

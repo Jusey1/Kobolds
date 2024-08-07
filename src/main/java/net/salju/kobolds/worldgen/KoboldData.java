@@ -5,8 +5,7 @@ import net.minecraft.world.level.saveddata.SavedData;
 import net.minecraft.world.level.Level;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.nbt.CompoundTag;
-
-import java.util.Map;
+import java.util.Map;
 import java.util.HashMap;
 
 public class KoboldData extends SavedData {

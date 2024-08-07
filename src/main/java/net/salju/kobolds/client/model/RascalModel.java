@@ -1,11 +1,9 @@
 package net.salju.kobolds.client.model;
 
 import net.salju.kobolds.entity.AbstractKoboldEntity;
-
-import net.minecraft.world.entity.HumanoidArm;
+import net.minecraft.world.entity.HumanoidArm;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.util.Mth;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.client.model.geom.builders.PartDefinition;
 import net.minecraft.client.model.geom.builders.MeshDefinition;
 import net.minecraft.client.model.geom.builders.LayerDefinition;
@@ -13,14 +11,11 @@ import net.minecraft.client.model.geom.builders.CubeListBuilder;
 import net.minecraft.client.model.geom.builders.CubeDeformation;
 import net.minecraft.client.model.geom.PartPose;
 import net.minecraft.client.model.geom.ModelPart;
-import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.HumanoidModel;
-
-import com.mojang.blaze3d.vertex.VertexConsumer;
+import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.blaze3d.vertex.PoseStack;
 
 public class RascalModel<T extends AbstractKoboldEntity> extends KoboldModel<T> {
-	public static final ModelLayerLocation RASCAL_MODEL = new ModelLayerLocation(new ResourceLocation("kobolds", "kobold_rascal"), "main");
 	public final ModelPart bag;
 
 	public RascalModel(ModelPart root) {

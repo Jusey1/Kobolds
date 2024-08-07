@@ -7,7 +7,8 @@ import net.salju.kobolds.entity.ai.KoboldRevengeGoal;
 import net.salju.kobolds.entity.ai.KoboldPotionGoal;
 import net.salju.kobolds.entity.ai.KoboldMeleeGoal;
 import net.minecraftforge.registries.ForgeRegistries;
-import net.minecraft.world.level.Level;
+import net.minecraft.world.level.ServerLevelAccessor;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.SwordItem;
 import net.minecraft.world.item.Items;
@@ -15,10 +16,14 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.entity.SpawnGroupData;
+import net.minecraft.world.entity.MobSpawnType;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.DifficultyInstance;
 import net.minecraft.util.RandomSource;
 import net.minecraft.util.Mth;
 import net.minecraft.server.level.ServerLevel;
@@ -26,6 +31,7 @@ import net.minecraft.nbt.Tag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.CompoundTag;
 import java.util.Optional;
+import javax.annotation.Nullable;
 
 public class KoboldRascal extends AbstractKoboldEntity {
 	public boolean isFound;
@@ -112,6 +118,13 @@ public class KoboldRascal extends AbstractKoboldEntity {
 		return tag.stream().filter(CompoundTag.class::isInstance).map(CompoundTag.class::cast).filter((loot) -> {
 			return ItemStack.isSameItemSameTags(ItemStack.of(loot), stack);
 		}).findFirst();
+	}
+
+	@Override
+	public SpawnGroupData finalizeSpawn(ServerLevelAccessor world, DifficultyInstance difficulty, MobSpawnType reason, @Nullable SpawnGroupData data, @Nullable CompoundTag tag) {
+		this.setDespawnDelay(24000);
+		this.addEffect(new MobEffectInstance(MobEffects.INVISIBILITY, this.getDespawnDelay(), 0));
+		return super.finalizeSpawn(world, difficulty, reason, data, tag);
 	}
 
 	@Override

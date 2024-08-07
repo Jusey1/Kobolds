@@ -2,16 +2,14 @@ package net.salju.kobolds.init;
 
 import net.salju.kobolds.entity.*;
 import net.salju.kobolds.KoboldsMod;
-
-import net.minecraftforge.registries.RegistryObject;
+import net.minecraftforge.registries.RegistryObject;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
-
-import net.minecraft.world.entity.MobCategory;
+import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.Entity;
 
@@ -23,7 +21,7 @@ public class KoboldsMobs {
 	public static final RegistryObject<EntityType<KoboldEnchanter>> KOBOLD_ENCHANTER = register("kobold_enchanter", EntityType.Builder.<KoboldEnchanter>of(KoboldEnchanter::new, MobCategory.MISC).sized(0.5f, 1.48f));
 	public static final RegistryObject<EntityType<KoboldRascal>> KOBOLD_RASCAL = register("kobold_rascal", EntityType.Builder.<KoboldRascal>of(KoboldRascal::new, MobCategory.MISC).sized(0.5f, 1.48f));
 	public static final RegistryObject<EntityType<KoboldEngineer>> KOBOLD_ENGINEER = register("kobold_engineer", EntityType.Builder.<KoboldEngineer>of(KoboldEngineer::new, MobCategory.MISC).sized(0.5f, 1.48f));
-	public static final RegistryObject<EntityType<KoboldPirate>> KOBOLD_PIRATE = register("kobold_pirate", EntityType.Builder.<KoboldPirate>of(KoboldPirate::new, MobCategory.MISC).sized(0.5f, 1.48f));
+	public static final RegistryObject<EntityType<Kobold>> KOBOLD_PIRATE = register("kobold_pirate", EntityType.Builder.<Kobold>of(Kobold::new, MobCategory.MISC).sized(0.5f, 1.48f));
 	public static final RegistryObject<EntityType<KoboldCaptain>> KOBOLD_CAPTAIN = register("kobold_captain", EntityType.Builder.<KoboldCaptain>of(KoboldCaptain::new, MobCategory.MISC).sized(0.5f, 1.48f));
 	public static final RegistryObject<EntityType<KoboldChild>> KOBOLD_CHILD = register("kobold_child", EntityType.Builder.<KoboldChild>of(KoboldChild::new, MobCategory.MISC).sized(0.4f, 0.76f));
 	public static final RegistryObject<EntityType<KoboldZombie>> KOBOLD_ZOMBIE = register("kobold_zombie", EntityType.Builder.<KoboldZombie>of(KoboldZombie::new, MobCategory.MONSTER).sized(0.5f, 1.48f));

@@ -2,13 +2,11 @@ package net.salju.kobolds.init;
 
 import net.salju.kobolds.item.KoboldPotionItem;
 import net.salju.kobolds.KoboldsMod;
-
-import net.minecraftforge.registries.RegistryObject;
+import net.minecraftforge.registries.RegistryObject;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.common.ForgeSpawnEggItem;
-
-import net.minecraft.world.item.SwordItem;
+import net.minecraft.world.item.SwordItem;
 import net.minecraft.world.item.StandingAndWallBlockItem;
 import net.minecraft.world.item.SmithingTemplateItem;
 import net.minecraft.world.item.ShovelItem;
@@ -36,7 +34,6 @@ public class KoboldsItems {
 	public static final RegistryObject<Item> KOBOLD_ZOMBIE_SPAWN_EGG = REGISTRY.register("kobold_zombie_spawn_egg", () -> new ForgeSpawnEggItem(KoboldsMobs.KOBOLD_ZOMBIE, -16724788, -6684775, new Item.Properties()));
 	public static final RegistryObject<Item> KOBOLD_SKELETON_SPAWN_EGG = REGISTRY.register("kobold_skeleton_spawn_egg", () -> new ForgeSpawnEggItem(KoboldsMobs.KOBOLD_SKELETON, -3355444, -13421773, new Item.Properties()));
 	public static final RegistryObject<Item> KOBOLD_POTION = REGISTRY.register("kobold_potion", () -> new KoboldPotionItem((new Item.Properties()).stacksTo(16).rarity(Rarity.RARE)));
-	public static final RegistryObject<Item> KOBOLD_POTION_INFINITY = REGISTRY.register("kobold_potion_infinity", () -> new KoboldPotionItem((new Item.Properties()).stacksTo(1).rarity(Rarity.EPIC)));
 	public static final RegistryObject<Item> KOBOLD_SKULL = REGISTRY.register("kobold_skull", () -> new StandingAndWallBlockItem(KoboldsBlocks.KOBOLD_SKULL.get(), KoboldsBlocks.KOBOLD_SKULL_WALL.get(), new Item.Properties().rarity(Rarity.UNCOMMON), Direction.DOWN));
 	public static final RegistryObject<Item> KOBOLD_IRON_SWORD = REGISTRY.register("kobold_iron_sword", () -> new SwordItem(KoboldsItemTiers.KOBOLD, 1, -2.2F, (new Item.Properties())));
 	public static final RegistryObject<Item> KOBOLD_IRON_SHOVEL = REGISTRY.register("kobold_iron_shovel", () -> new ShovelItem(KoboldsItemTiers.KOBOLD, 0.5F, -3.0F, (new Item.Properties())));

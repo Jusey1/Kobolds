@@ -143,7 +143,7 @@ public class KoboldZombie extends Zombie {
 							capty.setCanPickUpLoot(true);
 							ForgeEventFactory.onLivingConvert(this, capty);
 						} else if (this.zomboType == 2) {
-							KoboldPirate pirate = this.convertTo(KoboldsMobs.KOBOLD_PIRATE.get(), true);
+							Kobold pirate = this.convertTo(KoboldsMobs.KOBOLD_PIRATE.get(), true);
 							pirate.setCanPickUpLoot(true);
 							ForgeEventFactory.onLivingConvert(this, pirate);
 						} else if (this.zomboType == 3) {
@@ -231,19 +231,19 @@ public class KoboldZombie extends Zombie {
 	}
 
 	public void setZombo(AbstractKoboldEntity kobold) {
-		if (kobold instanceof KoboldCaptain) {
+		if (kobold.getType() == KoboldsMobs.KOBOLD_CAPTAIN.get()) {
 			this.getEntityData().set(DATA_TYPE, "pirate_captain");
 			this.zomboType = 1;
-		} else if (kobold instanceof KoboldPirate) {
+		} else if (kobold.getType() == KoboldsMobs.KOBOLD_PIRATE.get()) {
 			this.getEntityData().set(DATA_TYPE, "pirate");
 			this.zomboType = 2;
-		} else if (kobold instanceof KoboldWarrior) {
+		} else if (kobold.getType() == KoboldsMobs.KOBOLD_WARRIOR.get()) {
 			this.getEntityData().set(DATA_TYPE, "warrior");
 			this.zomboType = 3;
-		} else if (kobold instanceof KoboldEngineer) {
+		} else if (kobold.getType() == KoboldsMobs.KOBOLD_ENGINEER.get()) {
 			this.getEntityData().set(DATA_TYPE, "engineer");
 			this.zomboType = 4;
-		} else if (kobold instanceof KoboldEnchanter) {
+		} else if (kobold.getType() == KoboldsMobs.KOBOLD_ENCHANTER.get()) {
 			this.getEntityData().set(DATA_TYPE, "enchanter");
 			this.zomboType = 5;
 		} else {

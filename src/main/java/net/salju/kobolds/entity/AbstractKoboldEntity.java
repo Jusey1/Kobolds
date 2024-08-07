@@ -51,7 +51,6 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.effect.MobEffects;
-import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.InteractionResult;
@@ -362,7 +361,7 @@ public abstract class AbstractKoboldEntity extends PathfinderMob implements Cros
 
 	@Override
 	public SoundEvent getAmbientSound() {
-		return KoboldsModSounds.KOBOLD_IDLE.get();
+		return (this.isBaby() ? KoboldsModSounds.KOBOLD_YIP.get() : KoboldsModSounds.KOBOLD_IDLE.get());
 	}
 
 	@Override
@@ -426,7 +425,7 @@ public abstract class AbstractKoboldEntity extends PathfinderMob implements Cros
 							player.getItemInHand(hand).shrink(1);
 						}
 						return InteractionResult.SUCCESS;
-					} else if (gem.is(Items.EMERALD) && (this instanceof Kobold || this instanceof KoboldPirate || this instanceof KoboldEnchanter || this instanceof KoboldEngineer)) {
+					} else if (gem.is(Items.EMERALD) && (this instanceof Kobold || this instanceof KoboldEnchanter || this instanceof KoboldEngineer)) {
 						gem.setCount(1);
 						this.setItemInHand(InteractionHand.OFF_HAND, gem);
 						if (!player.isCreative()) {
@@ -444,22 +443,18 @@ public abstract class AbstractKoboldEntity extends PathfinderMob implements Cros
 	public SpawnGroupData finalizeSpawn(ServerLevelAccessor world, DifficultyInstance difficulty, MobSpawnType reason, @Nullable SpawnGroupData data, @Nullable CompoundTag tag) {
 		this.populateDefaultEquipmentSlots(world.getRandom(), difficulty);
 		this.populateDefaultEquipmentEnchantments(world.getRandom(), difficulty);
-		if (this instanceof KoboldRascal rascal) {
-			rascal.setDespawnDelay(24000);
-			rascal.addEffect(new MobEffectInstance(MobEffects.INVISIBILITY, rascal.getDespawnDelay(), 0));
-		}
 		return super.finalizeSpawn(world, difficulty, reason, data, tag);
 	}
 
 	@Override
 	protected void populateDefaultEquipmentSlots(RandomSource randy, DifficultyInstance souls) {
-		if (this instanceof KoboldWarrior) {
+		if (this.getType() == KoboldsMobs.KOBOLD_WARRIOR.get()) {
 			this.setItemSlot(EquipmentSlot.MAINHAND, new ItemStack(KoboldsItems.KOBOLD_IRON_AXE.get()));
-		} else if (this instanceof KoboldRascal || this instanceof KoboldCaptain) {
+		} else if (this.getType() == KoboldsMobs.KOBOLD_RASCAL.get() || this.getType() == KoboldsMobs.KOBOLD_CAPTAIN.get()) {
 			this.setItemSlot(EquipmentSlot.MAINHAND, new ItemStack(KoboldsItems.KOBOLD_IRON_SWORD.get()));
-		} else if (this instanceof KoboldEngineer) {
+		} else if (this.getType() == KoboldsMobs.KOBOLD_ENGINEER.get()) {
 			this.setItemSlot(EquipmentSlot.MAINHAND, new ItemStack(Items.CROSSBOW));
-		} else if (this instanceof Kobold || this instanceof KoboldPirate) {
+		} else if (this.getType() == KoboldsMobs.KOBOLD.get() || this.getType() == KoboldsMobs.KOBOLD_PIRATE.get()) {
 			if (Math.random() >= 0.6) {
 				this.setItemSlot(EquipmentSlot.MAINHAND, new ItemStack(Items.CROSSBOW));
 			} else {
@@ -467,9 +462,9 @@ public abstract class AbstractKoboldEntity extends PathfinderMob implements Cros
 			}
 		}
 		this.setDropChance(EquipmentSlot.MAINHAND, 0.0F);
-		if (this instanceof KoboldWarrior) {
+		if (this.getType() == KoboldsMobs.KOBOLD_WARRIOR.get()) {
 			this.setItemSlot(EquipmentSlot.OFFHAND, new ItemStack(Items.SHIELD));
-		} else if (this instanceof KoboldPirate) {
+		} else if (this.getType() == KoboldsMobs.KOBOLD_PIRATE.get()) {
 			if (Math.random() >= 0.75) {
 				this.primary = this.getMainHandItem();
 				this.setItemSlot(EquipmentSlot.OFFHAND, new ItemStack(Items.TRIDENT));

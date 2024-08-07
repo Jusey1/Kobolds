@@ -69,16 +69,16 @@ public class KoboldChild extends AbstractKoboldEntity {
 				if (this.level() instanceof ServerLevel lvl) {
 					if (this.level().getBiome(pos).is(BiomeTags.IS_JUNGLE)) {
 						if (Math.random() < 0.06) {
-							KoboldCaptain kobold = KoboldsMobs.KOBOLD_CAPTAIN.get().spawn(lvl, pos, MobSpawnType.BREEDING);
+							KoboldsMobs.KOBOLD_CAPTAIN.get().spawn(lvl, pos, MobSpawnType.BREEDING);
 						} else {
-							KoboldPirate kobold = KoboldsMobs.KOBOLD_PIRATE.get().spawn(lvl, pos, MobSpawnType.BREEDING);
+							KoboldsMobs.KOBOLD_PIRATE.get().spawn(lvl, pos, MobSpawnType.BREEDING);
 						}
 					} else if (Math.random() > 0.95) {
-						KoboldEngineer kobold = KoboldsMobs.KOBOLD_ENGINEER.get().spawn(lvl, pos, MobSpawnType.BREEDING);
+						KoboldsMobs.KOBOLD_ENGINEER.get().spawn(lvl, pos, MobSpawnType.BREEDING);
 					} else if (Math.random() < 0.1) {
-						KoboldEnchanter kobold = KoboldsMobs.KOBOLD_ENCHANTER.get().spawn(lvl, pos, MobSpawnType.BREEDING);
+						KoboldsMobs.KOBOLD_ENCHANTER.get().spawn(lvl, pos, MobSpawnType.BREEDING);
 					} else {
-						Kobold kobold = KoboldsMobs.KOBOLD.get().spawn(lvl, pos, MobSpawnType.BREEDING);
+						KoboldsMobs.KOBOLD.get().spawn(lvl, pos, MobSpawnType.BREEDING);
 					}
 				}
 			}

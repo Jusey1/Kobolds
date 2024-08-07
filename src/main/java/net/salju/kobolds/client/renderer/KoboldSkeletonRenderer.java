@@ -1,5 +1,6 @@
 package net.salju.kobolds.client.renderer;
 
+import net.salju.kobolds.init.KoboldsModels;
 import net.salju.kobolds.entity.KoboldSkeleton;
 import net.salju.kobolds.client.model.SkeleboldModel;
 import net.salju.kobolds.client.model.KoboldArmorModel;
@@ -13,9 +14,9 @@ import net.minecraft.client.renderer.MultiBufferSource;
 
 public class KoboldSkeletonRenderer extends MobRenderer<KoboldSkeleton, SkeleboldModel<KoboldSkeleton>> {
 	public KoboldSkeletonRenderer(EntityRendererProvider.Context context) {
-		super(context, new SkeleboldModel(context.bakeLayer(SkeleboldModel.SKELEBOLD_MODEL)), 0.36f);
+		super(context, new SkeleboldModel(context.bakeLayer(KoboldsModels.SKELEBOLD)), 0.36f);
 		this.addLayer(new ItemInHandLayer<KoboldSkeleton, SkeleboldModel<KoboldSkeleton>>(this, context.getItemInHandRenderer()));
-		this.addLayer(new HumanoidArmorLayer(this, new KoboldArmorModel(context.bakeLayer(KoboldArmorModel.KOBOLD_ARMOR_INNER_MODEL)), new KoboldArmorModel(context.bakeLayer(KoboldArmorModel.KOBOLD_ARMOR_OUTER_MODEL)), context.getModelManager()));
+		this.addLayer(new HumanoidArmorLayer(this, new KoboldArmorModel(context.bakeLayer(KoboldsModels.KOBOLD_ARMOR_INNER)), new KoboldArmorModel(context.bakeLayer(KoboldsModels.KOBOLD_ARMOR_OUTER)), context.getModelManager()));
 	}
 
 	@Override

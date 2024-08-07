@@ -21,4 +21,5 @@ public class KoboldsModSounds {
 	public static final RegistryObject<SoundEvent> KOBOLD_HURT = REGISTRY.register("kobold_hurt", () -> SoundEvent.createVariableRangeEvent(new ResourceLocation("kobolds", "kobold_hurt")));
 	public static final RegistryObject<SoundEvent> KOBOLD_IDLE = REGISTRY.register("kobold_idle", () -> SoundEvent.createVariableRangeEvent(new ResourceLocation("kobolds", "kobold_idle")));
 	public static final RegistryObject<SoundEvent> MUSIC_KOBBLESTONE = REGISTRY.register("music_kobblestone", () -> SoundEvent.createVariableRangeEvent(new ResourceLocation("kobolds", "music_kobblestone")));
+	public static final RegistryObject<SoundEvent> KOBOLD_YIP = REGISTRY.register("kobold_yip", () -> SoundEvent.createVariableRangeEvent(new ResourceLocation("kobolds", "kobold_yip")));
 }

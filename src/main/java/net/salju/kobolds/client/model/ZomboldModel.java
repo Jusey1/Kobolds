@@ -4,20 +4,16 @@ import net.minecraft.world.item.TridentItem;
 import net.minecraft.world.entity.monster.Zombie;
 import net.minecraft.world.entity.HumanoidArm;
 import net.minecraft.util.Mth;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.client.model.geom.builders.PartDefinition;
 import net.minecraft.client.model.geom.builders.MeshDefinition;
 import net.minecraft.client.model.geom.builders.LayerDefinition;
 import net.minecraft.client.model.geom.builders.CubeDeformation;
 import net.minecraft.client.model.geom.ModelPart;
-import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.HumanoidModel;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.blaze3d.vertex.PoseStack;
 
 public class ZomboldModel<T extends Zombie> extends HumanoidModel<T> {
-	public static final ModelLayerLocation ZOMBOLD_MODEL = new ModelLayerLocation(new ResourceLocation("kobolds", "zombold"), "main");
-
 	public ZomboldModel(ModelPart root) {
 		super(root);
 	}

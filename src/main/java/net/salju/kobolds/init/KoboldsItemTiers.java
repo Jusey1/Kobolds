@@ -1,12 +1,10 @@
 package net.salju.kobolds.init;
 
 import org.jetbrains.annotations.NotNull;
-
-import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.Tier;
 import net.minecraft.world.item.Items;
-
-import java.util.function.Supplier;
+import java.util.function.Supplier;
 
 public enum KoboldsItemTiers implements Tier {
 	KOBOLD(2, 1096, 4.0F, 3.0F, 14, () -> Ingredient.of(Items.IRON_INGOT));

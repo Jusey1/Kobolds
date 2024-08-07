@@ -3,14 +3,12 @@ package net.salju.kobolds.init;
 import net.salju.kobolds.client.renderer.*;
 import net.salju.kobolds.client.model.KoboldSkullModel;
 import net.salju.kobolds.block.KoboldSkull;
-
-import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
+import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.api.distmarker.Dist;
-
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.client.renderer.blockentity.SkullBlockRenderer;
 
 @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
@@ -32,7 +30,7 @@ public class KoboldsRenderers {
 
 	@SubscribeEvent
 	public static void registerSkullRenderers(EntityRenderersEvent.CreateSkullModels event) {
-		event.registerSkullModel(KoboldSkull.Types.SKELEBOLD, new KoboldSkullModel(event.getEntityModelSet().bakeLayer(KoboldSkullModel.KOBOLD_SKULL_MODEL)));
+		event.registerSkullModel(KoboldSkull.Types.SKELEBOLD, new KoboldSkullModel(event.getEntityModelSet().bakeLayer(KoboldsModels.KOBOLD_SKULL)));
 	}
 
 	@SubscribeEvent

@@ -1,11 +1,9 @@
 package net.salju.kobolds.init;
 
 import net.salju.kobolds.KoboldsMod;
-
-import net.minecraftforge.registries.RegistryObject;
+import net.minecraftforge.registries.RegistryObject;
 import net.minecraftforge.registries.DeferredRegister;
-
-import net.minecraft.world.level.block.entity.BannerPattern;
+import net.minecraft.world.level.block.entity.BannerPattern;
 import net.minecraft.core.registries.Registries;
 
 public class KoboldsBanners {
