@@ -1,0 +1,173 @@
+{
+  "kobold_trade": {
+    "subtitle": "subtitles.kobold_trade",
+    "sounds": [
+      {
+        "name": "kobolds:kobolds/kobold_trade_1",
+        "stream": false
+      },
+      {
+        "name": "kobolds:kobolds/kobold_trade_2",
+        "stream": false
+      },
+      {
+        "name": "kobolds:kobolds/kobold_trade_3",
+        "stream": false
+      }
+    ]
+  },
+  "kobold_purr": {
+    "subtitle": "subtitles.kobold_purr",
+    "sounds": [
+      {
+        "name": "kobolds:kobolds/kobold_purr_1",
+        "stream": false
+      },
+      {
+        "name": "kobolds:kobolds/kobold_purr_2",
+        "stream": false
+      },
+      {
+        "name": "kobolds:kobolds/kobold_purr_3",
+        "stream": false
+      },
+      {
+        "name": "kobolds:kobolds/kobold_purr_4",
+        "stream": false
+      },
+      {
+        "name": "kobolds:kobolds/kobold_purr_5",
+        "stream": false
+      },
+      {
+        "name": "kobolds:kobolds/kobold_purr_6",
+        "stream": false
+      }
+    ]
+  },
+  "kobold_death": {
+    "subtitle": "subtitles.kobold_death",
+    "sounds": [
+      {
+        "name": "kobolds:kobolds/kobold_death_1",
+        "stream": false
+      },
+      {
+        "name": "kobolds:kobolds/kobold_death_2",
+        "stream": false
+      },
+      {
+        "name": "kobolds:kobolds/kobold_death_3",
+        "stream": false
+      }
+    ]
+  },
+  "kobold_hurt": {
+    "subtitle": "subtitles.kobold_hurt",
+    "sounds": [
+      {
+        "name": "kobolds:kobolds/kobold_hit_1",
+        "stream": false
+      },
+      {
+        "name": "kobolds:kobolds/kobold_hit_2",
+        "stream": false
+      },
+      {
+        "name": "kobolds:kobolds/kobold_hit_3",
+        "stream": false
+      },
+      {
+        "name": "kobolds:kobolds/kobold_hit_4",
+        "stream": false
+      },
+      {
+        "name": "kobolds:kobolds/kobold_hit_5",
+        "stream": false
+      }
+    ]
+  },
+  "kobold_idle": {
+    "subtitle": "subtitles.kobold_idle",
+    "sounds": [
+      {
+        "name": "kobolds:kobolds/kobold_idle_1",
+        "stream": false
+      },
+      {
+        "name": "kobolds:kobolds/kobold_idle_2",
+        "stream": false
+      },
+      {
+        "name": "kobolds:kobolds/kobold_idle_3",
+        "stream": false
+      },
+      {
+        "name": "kobolds:kobolds/kobold_idle_4",
+        "stream": false
+      },
+      {
+        "name": "kobolds:kobolds/kobold_idle_5",
+        "stream": false
+      },
+      {
+        "name": "kobolds:kobolds/kobold_idle_6",
+        "stream": false
+      }
+    ]
+  },
+  "music_kobblestone": {
+    "subtitle": "subtitles.music_kobblestone",
+    "sounds": [
+      {
+        "name": "kobolds:music_discs/kobblestone",
+        "stream": true
+      }
+    ]
+  },
+  "kobold_yip": {
+    "subtitle": "subtitles.kobold_yip",
+    "sounds": [
+      {
+        "name": "kobolds:kobolds/kobold_yip_10",
+        "stream": false
+      },
+      {
+        "name": "kobolds:kobolds/kobold_yip_09",
+        "stream": false
+      },
+      {
+        "name": "kobolds:kobolds/kobold_yip_08",
+        "stream": false
+      },
+      {
+        "name": "kobolds:kobolds/kobold_yip_07",
+        "stream": false
+      },
+      {
+        "name": "kobolds:kobolds/kobold_yip_06",
+        "stream": false
+      },
+      {
+        "name": "kobolds:kobolds/kobold_yip_05",
+        "stream": false
+      },
+      {
+        "name": "kobolds:kobolds/kobold_yip_04",
+        "stream": false
+      },
+      {
+        "name": "kobolds:kobolds/kobold_yip_03",
+        "stream": false
+      },
+      {
+        "name": "kobolds:kobolds/kobold_yip_02",
+        "stream": false
+      },
+      {
+        "name": "kobolds:kobolds/kobold_yip_01",
+        "stream": false
+      }
+    ]
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "replace": false,
+  "values": [
+    "#minecraft:raiders",
+    "minecraft:skeleton",
+    "minecraft:stray",
+    "minecraft:bogged",
+    "minecraft:spider",
+    "minecraft:cave_spider",
+    "minecraft:creaking",
+    "minecraft:creaking_transient",
+    "#kobolds:normal_targets",
+    "kobolds:kobold_skeleton"
+  ]
+}

@@ -1,0 +1,8 @@
+{
+  "comparator_output": 9,
+  "description": {
+    "translate": "item.kobolds.music_disc_kobblestone.desc"
+  },
+  "length_in_seconds": 162,
+  "sound_event": "kobolds:music_kobblestone"
+}

@@ -1,0 +1,10 @@
+{
+  "replace": false,
+  "values": [
+    "kobolds:kobold_iron_sword",
+    "kobolds:kobold_iron_pickaxe",
+    "kobolds:kobold_iron_axe",
+    "kobolds:kobold_iron_shovel",
+    "kobolds:kobold_iron_hoe"
+  ]
+}
