@@ -52,7 +52,7 @@ public class KoboldRascal extends AbstractKoboldEntity {
 					ItemStack stack = new ItemStack(Items.BUNDLE);
 					if (Math.random() >= 0.85) {
 						stack = new ItemStack(KoboldsItems.KOBOLD_IRON_PICKAXE.get());
-						stack.setDamageValue(Mth.nextInt(this.getRandom(), 28, 216));
+						stack.setDamageValue(Mth.nextInt(this.getRandom(), 52, 716));
 						EnchantmentHelper.enchantItem(this.getRandom(), stack, Mth.nextInt(this.getRandom(), 18, 32), this.level().registryAccess(), Optional.empty());
 					} else {
 						List<ItemStack> data = new ArrayList<>();

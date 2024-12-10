@@ -1,6 +1,5 @@
 package net.salju.kobolds.client.model;
 
-import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.salju.kobolds.init.KoboldsTags;
 import net.salju.kobolds.client.renderer.AbstractKoboldState;
 import net.minecraft.world.entity.HumanoidArm;
@@ -70,19 +69,7 @@ public class KoboldModel<T extends AbstractKoboldState> extends HumanoidModel<T>
 			this.leftLeg.yRot = -0.2618F;
 		}
 		if (!kobold.getMainHandItem().isEmpty()) {
-			if (kobold.getMainHandItem().is(Items.POTION)) {
-				if (kobold.isLeftHanded) {
-					this.leftArm.xRot = -0.8727F;
-					this.leftArm.yRot = 0.0873F;
-					this.head.xRot = -0.2618F;
-					this.head.xRot = 0.1745F;
-				} else {
-					this.rightArm.xRot = -0.8727F;
-					this.rightArm.yRot = 0.0873F;
-					this.head.xRot = -0.2618F;
-					this.head.xRot = 0.1745F;
-				}
-			} else if (kobold.isAggressive) {
+			if (kobold.isAggressive) {
 				if (kobold.isLeftHanded) {
 					if (kobold.getMainHandItem().getItem() instanceof CrossbowItem || kobold.getMainHandItem().getItem() instanceof BowItem || kobold.getMainHandItem().is(KoboldsTags.RANGED)) {
 						if (kobold.isCharging) {
@@ -96,6 +83,9 @@ public class KoboldModel<T extends AbstractKoboldState> extends HumanoidModel<T>
 							this.rightArm.xRot = -1.3963F;
 							this.rightArm.yRot = -0.3054F;
 						}
+					} else if (kobold.getMainHandItem().getItem() instanceof TridentItem) {
+						this.leftArm.xRot = 2.8798F;
+						this.rightArm.xRot = 0.0F;
 					} else {
 						this.leftArm.xRot = -2.0944F;
 						this.leftArm.yRot = -0.1745F;
@@ -113,6 +103,9 @@ public class KoboldModel<T extends AbstractKoboldState> extends HumanoidModel<T>
 							this.leftArm.xRot = -1.3963F;
 							this.leftArm.yRot = 0.3054F;
 						}
+					} else if (kobold.getMainHandItem().getItem() instanceof TridentItem) {
+						this.rightArm.xRot = 2.8798F;
+						this.leftArm.xRot = 0.0F;
 					} else {
 						this.rightArm.xRot = -2.0944F;
 						this.rightArm.yRot = 0.1745F;
@@ -121,17 +114,7 @@ public class KoboldModel<T extends AbstractKoboldState> extends HumanoidModel<T>
 			}
 		}
 		if (!kobold.getOffhandItem().isEmpty()) {
-			if (kobold.getOffhandItem().getItem() instanceof TridentItem) {
-				if (kobold.isAggressive) {
-					if (kobold.isLeftHanded) {
-						this.rightArm.xRot = 2.8798F;
-						this.leftArm.xRot = 0.0F;
-					} else {
-						this.leftArm.xRot = 2.8798F;
-						this.rightArm.xRot = 0.0F;
-					}
-				}
-			} else if (kobold.getOffhandItem().getItem() instanceof ShieldItem) {
+			if (kobold.getOffhandItem().getItem() instanceof ShieldItem) {
 				if (kobold.isBlocking) {
 					if (kobold.isLeftHanded) {
 						this.rightArm.xRot = -0.6981F;

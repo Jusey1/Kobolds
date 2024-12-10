@@ -16,7 +16,7 @@ public class KoboldShieldGoal extends Goal {
 
 	@Override
 	public boolean canUse() {
-		return kobold.getOffhandItem().getItem() instanceof ShieldItem && raiseShield() && (kobold.getCD() == 0);
+		return kobold.getOffhandItem().getItem() instanceof ShieldItem && raiseShield();
 	}
 
 	@Override

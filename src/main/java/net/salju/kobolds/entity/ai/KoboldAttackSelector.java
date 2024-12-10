@@ -6,7 +6,6 @@ import net.salju.kobolds.entity.AbstractKoboldEntity;
 import net.minecraft.world.entity.ai.targeting.TargetingConditions;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.server.level.ServerLevel;
-
 import javax.annotation.Nullable;
 
 public class KoboldAttackSelector implements TargetingConditions.Selector {
