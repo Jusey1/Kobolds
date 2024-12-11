@@ -4,9 +4,7 @@ import net.salju.kobolds.init.KoboldsTags;
 import net.salju.kobolds.entity.ai.*;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.item.CrossbowItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 
@@ -28,19 +26,7 @@ public class KoboldEngineer extends AbstractKoboldEntity {
 	}
 
 	@Override
-	protected boolean canReplaceCurrentItem(ItemStack drop, ItemStack hand, EquipmentSlot slot) {
-		if (drop.is(KoboldsTags.RANGED)) {
-			if (drop.is(hand.getItem())) {
-				return this.canReplaceEqualItem(drop, hand);
-			} else {
-				return !hand.is(KoboldsTags.RANGED);
-			}
-		}
-		return super.canReplaceCurrentItem(drop, hand, slot);
-	}
-
-	@Override
 	public boolean isPreferredWeapon(ItemStack stack) {
-		return stack.getItem() instanceof CrossbowItem;
+		return stack.is(KoboldsTags.ENGI);
 	}
 }

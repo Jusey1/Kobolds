@@ -18,4 +18,7 @@ public class KoboldsTags {
 	public static final TagKey<Biome> BIOMES = TagKey.create(Registries.BIOME, ResourceLocation.fromNamespaceAndPath(Kobolds.MODID, "kobold_den_biomes"));
 	public static final TagKey<Enchantment> ENCHS = TagKey.create(Registries.ENCHANTMENT, ResourceLocation.fromNamespaceAndPath(Kobolds.MODID, "kobold_preferred"));
 	public static final TagKey<Item> RANGED = ItemTags.create(ResourceLocation.fromNamespaceAndPath(Kobolds.MODID, "usable_ranged_weapons"));
+	public static final TagKey<Item> BASIC = ItemTags.create(ResourceLocation.fromNamespaceAndPath(Kobolds.MODID, "kobold_weapons"));
+	public static final TagKey<Item> WAR = ItemTags.create(ResourceLocation.fromNamespaceAndPath(Kobolds.MODID, "kobold_warrior_weapons"));
+	public static final TagKey<Item> ENGI = ItemTags.create(ResourceLocation.fromNamespaceAndPath(Kobolds.MODID, "kobold_engineer_weapons"));
 }

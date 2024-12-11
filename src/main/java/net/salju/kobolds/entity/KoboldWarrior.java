@@ -1,10 +1,10 @@
 package net.salju.kobolds.entity;
 
+import net.salju.kobolds.init.KoboldsTags;
 import net.salju.kobolds.entity.ai.*;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.item.AxeItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 
@@ -28,6 +28,6 @@ public class KoboldWarrior extends AbstractKoboldEntity {
 
 	@Override
 	public boolean isPreferredWeapon(ItemStack stack) {
-		return stack.getItem() instanceof AxeItem;
+		return stack.is(KoboldsTags.WAR);
 	}
 }

@@ -37,7 +37,7 @@ public class KoboldShieldGoal extends Goal {
 	}
 
 	protected boolean raiseShield() {
-		if (kobold.getTarget() != null && kobold.getTarget().isAlive()) {
+		if (kobold.getTarget() != null && kobold.getTarget().isAlive() && this.kobold.getCD() <= 0) {
 			LivingEntity target = kobold.getTarget();
             return (target instanceof RangedAttackMob && kobold.distanceTo(target) >= 0.2D) || (kobold.distanceTo(target) >= 0.2D && kobold.distanceTo(target) <= 5.2D);
 		}

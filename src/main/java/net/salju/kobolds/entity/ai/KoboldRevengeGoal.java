@@ -7,14 +7,14 @@ import net.minecraft.world.Difficulty;
 public class KoboldRevengeGoal extends HurtByTargetGoal {
 	public KoboldRevengeGoal(AbstractKoboldEntity kobold) {
 		super(kobold);
-		this.setAlertOthers(new Class[]{AbstractKoboldEntity.class});
+		this.setAlertOthers(AbstractKoboldEntity.class);
 	}
 
 	@Override
 	public void start() {
 		super.start();
 		for (AbstractKoboldEntity kobolds : this.mob.level().getEntitiesOfClass(AbstractKoboldEntity.class, this.mob.getBoundingBox().inflate(32.0D), kobold -> (kobold.getTarget() == null || !kobold.getTarget().isAlive()))) {
-			if (!(this.mob.level().getDifficulty() == Difficulty.PEACEFUL)) {
+			if (this.mob.level().getDifficulty() != Difficulty.PEACEFUL) {
 				kobolds.setTarget(this.mob.getTarget());
 			}
 		}

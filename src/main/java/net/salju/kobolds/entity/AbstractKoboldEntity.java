@@ -183,8 +183,7 @@ public abstract class AbstractKoboldEntity extends PathfinderMob implements Cros
 			flag = this.canReplaceCurrentItem(stack, current, slot);
 		}
 		if (flag && this.canHoldItem(stack)) {
-			double d0 = this.getEquipmentDropChance(slot);
-			if (!current.isEmpty() && (double) Math.max(this.random.nextFloat() - 0.1F, 0.0F) < d0) {
+			if (!current.isEmpty() && !(stack.getItem() instanceof TridentItem) && (double) Math.max(this.random.nextFloat() - 0.1F, 0.0F) < this.getEquipmentDropChance(slot)) {
 				this.spawnAtLocation(lvl, current);
 			}
 			if (stack.is(Items.EMERALD) && stack.getCount() > 1) {
@@ -207,31 +206,30 @@ public abstract class AbstractKoboldEntity extends PathfinderMob implements Cros
 	protected boolean canReplaceCurrentItem(ItemStack drop, ItemStack hand, EquipmentSlot slot) {
 		if (EnchantmentHelper.hasTag(drop, EnchantmentTags.CURSE)) {
 			return false;
-		} else if (this.isPreferredWeapon(drop)) {
-			if (this.isPreferredWeapon(hand)) {
-				if (drop.getItem() instanceof TridentItem) {
-					if (hand.getItem() instanceof TridentItem && this.canReplaceEqualItem(drop, hand)) {
-						this.trident = drop;
-						return true;
-					} else if (this.trident.isEmpty()) {
-						this.primary = this.getMainHandItem();
-						this.trident = drop;
-						this.setItemInHand(InteractionHand.MAIN_HAND, ItemStack.EMPTY);
-						return true;
-					}
-				} else {
-					return this.canReplaceEqualItem(drop, hand);
-				}
+		} else if (drop.getItem() instanceof TridentItem) {
+			if (hand.getItem() instanceof TridentItem && this.canReplaceEqualItem(drop, hand)) {
+				this.trident = drop;
+				return true;
+			} else if (this.trident.isEmpty() && hand.getItem() instanceof SwordItem) {
+				this.primary = this.getMainHandItem();
+				this.trident = drop;
+				return true;
 			} else {
-				return !hand.is(KoboldsTags.RANGED);
+				return false;
+			}
+		} else if (this.isPreferredWeapon(drop)) {
+			if (hand.getItem() instanceof TridentItem) {
+				return false;
+			} else if (this.isPreferredWeapon(hand)) {
+				return this.canReplaceEqualItem(drop, hand);
+			} else {
+				return true;
 			}
 		} else if (this.isPreferredWeapon(hand)) {
 			return false;
 		} else if (drop.getItem() instanceof BowItem) {
-			if (hand.getItem() instanceof BowItem) {
+			if (hand.getItem() instanceof BowItem || hand.getItem() instanceof CrossbowItem) {
 				return this.canReplaceEqualItem(drop, hand);
-			} else if (hand.isEmpty() || (drop.isEnchanted() && hand.getItem() instanceof CrossbowItem && !hand.isEnchanted())) {
-				return true;
 			}
 		} else if (drop.getItem() instanceof ShieldItem) {
 			if (hand.getItem() instanceof ShieldItem) {
@@ -280,33 +278,10 @@ public abstract class AbstractKoboldEntity extends PathfinderMob implements Cros
 		return super.canReplaceEqualItem(drop, hand);
 	}
 
+	@Override
 	public void aiStep() {
 		super.aiStep();
 		this.updateSwingTime();
-	}
-
-	public void setCD(int i) {
-		this.cooldown = i;
-	}
-
-	public void setBreed(int i) {
-		this.breed = i;
-	}
-
-	public void setPotionCD(int i) {
-		this.potion = i;
-	}
-
-	public boolean isDiamond() {
-		return this.getEntityData().get(DATA_DIAMOND_EYES);
-	}
-
-	public int getBreed() {
-		return this.breed;
-	}
-
-	public int getPotionCD() {
-		return this.potion;
 	}
 
 	@Override
@@ -486,6 +461,9 @@ public abstract class AbstractKoboldEntity extends PathfinderMob implements Cros
 				this.givePotion(PotionContents.createItemStack(Items.POTION, Potions.LONG_WATER_BREATHING), 120);
 			}
 		}
+		if (this.isBlocking() && source.getDirectEntity() instanceof LivingEntity atk && atk.canDisableShield()) {
+			this.setCD(100);
+		}
 		return (!(source.getEntity() instanceof AbstractKoboldEntity) && !source.is(DamageTypes.CAMPFIRE) && super.hurtServer(lvl, source, amount));
 	}
 
@@ -520,8 +498,36 @@ public abstract class AbstractKoboldEntity extends PathfinderMob implements Cros
 		}
 	}
 
+	public void setCD(int i) {
+		this.cooldown = i;
+	}
+
+	public void setBreed(int i) {
+		this.breed = i;
+	}
+
+	public void setPotionCD(int i) {
+		this.potion = i;
+	}
+
+	public boolean isDiamond() {
+		return this.getEntityData().get(DATA_DIAMOND_EYES);
+	}
+
+	public int getCD() {
+		return this.cooldown;
+	}
+
+	public int getBreed() {
+		return this.breed;
+	}
+
+	public int getPotionCD() {
+		return this.potion;
+	}
+
 	public boolean isPreferredWeapon(ItemStack stack) {
-		return stack.getItem() instanceof SwordItem;
+		return stack.is(KoboldsTags.BASIC);
 	}
 
 	public static List<ItemStack> getTradeItems(AbstractKoboldEntity kobold, String table) {
