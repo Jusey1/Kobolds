@@ -28,7 +28,7 @@ public class KoboldSpecialRangeGoal<T extends AbstractKoboldEntity & RangedAttac
 
 	@Override
 	public boolean canUse() {
-		return (kobold.getTarget() == null || !kobold.getTarget().isAlive()) ? false : this.isHoldingWeapon();
+		return kobold.getTarget() != null && kobold.getTarget().isAlive() && this.isHoldingWeapon();
 	}
 
 	@Override

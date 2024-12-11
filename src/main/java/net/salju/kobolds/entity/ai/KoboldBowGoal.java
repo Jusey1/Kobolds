@@ -20,7 +20,7 @@ public class KoboldBowGoal<T extends AbstractKoboldEntity & RangedAttackMob> ext
 
 	@Override
 	public boolean canUse() {
-		return (kobold.getTarget() == null || !kobold.getTarget().isAlive()) ? false : this.isHoldingBow();
+		return kobold.getTarget() != null && kobold.getTarget().isAlive() && this.isHoldingBow();
 	}
 
 	@Override

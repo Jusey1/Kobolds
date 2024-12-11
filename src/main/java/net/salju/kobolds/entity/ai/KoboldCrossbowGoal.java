@@ -127,7 +127,7 @@ public class KoboldCrossbowGoal<T extends AbstractKoboldEntity & RangedAttackMob
 		return this.crossbowState == KoboldCrossbowGoal.CrossbowState.UNCHARGED;
 	}
 
-	static enum CrossbowState {
+	enum CrossbowState {
 		UNCHARGED, CHARGING, CHARGED, READY_TO_ATTACK;
 	}
 }

@@ -1,10 +1,12 @@
 package net.salju.kobolds.entity;
 
 import net.salju.kobolds.entity.ai.*;
-import net.minecraft.world.level.Level;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TridentItem;
+import net.minecraft.world.level.Level;
 
 public class KoboldCaptain extends AbstractKoboldEntity {
 	public KoboldCaptain(EntityType<KoboldCaptain> type, Level world) {
@@ -23,5 +25,10 @@ public class KoboldCaptain extends AbstractKoboldEntity {
 		this.goalSelector.addGoal(1, new KoboldTradeGoal(this, "gameplay/captain_loot"));
 		this.goalSelector.addGoal(2, new KoboldMeleeGoal(this, 1.2D, false));
 		this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, LivingEntity.class, 12, true, false, new KoboldAttackSelector(this)));
+	}
+
+	@Override
+	public boolean isPreferredWeapon(ItemStack stack) {
+		return stack.getItem() instanceof TridentItem;
 	}
 }

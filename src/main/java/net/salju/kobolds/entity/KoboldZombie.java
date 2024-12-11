@@ -185,13 +185,14 @@ public class KoboldZombie extends Zombie {
 
 	@Override
 	protected void populateDefaultEquipmentSlots(RandomSource randy, DifficultyInstance souls) {
-		if (this.getZomboType() == "warrior") {
+		if (this.getZomboType().equals("warrior")) {
 			this.setItemSlot(EquipmentSlot.MAINHAND, new ItemStack(KoboldsItems.KOBOLD_IRON_AXE.get()));
-		} else if (this.getZomboType() == "pirate_captain") {
+			this.setItemSlot(EquipmentSlot.OFFHAND, new ItemStack(Items.SHIELD));
+		} else if (this.getZomboType().equals("pirate_captain")) {
 			this.setItemSlot(EquipmentSlot.MAINHAND, new ItemStack(KoboldsItems.KOBOLD_IRON_SWORD.get()));
-		} else if (this.getZomboType() == "engineer") {
+		} else if (this.getZomboType().equals("engineer")) {
 			this.setItemSlot(EquipmentSlot.MAINHAND, new ItemStack(Items.CROSSBOW));
-		} else if (this.getZomboType() == "base" || this.getZomboType() == "pirate") {
+		} else if (this.getZomboType().equals("base") || this.getZomboType().equals("pirate")) {
 			if (Math.random() >= 0.6) {
 				this.setItemSlot(EquipmentSlot.MAINHAND, new ItemStack(Items.CROSSBOW));
 			} else {
@@ -199,9 +200,6 @@ public class KoboldZombie extends Zombie {
 			}
 		}
 		this.setDropChance(EquipmentSlot.MAINHAND, 0.0F);
-		if (this.getZomboType() == "warrior") {
-			this.setItemSlot(EquipmentSlot.OFFHAND, new ItemStack(Items.SHIELD));
-		}
 		this.setDropChance(EquipmentSlot.OFFHAND, 0.0F);
 	}
 

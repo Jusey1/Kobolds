@@ -1,13 +1,12 @@
 package net.salju.kobolds.entity;
 
 import net.salju.kobolds.entity.ai.*;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.item.SwordItem;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
-import net.minecraft.world.entity.EquipmentSlot;
-import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.AxeItem;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 
 public class KoboldWarrior extends AbstractKoboldEntity {
 	public KoboldWarrior(EntityType<KoboldWarrior> type, Level world) {
@@ -28,10 +27,7 @@ public class KoboldWarrior extends AbstractKoboldEntity {
 	}
 
 	@Override
-	protected boolean canReplaceCurrentItem(ItemStack drop, ItemStack hand, EquipmentSlot slot) {
-		if (drop.getItem() instanceof SwordItem) {
-			return false;
-		}
-		return super.canReplaceCurrentItem(drop, hand, slot);
+	public boolean isPreferredWeapon(ItemStack stack) {
+		return stack.getItem() instanceof AxeItem;
 	}
 }

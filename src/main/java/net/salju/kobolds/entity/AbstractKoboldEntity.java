@@ -6,55 +6,60 @@ import net.salju.kobolds.init.KoboldsMobs;
 import net.salju.kobolds.init.KoboldsItems;
 import net.salju.kobolds.init.KoboldsTags;
 import net.neoforged.neoforge.event.EventHooks;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Holder;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.tags.EnchantmentTags;
+import net.minecraft.util.Mth;
+import net.minecraft.util.RandomSource;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.damagesource.DamageTypes;
+import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
+import net.minecraft.world.entity.ai.goal.FloatGoal;
+import net.minecraft.world.entity.ai.goal.LookAtPlayerGoal;
+import net.minecraft.world.entity.ai.goal.OpenDoorGoal;
+import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
+import net.minecraft.world.entity.ai.goal.RandomStrollGoal;
+import net.minecraft.world.entity.ai.navigation.GroundPathNavigation;
+import net.minecraft.world.entity.ai.targeting.TargetingConditions;
+import net.minecraft.world.entity.monster.CrossbowAttackMob;
+import net.minecraft.world.entity.monster.RangedAttackMob;
+import net.minecraft.world.entity.monster.Zombie;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.projectile.AbstractArrow;
+import net.minecraft.world.entity.projectile.ProjectileUtil;
+import net.minecraft.world.entity.projectile.ThrownTrident;
+import net.minecraft.world.entity.*;
+import net.minecraft.world.item.alchemy.PotionContents;
+import net.minecraft.world.item.alchemy.Potions;
+import net.minecraft.world.item.enchantment.Enchantment;
+import net.minecraft.world.item.enchantment.EnchantmentHelper;
+import net.minecraft.world.item.enchantment.ItemEnchantments;
+import net.minecraft.world.item.*;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
 import net.minecraft.world.level.storage.loot.LootParams;
-import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.item.*;
-import net.minecraft.world.item.alchemy.PotionContents;
-import net.minecraft.world.item.alchemy.Potions;
-import net.minecraft.world.entity.*;
-import net.minecraft.world.entity.projectile.ThrownTrident;
-import net.minecraft.world.entity.projectile.ProjectileUtil;
-import net.minecraft.world.entity.projectile.AbstractArrow;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.entity.monster.Zombie;
-import net.minecraft.world.entity.monster.RangedAttackMob;
-import net.minecraft.world.entity.monster.CrossbowAttackMob;
-import net.minecraft.world.entity.ai.targeting.TargetingConditions;
-import net.minecraft.world.entity.ai.navigation.GroundPathNavigation;
-import net.minecraft.world.entity.ai.goal.RandomStrollGoal;
-import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
-import net.minecraft.world.entity.ai.goal.OpenDoorGoal;
-import net.minecraft.world.entity.ai.goal.LookAtPlayerGoal;
-import net.minecraft.world.entity.ai.goal.FloatGoal;
-import net.minecraft.world.entity.ai.attributes.Attributes;
-import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
-import net.minecraft.world.effect.MobEffects;
-import net.minecraft.world.damagesource.DamageTypes;
-import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.level.ServerLevelAccessor;
+import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.DifficultyInstance;
-import net.minecraft.util.RandomSource;
-import net.minecraft.util.Mth;
-import net.minecraft.sounds.SoundEvents;
-import net.minecraft.sounds.SoundEvent;
-import net.minecraft.server.level.ServerLevel;
-import net.minecraft.core.registries.Registries;
-import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.network.syncher.SynchedEntityData;
-import net.minecraft.network.syncher.EntityDataSerializers;
-import net.minecraft.network.syncher.EntityDataAccessor;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.core.BlockPos;
 import javax.annotation.Nullable;
+import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
-import java.util.List;
 
 public abstract class AbstractKoboldEntity extends PathfinderMob implements CrossbowAttackMob, RangedAttackMob {
 	private static final EntityDataAccessor<Boolean> DATA_CHARGING_STATE = SynchedEntityData.defineId(AbstractKoboldEntity.class, EntityDataSerializers.BOOLEAN);
@@ -200,26 +205,79 @@ public abstract class AbstractKoboldEntity extends PathfinderMob implements Cros
 
 	@Override
 	protected boolean canReplaceCurrentItem(ItemStack drop, ItemStack hand, EquipmentSlot slot) {
-		if (drop.getItem() instanceof ShieldItem) {
+		if (EnchantmentHelper.hasTag(drop, EnchantmentTags.CURSE)) {
+			return false;
+		} else if (this.isPreferredWeapon(drop)) {
+			if (this.isPreferredWeapon(hand)) {
+				if (drop.getItem() instanceof TridentItem) {
+					if (hand.getItem() instanceof TridentItem && this.canReplaceEqualItem(drop, hand)) {
+						this.trident = drop;
+						return true;
+					} else if (this.trident.isEmpty()) {
+						this.primary = this.getMainHandItem();
+						this.trident = drop;
+						this.setItemInHand(InteractionHand.MAIN_HAND, ItemStack.EMPTY);
+						return true;
+					}
+				} else {
+					return this.canReplaceEqualItem(drop, hand);
+				}
+			} else {
+				return !hand.is(KoboldsTags.RANGED);
+			}
+		} else if (this.isPreferredWeapon(hand)) {
+			return false;
+		} else if (drop.getItem() instanceof BowItem) {
+			if (hand.getItem() instanceof BowItem) {
+				return this.canReplaceEqualItem(drop, hand);
+			} else if (hand.isEmpty() || (drop.isEnchanted() && hand.getItem() instanceof CrossbowItem && !hand.isEnchanted())) {
+				return true;
+			}
+		} else if (drop.getItem() instanceof ShieldItem) {
 			if (hand.getItem() instanceof ShieldItem) {
 				return this.canReplaceEqualItem(drop, hand);
 			} else if (hand.isEmpty()) {
-				return true;
-			}
-		} else if (drop.getItem() instanceof TridentItem) {
-			if (hand.getItem() instanceof TridentItem && this.canReplaceEqualItem(drop, hand)) {
-				this.trident = drop;
-				return true;
-			} else if (this.trident.isEmpty()) {
-				this.primary = this.getMainHandItem();
-				this.trident = drop;
-				this.setItemInHand(InteractionHand.MAIN_HAND, ItemStack.EMPTY);
 				return true;
 			}
 		} else if (drop.is(Items.EMERALD) && hand.isEmpty() && this.getType().is(KoboldsTags.TRADERS)) {
 			return true;
 		}
 		return super.canReplaceCurrentItem(drop, hand, slot);
+	}
+
+	@Override
+	public boolean canReplaceEqualItem(ItemStack drop, ItemStack hand) {
+		if (drop.isEnchanted()) {
+			if (hand.isEnchanted()) {
+				int id = 0;
+				ItemEnchantments.Mutable dropMap = new ItemEnchantments.Mutable(EnchantmentHelper.getEnchantmentsForCrafting(drop));
+				for (Holder<Enchantment> e : dropMap.keySet()) {
+					if (e.is(KoboldsTags.ENCHS)) {
+						id = (id + (5 * dropMap.getLevel(e)));
+					} else {
+						id = (id + dropMap.getLevel(e));
+					}
+				}
+				int ih = 0;
+				ItemEnchantments.Mutable handMap = new ItemEnchantments.Mutable(EnchantmentHelper.getEnchantmentsForCrafting(hand));
+				for (Holder<Enchantment> e : handMap.keySet()) {
+					if (e.is(KoboldsTags.ENCHS)) {
+						ih = (ih + (5 * handMap.getLevel(e)));
+					} else {
+						ih = (ih + handMap.getLevel(e));
+					}
+				}
+				if (id > ih) {
+					return true;
+				} else if (this.isPreferredWeapon(drop) && id == ih) {
+					return drop.getAttributeModifiers().compute(this.getAttributeBaseValue(Attributes.ATTACK_DAMAGE), EquipmentSlot.MAINHAND) > hand.getAttributeModifiers().compute(this.getAttributeBaseValue(Attributes.ATTACK_DAMAGE), EquipmentSlot.MAINHAND);
+				}
+			}
+			return !hand.isEnchanted();
+		} else if (this.isPreferredWeapon(drop) && !hand.isEnchanted()) {
+			return drop.getAttributeModifiers().compute(this.getAttributeBaseValue(Attributes.ATTACK_DAMAGE), EquipmentSlot.MAINHAND) > hand.getAttributeModifiers().compute(this.getAttributeBaseValue(Attributes.ATTACK_DAMAGE), EquipmentSlot.MAINHAND);
+		}
+		return super.canReplaceEqualItem(drop, hand);
 	}
 
 	public void aiStep() {
@@ -460,6 +518,10 @@ public abstract class AbstractKoboldEntity extends PathfinderMob implements Cros
 			this.setCD(0);
 			proj.discard();
 		}
+	}
+
+	public boolean isPreferredWeapon(ItemStack stack) {
+		return stack.getItem() instanceof SwordItem;
 	}
 
 	public static List<ItemStack> getTradeItems(AbstractKoboldEntity kobold, String table) {
