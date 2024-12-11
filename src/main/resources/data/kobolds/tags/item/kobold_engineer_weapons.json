@@ -1,0 +1,7 @@
+{
+  "replace": false,
+  "values": [
+    "minecraft:crossbow",
+    "#kobolds:usable_ranged_weapons"
+  ]
+}
