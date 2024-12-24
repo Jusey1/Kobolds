@@ -2,7 +2,7 @@
   "type": "kobolds:kobold_den",
   "start_pool": "kobolds:kobold_den_pirate",
   "biomes": "#minecraft:is_overworld",
-  "surface_biome_tag": "minecraft:is_jungle",
+  "surface_biomes": "#minecraft:is_jungle",
   "step": "underground_structures",
   "terrain_adaptation": "bury",
   "liquid_settings": "ignore_waterlogging",
