@@ -1,14 +1,17 @@
 package net.salju.kobolds.worldgen;
 
-import com.mojang.serialization.Codec;
-import net.minecraft.world.level.levelgen.structure.structures.JigsawStructure;
 import net.salju.kobolds.init.KoboldsTags;
 import net.salju.kobolds.init.KoboldsStructures;
-import net.minecraft.world.level.levelgen.structure.pools.StructureTemplatePool;
-import net.minecraft.world.level.levelgen.structure.pools.JigsawPlacement;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.core.*;
+import net.minecraft.tags.BiomeTags;
 import net.minecraft.world.level.levelgen.structure.pools.DimensionPadding;
+import net.minecraft.world.level.levelgen.structure.pools.JigsawPlacement;
+import net.minecraft.world.level.levelgen.structure.pools.StructureTemplatePool;
 import net.minecraft.world.level.levelgen.structure.pools.alias.PoolAliasLookup;
 import net.minecraft.world.level.levelgen.structure.templatesystem.LiquidSettings;
+import net.minecraft.world.level.levelgen.structure.structures.JigsawStructure;
 import net.minecraft.world.level.levelgen.structure.StructureType;
 import net.minecraft.world.level.levelgen.structure.Structure;
 import net.minecraft.world.level.levelgen.heightproviders.HeightProvider;
@@ -16,16 +19,9 @@ import net.minecraft.world.level.levelgen.WorldGenerationContext;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.level.biome.CheckerboardColumnBiomeSource;
 import net.minecraft.world.level.biome.Biome;
-import net.minecraft.tags.TagKey;
-import net.minecraft.tags.BiomeTags;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.core.registries.Registries;
-import net.minecraft.core.QuartPos;
-import net.minecraft.core.Holder;
-import net.minecraft.core.BlockPos;
-import java.util.Optional;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.mojang.serialization.MapCodec;
+import java.util.Optional;
 
 public class AbstractKoboldStructure extends Structure {
 	public static final MapCodec<AbstractKoboldStructure> CODEC = RecordCodecBuilder.mapCodec(instance ->
@@ -36,7 +32,7 @@ public class AbstractKoboldStructure extends Structure {
 					Heightmap.Types.CODEC.optionalFieldOf("project_start_to_heightmap").forGetter(structure -> structure.heightmap),
 					DimensionPadding.CODEC.optionalFieldOf("dimension_padding", JigsawStructure.DEFAULT_DIMENSION_PADDING).forGetter(structure -> structure.dims),
 					LiquidSettings.CODEC.optionalFieldOf("liquid_settings", JigsawStructure.DEFAULT_LIQUID_SETTINGS).forGetter(structure -> structure.water),
-					ResourceLocation.CODEC.optionalFieldOf("surface_biome_tag").forGetter(structure -> structure.underBiomes)
+					RegistryCodecs.homogeneousList(Registries.BIOME).optionalFieldOf("surface_biomes").forGetter(structure -> structure.underBiomes)
 			).apply(instance, AbstractKoboldStructure::new));
 
 	private final Holder<StructureTemplatePool> startPool;
@@ -45,9 +41,9 @@ public class AbstractKoboldStructure extends Structure {
 	private final Optional<Heightmap.Types> heightmap;
 	private final DimensionPadding dims;
 	private final LiquidSettings water;
-	private final Optional<ResourceLocation> underBiomes;
+	private final Optional<HolderSet<Biome>> underBiomes;
 
-	public AbstractKoboldStructure(Structure.StructureSettings config, Holder<StructureTemplatePool> pool, Optional<ResourceLocation> jigsaw, HeightProvider height, Optional<Heightmap.Types> map, DimensionPadding d, LiquidSettings w, Optional<ResourceLocation> under) {
+	public AbstractKoboldStructure(Structure.StructureSettings config, Holder<StructureTemplatePool> pool, Optional<ResourceLocation> jigsaw, HeightProvider height, Optional<Heightmap.Types> map, DimensionPadding d, LiquidSettings w, Optional<HolderSet<Biome>> under) {
 		super(config);
 		this.startPool = pool;
 		this.jiggy = jigsaw;
@@ -78,7 +74,7 @@ public class AbstractKoboldStructure extends Structure {
 				for (int z = context.chunkPos().z - 1; z <= context.chunkPos().z + 1; z++) {
 					Holder<Biome> biome = context.biomeSource().getNoiseBiome(QuartPos.fromSection(x), QuartPos.fromBlock(pos.getY()), QuartPos.fromSection(z), context.randomState().sampler());
 					if (underBiomes.isPresent()) {
-						if (biome.is(TagKey.create(Registries.BIOME, underBiomes.get()))) {
+						if (underBiomes.get().contains(biome)) {
 							return true;
 						}
 					} else if (biome.is(KoboldsTags.BIOMES)) {
