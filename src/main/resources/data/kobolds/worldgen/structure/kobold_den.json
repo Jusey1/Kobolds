@@ -3,7 +3,7 @@
   "start_pool": "kobolds:kobold_den",
   "biomes": "#minecraft:is_overworld",
   "step": "underground_structures",
-  "terrain_adaptation": "bury",
+  "terrain_adaptation": "encapsulate",
   "liquid_settings": "ignore_waterlogging",
   "start_height": {
     "type": "minecraft:uniform",

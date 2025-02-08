@@ -4,7 +4,7 @@
   "biomes": "#minecraft:is_overworld",
   "surface_biomes": "#minecraft:is_jungle",
   "step": "underground_structures",
-  "terrain_adaptation": "bury",
+  "terrain_adaptation": "encapsulate",
   "liquid_settings": "ignore_waterlogging",
   "start_height": {
     "type": "minecraft:uniform",
