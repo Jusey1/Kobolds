@@ -1,7 +1,7 @@
 package net.salju.kobolds.client.renderer;
 
 import net.salju.kobolds.Kobolds;
-import net.salju.kobolds.init.KoboldsModels;
+import net.salju.kobolds.init.KoboldsClient;
 import net.salju.kobolds.entity.AbstractKoboldEntity;
 import net.salju.kobolds.client.renderer.layers.KoboldEyesLayer;
 import net.salju.kobolds.client.model.KoboldChildModel;
@@ -14,7 +14,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 
 public class KoboldChildRenderer extends MobRenderer<AbstractKoboldEntity, AbstractKoboldState, KoboldChildModel<AbstractKoboldState>> {
 	public KoboldChildRenderer(EntityRendererProvider.Context context) {
-		super(context, new KoboldChildModel(context.bakeLayer(KoboldsModels.KOBOLD_CHILD)), 0.36f);
+		super(context, new KoboldChildModel(context.bakeLayer(KoboldsClient.KOBOLD_CHILD)), 0.36f);
 		this.addLayer(new KoboldEyesLayer<>(this));
 	}
 

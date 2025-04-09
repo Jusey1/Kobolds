@@ -1,7 +1,7 @@
 package net.salju.kobolds.client.renderer;
 
 import net.salju.kobolds.Kobolds;
-import net.salju.kobolds.init.KoboldsModels;
+import net.salju.kobolds.init.KoboldsClient;
 import net.salju.kobolds.entity.KoboldZombie;
 import net.salju.kobolds.client.renderer.layers.KoboldZombieEyesLayer;
 import net.salju.kobolds.client.model.ZomboldModel;
@@ -17,10 +17,10 @@ import com.mojang.blaze3d.vertex.PoseStack;
 
 public class KoboldZombieRenderer extends MobRenderer<KoboldZombie, AbstractKoboldState, ZomboldModel<AbstractKoboldState>> {
 	public KoboldZombieRenderer(EntityRendererProvider.Context context) {
-		super(context, new ZomboldModel(context.bakeLayer(KoboldsModels.ZOMBOLD)), 0.36f);
+		super(context, new ZomboldModel(context.bakeLayer(KoboldsClient.ZOMBOLD)), 0.36f);
 		this.addLayer(new ItemInHandLayer<>(this, context.getItemRenderer()));
 		this.addLayer(new KoboldZombieEyesLayer<>(this));
-		this.addLayer(new HumanoidArmorLayer(this, new KoboldArmorModel(context.bakeLayer(KoboldsModels.KOBOLD_ARMOR_INNER)), new KoboldArmorModel(context.bakeLayer(KoboldsModels.KOBOLD_ARMOR_OUTER)), context.getEquipmentRenderer()));
+		this.addLayer(new HumanoidArmorLayer(this, new KoboldArmorModel(context.bakeLayer(KoboldsClient.KOBOLD_ARMOR_INNER)), new KoboldArmorModel(context.bakeLayer(KoboldsClient.KOBOLD_ARMOR_OUTER)), context.getEquipmentRenderer()));
 	}
 
 	@Override
@@ -37,7 +37,7 @@ public class KoboldZombieRenderer extends MobRenderer<KoboldZombie, AbstractKobo
 	public void extractRenderState(KoboldZombie zombo, AbstractKoboldState state, float f1) {
 		super.extractRenderState(zombo, state, f1);
 		HumanoidMobRenderer.extractHumanoidRenderState(zombo, state, f1);
-		if (zombo.getName().getString().equals("James") && zombo.getZomboType() == "enchanter") {
+		if (zombo.getName().getString().equals("James") && zombo.getZomboType().equals("enchanter")) {
 			state.texture = ResourceLocation.fromNamespaceAndPath(Kobolds.MODID, "textures/entity/undead/zombie_james.png");
 		} else {
 			state.texture = ResourceLocation.fromNamespaceAndPath(Kobolds.MODID, "textures/entity/undead/zombie_" + zombo.getZomboType() + ".png");

@@ -1,7 +1,7 @@
 package net.salju.kobolds.client.renderer;
 
 import net.salju.kobolds.Kobolds;
-import net.salju.kobolds.init.KoboldsModels;
+import net.salju.kobolds.init.KoboldsClient;
 import net.salju.kobolds.entity.KoboldSkeleton;
 import net.salju.kobolds.client.model.SkeleboldModel;
 import net.salju.kobolds.client.model.KoboldArmorModel;
@@ -16,9 +16,9 @@ import com.mojang.blaze3d.vertex.PoseStack;
 
 public class KoboldSkeletonRenderer extends MobRenderer<KoboldSkeleton, AbstractKoboldState, SkeleboldModel<AbstractKoboldState>> {
 	public KoboldSkeletonRenderer(EntityRendererProvider.Context context) {
-		super(context, new SkeleboldModel(context.bakeLayer(KoboldsModels.SKELEBOLD)), 0.36f);
+		super(context, new SkeleboldModel(context.bakeLayer(KoboldsClient.SKELEBOLD)), 0.36f);
 		this.addLayer(new ItemInHandLayer<>(this, context.getItemRenderer()));
-		this.addLayer(new HumanoidArmorLayer(this, new KoboldArmorModel(context.bakeLayer(KoboldsModels.KOBOLD_ARMOR_INNER)), new KoboldArmorModel(context.bakeLayer(KoboldsModels.KOBOLD_ARMOR_OUTER)), context.getEquipmentRenderer()));
+		this.addLayer(new HumanoidArmorLayer(this, new KoboldArmorModel(context.bakeLayer(KoboldsClient.KOBOLD_ARMOR_INNER)), new KoboldArmorModel(context.bakeLayer(KoboldsClient.KOBOLD_ARMOR_OUTER)), context.getEquipmentRenderer()));
 	}
 
 	@Override
