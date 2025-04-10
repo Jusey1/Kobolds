@@ -62,7 +62,7 @@ public class SkeleboldModel<T extends AbstractKoboldState> extends HumanoidModel
 		if (!kobold.getMainHandItem().isEmpty()) {
 			if (kobold.isAggressive) {
 				if (kobold.isLeftHanded) {
-					if (kobold.getMainHandItem().getItem() instanceof BowItem) {
+					if (kobold.getMainhandItem().getItem() instanceof BowItem) {
 						this.leftArm.xRot = -1.4399F;
 						this.leftArm.yRot = 0.2618F;
 						this.rightArm.xRot = -1.3963F;
@@ -72,7 +72,7 @@ public class SkeleboldModel<T extends AbstractKoboldState> extends HumanoidModel
 						this.leftArm.yRot = -0.1745F;
 					}
 				} else {
-					if (kobold.getMainHandItem().getItem() instanceof BowItem) {
+					if (kobold.getMainhandItem().getItem() instanceof BowItem) {
 						this.rightArm.xRot = -1.4399F;
 						this.rightArm.yRot = -0.2618F;
 						this.leftArm.xRot = -1.3963F;
@@ -82,14 +82,14 @@ public class SkeleboldModel<T extends AbstractKoboldState> extends HumanoidModel
 						this.rightArm.yRot = 0.1745F;
 					}
 				}
-			} else if (kobold.getMainHandItem().getItem() instanceof CrossbowItem) {
+			} else if (kobold.getMainhandItem().getItem() instanceof CrossbowItem) {
 				if (kobold.isLeftHanded) {
 					if (kobold.isCharging) {
 						this.leftArm.xRot = -0.6981F;
 						this.leftArm.yRot = 0.3491F;
 						this.rightArm.xRot = -1.1345F;
 						this.rightArm.yRot = -0.5672F;
-					} else if (CrossbowItem.isCharged(kobold.getMainHandItem())) {
+					} else if (CrossbowItem.isCharged(kobold.getMainhandItem())) {
 						this.leftArm.xRot = -1.4399F;
 						this.leftArm.yRot = 0.2618F;
 						this.rightArm.xRot = -1.3963F;
@@ -101,7 +101,7 @@ public class SkeleboldModel<T extends AbstractKoboldState> extends HumanoidModel
 						this.rightArm.yRot = -0.3491F;
 						this.leftArm.xRot = -1.1345F;
 						this.leftArm.yRot = 0.5672F;
-					} else if (CrossbowItem.isCharged(kobold.getMainHandItem())) {
+					} else if (CrossbowItem.isCharged(kobold.getMainhandItem())) {
 						this.rightArm.xRot = -1.4399F;
 						this.rightArm.yRot = -0.2618F;
 						this.leftArm.xRot = -1.3963F;

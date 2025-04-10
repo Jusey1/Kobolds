@@ -13,12 +13,13 @@ import net.minecraft.client.renderer.entity.layers.HumanoidArmorLayer;
 import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.world.entity.HumanoidArm;
 import com.mojang.blaze3d.vertex.PoseStack;
 
 public class KoboldCaptainRenderer extends MobRenderer<AbstractKoboldEntity, AbstractKoboldState, KoboldModel<AbstractKoboldState>> {
 	public KoboldCaptainRenderer(EntityRendererProvider.Context context) {
 		super(context, new KoboldModel(context.bakeLayer(KoboldsClient.KOBOLD)), 0.36f);
-		this.addLayer(new ItemInHandLayer<>(this, context.getItemRenderer()));
+		this.addLayer(new ItemInHandLayer<>(this));
 		this.addLayer(new KoboldPirateEyesLayer<>(this));
 		this.addLayer(new HumanoidArmorLayer(this, new KoboldArmorModel(context.bakeLayer(KoboldsClient.KOBOLD_ARMOR_INNER)), new KoboldArmorModel(context.bakeLayer(KoboldsClient.KOBOLD_ARMOR_OUTER)), context.getEquipmentRenderer()));
 	}
@@ -36,13 +37,15 @@ public class KoboldCaptainRenderer extends MobRenderer<AbstractKoboldEntity, Abs
 	@Override
 	public void extractRenderState(AbstractKoboldEntity kobold, AbstractKoboldState state, float f1) {
 		super.extractRenderState(kobold, state, f1);
-		HumanoidMobRenderer.extractHumanoidRenderState(kobold, state, f1);
+		HumanoidMobRenderer.extractHumanoidRenderState(kobold, state, f1, this.itemModelResolver);
 		state.texture = ResourceLocation.fromNamespaceAndPath(Kobolds.MODID, "textures/entity/kobolds/pirate_captain.png");
 		state.isAggressive = kobold.isAggressive();
 		state.isBlocking = kobold.isBlocking();
 		state.isCharging = kobold.isCharging();
 		state.isDiamond = kobold.isDiamond();
 		state.isLeftHanded = kobold.isLeftHanded();
+		state.rightStack = kobold.getItemHeldByArm(HumanoidArm.RIGHT);
+		state.leftStack = kobold.getItemHeldByArm(HumanoidArm.LEFT);
 	}
 
 	@Override

@@ -12,12 +12,13 @@ import net.minecraft.client.renderer.entity.layers.HumanoidArmorLayer;
 import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.world.entity.HumanoidArm;
 import com.mojang.blaze3d.vertex.PoseStack;
 
 public class KoboldSkeletonRenderer extends MobRenderer<KoboldSkeleton, AbstractKoboldState, SkeleboldModel<AbstractKoboldState>> {
 	public KoboldSkeletonRenderer(EntityRendererProvider.Context context) {
 		super(context, new SkeleboldModel(context.bakeLayer(KoboldsClient.SKELEBOLD)), 0.36f);
-		this.addLayer(new ItemInHandLayer<>(this, context.getItemRenderer()));
+		this.addLayer(new ItemInHandLayer<>(this));
 		this.addLayer(new HumanoidArmorLayer(this, new KoboldArmorModel(context.bakeLayer(KoboldsClient.KOBOLD_ARMOR_INNER)), new KoboldArmorModel(context.bakeLayer(KoboldsClient.KOBOLD_ARMOR_OUTER)), context.getEquipmentRenderer()));
 	}
 
@@ -34,11 +35,13 @@ public class KoboldSkeletonRenderer extends MobRenderer<KoboldSkeleton, Abstract
 	@Override
 	public void extractRenderState(KoboldSkeleton skelebold, AbstractKoboldState state, float f1) {
 		super.extractRenderState(skelebold, state, f1);
-		HumanoidMobRenderer.extractHumanoidRenderState(skelebold, state, f1);
+		HumanoidMobRenderer.extractHumanoidRenderState(skelebold, state, f1, this.itemModelResolver);
 		state.texture = ResourceLocation.fromNamespaceAndPath(Kobolds.MODID, "textures/entity/undead/skeleton.png");
 		state.isAggressive = skelebold.isAggressive();
 		state.isCharging = skelebold.isCharging();
 		state.isLeftHanded = skelebold.isLeftHanded();
+		state.rightStack = skelebold.getItemHeldByArm(HumanoidArm.RIGHT);
+		state.leftStack = skelebold.getItemHeldByArm(HumanoidArm.LEFT);
 	}
 
 	@Override

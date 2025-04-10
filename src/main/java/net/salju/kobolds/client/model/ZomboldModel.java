@@ -52,7 +52,7 @@ public class ZomboldModel<T extends AbstractKoboldState> extends HumanoidModel<T
 			this.leftLeg.yRot = -0.2618F;
 		}
 		if (kobold.isAggressive) {
-			if (kobold.getMainHandItem().getItem() instanceof TridentItem) {
+			if (kobold.getMainhandItem().getItem() instanceof TridentItem) {
 				if (kobold.isLeftHanded) {
 					this.rightArm.xRot = -1.5708F;
 					this.leftArm.xRot = 2.8798F;

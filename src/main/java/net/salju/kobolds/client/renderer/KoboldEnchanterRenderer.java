@@ -13,12 +13,13 @@ import net.minecraft.client.renderer.entity.layers.HumanoidArmorLayer;
 import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.world.entity.HumanoidArm;
 import com.mojang.blaze3d.vertex.PoseStack;
 
 public class KoboldEnchanterRenderer extends MobRenderer<AbstractKoboldEntity, AbstractKoboldState, KoboldModel<AbstractKoboldState>> {
 	public KoboldEnchanterRenderer(EntityRendererProvider.Context context) {
 		super(context, new KoboldModel(context.bakeLayer(KoboldsClient.KOBOLD)), 0.36f);
-		this.addLayer(new ItemInHandLayer<>(this, context.getItemRenderer()));
+		this.addLayer(new ItemInHandLayer<>(this));
 		this.addLayer(new KoboldEyesLayer<>(this));
 		this.addLayer(new HumanoidArmorLayer(this, new KoboldArmorModel(context.bakeLayer(KoboldsClient.KOBOLD_ARMOR_INNER)), new KoboldArmorModel(context.bakeLayer(KoboldsClient.KOBOLD_ARMOR_OUTER)), context.getEquipmentRenderer()));
 	}
@@ -36,7 +37,7 @@ public class KoboldEnchanterRenderer extends MobRenderer<AbstractKoboldEntity, A
 	@Override
 	public void extractRenderState(AbstractKoboldEntity kobold, AbstractKoboldState state, float f1) {
 		super.extractRenderState(kobold, state, f1);
-		HumanoidMobRenderer.extractHumanoidRenderState(kobold, state, f1);
+		HumanoidMobRenderer.extractHumanoidRenderState(kobold, state, f1, this.itemModelResolver);
 		if (kobold.getName().getString().equals("James")) {
 			state.texture = ResourceLocation.fromNamespaceAndPath(Kobolds.MODID, "textures/entity/special/james.png");
 		} else if (kobold.getName().getString().equals("Popper")) {
@@ -47,6 +48,8 @@ public class KoboldEnchanterRenderer extends MobRenderer<AbstractKoboldEntity, A
 		}
 		state.isDiamond = kobold.isDiamond();
 		state.isLeftHanded = kobold.isLeftHanded();
+		state.rightStack = kobold.getItemHeldByArm(HumanoidArm.RIGHT);
+		state.leftStack = kobold.getItemHeldByArm(HumanoidArm.LEFT);
 	}
 
 	@Override

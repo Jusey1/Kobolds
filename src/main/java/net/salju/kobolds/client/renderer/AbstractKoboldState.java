@@ -9,17 +9,23 @@ import net.minecraft.world.item.ItemStack;
 
 @OnlyIn(Dist.CLIENT)
 public class AbstractKoboldState extends HumanoidRenderState {
-	public boolean isZomboConverting = false;
-	public boolean isAggressive = false;
-	public boolean isBlocking = false;
-	public boolean isCharging = false;
-	public boolean isDiamond = false;
-	public boolean isLeftHanded = false;
-	public boolean isPopper = false;
+	public ItemStack rightStack = ItemStack.EMPTY;
+	public ItemStack leftStack = ItemStack.EMPTY;
+	public boolean isZomboConverting;
+	public boolean isAggressive;
+	public boolean isBlocking;
+	public boolean isCharging;
+	public boolean isDiamond;
+	public boolean isLeftHanded;
+	public boolean isPopper;
 	public ResourceLocation texture;
 	public String getZomboType = "base";
 
+	public ItemStack getMainhandItem() {
+		return this.mainArm.equals(HumanoidArm.RIGHT) ? this.rightStack : this.leftStack;
+	}
+
 	public ItemStack getOffhandItem() {
-		return this.mainArm == HumanoidArm.RIGHT ? this.leftHandItem : this.rightHandItem;
+		return this.mainArm.equals(HumanoidArm.RIGHT) ? this.leftStack : this.rightStack;
 	}
 }

@@ -13,12 +13,13 @@ import net.minecraft.client.renderer.entity.layers.HumanoidArmorLayer;
 import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.world.entity.HumanoidArm;
 import com.mojang.blaze3d.vertex.PoseStack;
 
 public class KoboldZombieRenderer extends MobRenderer<KoboldZombie, AbstractKoboldState, ZomboldModel<AbstractKoboldState>> {
 	public KoboldZombieRenderer(EntityRendererProvider.Context context) {
 		super(context, new ZomboldModel(context.bakeLayer(KoboldsClient.ZOMBOLD)), 0.36f);
-		this.addLayer(new ItemInHandLayer<>(this, context.getItemRenderer()));
+		this.addLayer(new ItemInHandLayer<>(this));
 		this.addLayer(new KoboldZombieEyesLayer<>(this));
 		this.addLayer(new HumanoidArmorLayer(this, new KoboldArmorModel(context.bakeLayer(KoboldsClient.KOBOLD_ARMOR_INNER)), new KoboldArmorModel(context.bakeLayer(KoboldsClient.KOBOLD_ARMOR_OUTER)), context.getEquipmentRenderer()));
 	}
@@ -36,7 +37,7 @@ public class KoboldZombieRenderer extends MobRenderer<KoboldZombie, AbstractKobo
 	@Override
 	public void extractRenderState(KoboldZombie zombo, AbstractKoboldState state, float f1) {
 		super.extractRenderState(zombo, state, f1);
-		HumanoidMobRenderer.extractHumanoidRenderState(zombo, state, f1);
+		HumanoidMobRenderer.extractHumanoidRenderState(zombo, state, f1, this.itemModelResolver);
 		if (zombo.getName().getString().equals("James") && zombo.getZomboType().equals("enchanter")) {
 			state.texture = ResourceLocation.fromNamespaceAndPath(Kobolds.MODID, "textures/entity/undead/zombie_james.png");
 		} else {
@@ -46,6 +47,8 @@ public class KoboldZombieRenderer extends MobRenderer<KoboldZombie, AbstractKobo
 		state.isLeftHanded = zombo.isLeftHanded();
 		state.getZomboType = zombo.getZomboType();
 		state.isZomboConverting = zombo.isConvert();
+		state.rightStack = zombo.getItemHeldByArm(HumanoidArm.RIGHT);
+		state.leftStack = zombo.getItemHeldByArm(HumanoidArm.LEFT);
 	}
 
 	@Override

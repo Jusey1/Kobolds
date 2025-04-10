@@ -13,13 +13,14 @@ import net.minecraft.client.renderer.entity.layers.HumanoidArmorLayer;
 import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.world.entity.HumanoidArm;
 import com.mojang.blaze3d.vertex.PoseStack;
 
 public class KoboldRascalRenderer extends MobRenderer<AbstractKoboldEntity, AbstractKoboldState, RascalModel<AbstractKoboldState>> {
 	public KoboldRascalRenderer(EntityRendererProvider.Context context) {
 		super(context, new RascalModel(context.bakeLayer(KoboldsClient.KOBOLD_RASCAL)), 0.36f);
 		this.addLayer(new KoboldEyesLayer<>(this));
-		this.addLayer(new ItemInHandLayer<>(this, context.getItemRenderer()) {
+		this.addLayer(new ItemInHandLayer<>(this) {
 			public void render(PoseStack pose, MultiBufferSource buffer, int i, AbstractKoboldState kobold, float f1, float f2) {
 				if (kobold.isAggressive) {
 					super.render(pose, buffer, i, kobold, f1, f2);
@@ -42,11 +43,13 @@ public class KoboldRascalRenderer extends MobRenderer<AbstractKoboldEntity, Abst
 	@Override
 	public void extractRenderState(AbstractKoboldEntity kobold, AbstractKoboldState state, float f1) {
 		super.extractRenderState(kobold, state, f1);
-		HumanoidMobRenderer.extractHumanoidRenderState(kobold, state, f1);
+		HumanoidMobRenderer.extractHumanoidRenderState(kobold, state, f1, this.itemModelResolver);
 		state.texture = ResourceLocation.fromNamespaceAndPath(Kobolds.MODID, "textures/entity/kobolds/rascal.png");
 		state.isAggressive = kobold.isAggressive();
 		state.isDiamond = kobold.isDiamond();
 		state.isLeftHanded = kobold.isLeftHanded();
+		state.rightStack = kobold.getItemHeldByArm(HumanoidArm.RIGHT);
+		state.leftStack = kobold.getItemHeldByArm(HumanoidArm.LEFT);
 	}
 
 	@Override

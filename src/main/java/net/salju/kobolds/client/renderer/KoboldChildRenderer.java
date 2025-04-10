@@ -31,7 +31,7 @@ public class KoboldChildRenderer extends MobRenderer<AbstractKoboldEntity, Abstr
 	@Override
 	public void extractRenderState(AbstractKoboldEntity kobold, AbstractKoboldState state, float f1) {
 		super.extractRenderState(kobold, state, f1);
-		HumanoidMobRenderer.extractHumanoidRenderState(kobold, state, f1);
+		HumanoidMobRenderer.extractHumanoidRenderState(kobold, state, f1, this.itemModelResolver);
 		state.texture = ResourceLocation.fromNamespaceAndPath(Kobolds.MODID, "textures/entity/kobolds/child.png");
 		state.isLeftHanded = kobold.isLeftHanded();
 	}

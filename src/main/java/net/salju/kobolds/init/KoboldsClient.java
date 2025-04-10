@@ -52,7 +52,7 @@ public class KoboldsClient {
 
 	@SubscribeEvent
 	public static void registerSkullRenderers(EntityRenderersEvent.CreateSkullModels event) {
-		event.registerSkullModel(KoboldSkull.Types.SKELEBOLD, new KoboldSkullModel(event.getEntityModelSet().bakeLayer(KOBOLD_SKULL)));
+		event.registerSkullModel(KoboldSkull.Types.SKELEBOLD, KOBOLD_SKULL);
 	}
 
 	@SubscribeEvent

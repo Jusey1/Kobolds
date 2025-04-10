@@ -240,7 +240,7 @@ public abstract class AbstractKoboldEntity extends PathfinderMob implements Cros
 		} else if (drop.is(Items.EMERALD) && hand.isEmpty() && this.getType().is(KoboldsTags.TRADERS)) {
 			return true;
 		}
-		return super.canReplaceCurrentItem(drop, hand, slot);
+		return false;
 	}
 
 	@Override

@@ -68,10 +68,10 @@ public class KoboldModel<T extends AbstractKoboldState> extends HumanoidModel<T>
 			this.rightLeg.yRot = 0.2618F;
 			this.leftLeg.yRot = -0.2618F;
 		}
-		if (!kobold.getMainHandItem().isEmpty()) {
+		if (!kobold.getMainhandItem().isEmpty()) {
 			if (kobold.isAggressive) {
 				if (kobold.isLeftHanded) {
-					if (kobold.getMainHandItem().getItem() instanceof CrossbowItem || kobold.getMainHandItem().getItem() instanceof BowItem || kobold.getMainHandItem().is(KoboldsTags.RANGED)) {
+					if (kobold.getMainhandItem().getItem() instanceof CrossbowItem || kobold.getMainhandItem().getItem() instanceof BowItem || kobold.getMainhandItem().is(KoboldsTags.RANGED)) {
 						if (kobold.isCharging) {
 							this.leftArm.xRot = -0.6981F;
 							this.leftArm.yRot = 0.3491F;
@@ -83,7 +83,7 @@ public class KoboldModel<T extends AbstractKoboldState> extends HumanoidModel<T>
 							this.rightArm.xRot = -1.3963F;
 							this.rightArm.yRot = -0.3054F;
 						}
-					} else if (kobold.getMainHandItem().getItem() instanceof TridentItem) {
+					} else if (kobold.getMainhandItem().getItem() instanceof TridentItem) {
 						this.leftArm.xRot = 2.8798F;
 						this.rightArm.xRot = 0.0F;
 					} else {
@@ -91,7 +91,7 @@ public class KoboldModel<T extends AbstractKoboldState> extends HumanoidModel<T>
 						this.leftArm.yRot = -0.1745F;
 					}
 				} else {
-					if (kobold.getMainHandItem().getItem() instanceof CrossbowItem || kobold.getMainHandItem().getItem() instanceof BowItem || kobold.getMainHandItem().is(KoboldsTags.RANGED)) {
+					if (kobold.getMainhandItem().getItem() instanceof CrossbowItem || kobold.getMainhandItem().getItem() instanceof BowItem || kobold.getMainhandItem().is(KoboldsTags.RANGED)) {
 						if (kobold.isCharging) {
 							this.rightArm.xRot = -0.6981F;
 							this.rightArm.yRot = -0.3491F;
@@ -103,7 +103,7 @@ public class KoboldModel<T extends AbstractKoboldState> extends HumanoidModel<T>
 							this.leftArm.xRot = -1.3963F;
 							this.leftArm.yRot = 0.3054F;
 						}
-					} else if (kobold.getMainHandItem().getItem() instanceof TridentItem) {
+					} else if (kobold.getMainhandItem().getItem() instanceof TridentItem) {
 						this.rightArm.xRot = 2.8798F;
 						this.leftArm.xRot = 0.0F;
 					} else {
