@@ -2,10 +2,7 @@
   "replace": false,
   "values": [
     "#minecraft:illager",
-    "minecraft:zombie",
-    "minecraft:husk",
-    "minecraft:drowned",
-    "minecraft:silverfish",
-    "kobolds:kobold_zombie"
+    "#minecraft:zombies",
+    "minecraft:silverfish"
   ]
 }
