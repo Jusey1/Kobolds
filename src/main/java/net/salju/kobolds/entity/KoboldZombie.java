@@ -64,8 +64,8 @@ public class KoboldZombie extends Zombie {
 	@Override
 	public void readAdditionalSaveData(CompoundTag tag) {
 		super.readAdditionalSaveData(tag);
-		this.setZombo(tag.getInt("ZomboType"));
-		this.convert = tag.getInt("Convert");
+		this.setZombo(tag.getInt("ZomboType").orElse(6));
+		this.convert = tag.getInt("Convert").orElse(0);
 	}
 
 	@Override
@@ -166,7 +166,7 @@ public class KoboldZombie extends Zombie {
 			player.swing(hand, true);
 			this.playSound(SoundEvents.ZOMBIE_VILLAGER_CURE, 1.0F, 1.0F);
 			this.removeEffect(MobEffects.WEAKNESS);
-			this.addEffect(new MobEffectInstance(MobEffects.DAMAGE_BOOST, waitTicks, potionLevel));
+			this.addEffect(new MobEffectInstance(MobEffects.STRENGTH, waitTicks, potionLevel));
 			this.convert = waitTicks;
 			this.getEntityData().set(DATA_CONVERTING, true);
 		}

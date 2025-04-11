@@ -1,11 +1,11 @@
 package net.salju.kobolds.entity;
 
+import net.salju.kobolds.init.KoboldsTags;
 import net.salju.kobolds.entity.ai.KoboldPotionGoal;
 import net.salju.kobolds.entity.ai.KoboldTradeGoal;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.entity.ai.goal.PanicGoal;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.EntityType;
@@ -25,7 +25,7 @@ public class KoboldEnchanter extends AbstractKoboldEntity {
 
 	@Override
 	protected boolean canReplaceCurrentItem(ItemStack drop, ItemStack hand, EquipmentSlot slot) {
-		if (drop.getItem() instanceof ArmorItem || drop.is(Items.EMERALD)) {
+		if (drop.is(KoboldsTags.ARMOR) || drop.is(Items.EMERALD)) {
 			return super.canReplaceCurrentItem(drop, hand, slot);
 		} else {
 			return false;

@@ -28,12 +28,12 @@ public class KoboldTradeGoal extends Goal {
 
 	@Override
 	public boolean canUse() {
-		return (checkHand() && !(this.kobold.hasEffect(MobEffects.MOVEMENT_SLOWDOWN)));
+		return (checkHand() && !(this.kobold.hasEffect(MobEffects.SLOWNESS)));
 	}
 
 	@Override
 	public void start() {
-		this.kobold.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 120, 10, false, false));
+		this.kobold.addEffect(new MobEffectInstance(MobEffects.SLOWNESS, 120, 10, false, false));
 		Kobolds.queueServerWork(100, () -> {
 			if (this.kobold.isAlive()) {
 				this.kobold.swing(InteractionHand.MAIN_HAND, true);

@@ -27,13 +27,14 @@ public class KoboldPotionGoal extends Goal {
 
 	@Override
 	public void start() {
-		kobold.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 32, 4, false, false));
+		kobold.addEffect(new MobEffectInstance(MobEffects.SLOWNESS, 32, 4, false, false));
 		kobold.playSound(SoundEvents.GENERIC_DRINK.value(), 0.5F, 1.0F);
 		Kobolds.queueServerWork(32, () -> {
 			InteractionHand hand = ProjectileUtil.getWeaponHoldingHand(kobold, stack -> stack == Items.POTION);
-			kobold.getItemInHand(hand).getOrDefault(DataComponents.POTION_CONTENTS, PotionContents.EMPTY).forEachEffect(effect -> {
+			PotionContents target = kobold.getItemInHand(hand).getOrDefault(DataComponents.POTION_CONTENTS, PotionContents.EMPTY);
+			for (MobEffectInstance effect : target.getAllEffects()) {
 				kobold.addEffect(effect);
-			});
+			}
 			kobold.setItemInHand(hand, ItemStack.EMPTY);
 		});
 	}

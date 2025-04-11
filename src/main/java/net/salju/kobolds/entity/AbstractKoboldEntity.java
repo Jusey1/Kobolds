@@ -20,6 +20,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.tags.EnchantmentTags;
+import net.minecraft.tags.ItemTags;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.damagesource.DamageSource;
@@ -59,14 +60,14 @@ import net.minecraft.world.InteractionHand;
 import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Objects;
-import java.util.UUID;
+import java.util.Optional;
 
 public abstract class AbstractKoboldEntity extends PathfinderMob implements CrossbowAttackMob, RangedAttackMob {
 	private static final EntityDataAccessor<Boolean> DATA_CHARGING_STATE = SynchedEntityData.defineId(AbstractKoboldEntity.class, EntityDataSerializers.BOOLEAN);
 	private static final EntityDataAccessor<Boolean> DATA_DIAMOND_EYES = SynchedEntityData.defineId(AbstractKoboldEntity.class, EntityDataSerializers.BOOLEAN);
+	private Optional<EntityReference<Entity>> thrownTrident = Optional.empty();
 	private ItemStack primary = new ItemStack(KoboldsItems.KOBOLD_IRON_SWORD);
 	private ItemStack trident = ItemStack.EMPTY;
-	private UUID thrownTrident;
 	private int breed;
 	private int cooldown;
 	private int potion;
@@ -97,8 +98,8 @@ public abstract class AbstractKoboldEntity extends PathfinderMob implements Cros
 		if (!this.trident.isEmpty()) {
 			tag.put("Trident", this.trident.save(this.level().registryAccess(), new CompoundTag()));
 		}
-		if (this.thrownTrident != null) {
-			tag.putUUID("TridentUUID", this.thrownTrident);
+		if (this.getTridentReference() != null) {
+			this.getTridentReference().store(tag, "ThrownTrident");
 		}
 		tag.putInt("Breed", this.breed);
 		tag.putInt("CD", this.cooldown);
@@ -108,18 +109,27 @@ public abstract class AbstractKoboldEntity extends PathfinderMob implements Cros
 	@Override
 	public void readAdditionalSaveData(CompoundTag tag) {
 		super.readAdditionalSaveData(tag);
-		if (ItemStack.parse(this.level().registryAccess(), tag.getCompound("Primary")).isPresent()) {
-			this.primary = ItemStack.parse(this.level().registryAccess(), tag.getCompound("Primary")).get();
+		if (tag.getCompound("Primary").isPresent()) {
+			if (ItemStack.parse(this.level().registryAccess(), tag.getCompound("Primary").get()).isPresent()) {
+				this.primary = ItemStack.parse(this.level().registryAccess(), tag.getCompound("Primary").get()).get();
+			}
 		}
-		if (ItemStack.parse(this.level().registryAccess(), tag.getCompound("Trident")).isPresent()) {
-			this.trident = ItemStack.parse(this.level().registryAccess(), tag.getCompound("Trident")).get();
+		if (tag.getCompound("Trident").isPresent()) {
+			if (ItemStack.parse(this.level().registryAccess(), tag.getCompound("Trident").get()).isPresent()) {
+				this.trident = ItemStack.parse(this.level().registryAccess(), tag.getCompound("Trident").get()).get();
+			}
 		}
-		if (tag.contains("TridentUUID")) {
-			this.thrownTrident = tag.getUUID("TridentUUID");
+		if (tag.contains("ThrownTrident")) {
+			EntityReference<Entity> target = EntityReference.read(tag, "ThrownTrident");
+			if (target != null) {
+				this.thrownTrident = Optional.of(target);
+			} else {
+				this.thrownTrident = Optional.empty();
+			}
 		}
-		this.breed = tag.getInt("Breed");
-		this.cooldown = tag.getInt("CD");
-		this.potion = tag.getInt("PCD");
+		this.breed = tag.getInt("Breed").orElse(0);
+		this.cooldown = tag.getInt("CD").orElse(0);
+		this.potion = tag.getInt("PCD").orElse(0);
 	}
 
 	@Override
@@ -154,7 +164,7 @@ public abstract class AbstractKoboldEntity extends PathfinderMob implements Cros
 			this.playSound(SoundEvents.DROWNED_SHOOT, 1.0F, 1.0F / (this.getRandom().nextFloat() * 0.4F + 0.8F));
 			this.level().addFreshEntity(proj);
 			this.setItemInHand(InteractionHand.MAIN_HAND, this.primary);
-			this.thrownTrident = proj.getUUID();
+			this.setTrident(proj);
 			this.setCD(1200);
 		}
 	}
@@ -183,7 +193,7 @@ public abstract class AbstractKoboldEntity extends PathfinderMob implements Cros
 			flag = this.canReplaceCurrentItem(stack, current, slot);
 		}
 		if (flag && this.canHoldItem(stack)) {
-			if (!current.isEmpty() && !(stack.getItem() instanceof TridentItem) && (double) Math.max(this.random.nextFloat() - 0.1F, 0.0F) < this.getEquipmentDropChance(slot)) {
+			if (!current.isEmpty() && !(stack.getItem() instanceof TridentItem) && (double) Math.max(this.random.nextFloat() - 0.1F, 0.0F) < this.getDropChances().byEquipment(slot)) {
 				this.spawnAtLocation(lvl, current);
 			}
 			if (stack.is(Items.EMERALD) && stack.getCount() > 1) {
@@ -210,7 +220,7 @@ public abstract class AbstractKoboldEntity extends PathfinderMob implements Cros
 			if (hand.getItem() instanceof TridentItem && this.canReplaceEqualItem(drop, hand)) {
 				this.trident = drop;
 				return true;
-			} else if (this.trident.isEmpty() && hand.getItem() instanceof SwordItem) {
+			} else if (this.trident.isEmpty() && hand.is(ItemTags.SWORDS)) {
 				this.primary = this.getMainHandItem();
 				this.trident = drop;
 				return true;
@@ -227,10 +237,6 @@ public abstract class AbstractKoboldEntity extends PathfinderMob implements Cros
 			}
 		} else if (this.isPreferredWeapon(hand)) {
 			return false;
-		} else if (drop.getItem() instanceof BowItem) {
-			if (hand.getItem() instanceof BowItem || hand.getItem() instanceof CrossbowItem) {
-				return this.canReplaceEqualItem(drop, hand);
-			}
 		} else if (drop.getItem() instanceof ShieldItem) {
 			if (hand.getItem() instanceof ShieldItem) {
 				return this.canReplaceEqualItem(drop, hand);
@@ -239,6 +245,8 @@ public abstract class AbstractKoboldEntity extends PathfinderMob implements Cros
 			}
 		} else if (drop.is(Items.EMERALD) && hand.isEmpty() && this.getType().is(KoboldsTags.TRADERS)) {
 			return true;
+		} else if (drop.is(KoboldsTags.ARMOR)) {
+			return hand.isEmpty() || this.canReplaceEqualItem(drop, hand);
 		}
 		return false;
 	}
@@ -291,7 +299,7 @@ public abstract class AbstractKoboldEntity extends PathfinderMob implements Cros
 
 	@Override
 	public SoundEvent getHurtSound(DamageSource ds) {
-		return (this.isBlocking() ? SoundEvents.SHIELD_BLOCK : KoboldsSounds.KOBOLD_HURT.get());
+		return (this.isBlocking() ? SoundEvents.SHIELD_BLOCK.value() : KoboldsSounds.KOBOLD_HURT.get());
 	}
 
 	@Override
@@ -461,8 +469,8 @@ public abstract class AbstractKoboldEntity extends PathfinderMob implements Cros
 				this.givePotion(PotionContents.createItemStack(Items.POTION, Potions.LONG_WATER_BREATHING), 120);
 			}
 		}
-		if (this.isBlocking() && source.getDirectEntity() instanceof LivingEntity atk && atk.canDisableShield()) {
-			this.setCD(100);
+		if (this.isBlocking() && source.getDirectEntity() instanceof LivingEntity atk) {
+			this.setCD((int) atk.getSecondsToDisableBlocking() * 20);
 		}
 		return (!(source.getEntity() instanceof AbstractKoboldEntity) && !source.is(DamageTypes.CAMPFIRE) && super.hurtServer(lvl, source, amount));
 	}
@@ -475,14 +483,14 @@ public abstract class AbstractKoboldEntity extends PathfinderMob implements Cros
 	}
 
 	public void checkTrident() {
-		if (this.thrownTrident != null && this.level() instanceof ServerLevel lvl && this.cooldown <= 1180) {
-			if (lvl.getEntity(this.thrownTrident) instanceof ThrownTrident proj && proj.getOwner().is(this)) {
-				if (this.distanceTo(proj) < 2.0D || this.cooldown == 1) {
+		if (this.getTridentReference() != null && this.level() instanceof ServerLevel lvl && this.cooldown <= 1180) {
+			if (lvl.getEntity(this.getTridentReference().getUUID()) instanceof ThrownTrident proj && proj.getOwner().is(this)) {
+				if (this.distanceTo(proj) < 2.0D || this.cooldown <= 1) {
 					this.giveTrident(proj);
 				} else if (this.distanceTo(proj) < 32.0D && this.getTarget() == null) {
 					this.getNavigation().moveTo(proj, 1.0F);
 				}
-			} else if (lvl.getEntity(this.thrownTrident) == null && this.cooldown <= 1) {
+			} else if (lvl.getEntity(this.getTridentReference().getUUID()) == null && this.cooldown <= 1) {
 				this.giveTrident(null);
 			}
 		}
@@ -491,7 +499,7 @@ public abstract class AbstractKoboldEntity extends PathfinderMob implements Cros
 	protected void giveTrident(@Nullable ThrownTrident proj) {
 		this.primary = this.getMainHandItem();
 		this.setItemInHand(InteractionHand.MAIN_HAND, this.trident);
-		this.thrownTrident = null;
+		this.setTrident(null);
 		if (this.cooldown > 1 && proj != null) {
 			this.setCD(0);
 			proj.discard();
@@ -508,6 +516,10 @@ public abstract class AbstractKoboldEntity extends PathfinderMob implements Cros
 
 	public void setPotionCD(int i) {
 		this.potion = i;
+	}
+
+	public void setTrident(@Nullable ThrownTrident proj) {
+		this.thrownTrident = Optional.ofNullable(proj).map(EntityReference::new);
 	}
 
 	public boolean isDiamond() {
@@ -528,6 +540,11 @@ public abstract class AbstractKoboldEntity extends PathfinderMob implements Cros
 
 	public boolean isPreferredWeapon(ItemStack stack) {
 		return stack.is(KoboldsTags.BASIC);
+	}
+
+	@Nullable
+	public EntityReference<Entity> getTridentReference() {
+		return this.thrownTrident.orElse(null);
 	}
 
 	public static List<ItemStack> getTradeItems(AbstractKoboldEntity kobold, String table) {

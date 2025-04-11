@@ -1,6 +1,13 @@
 package net.salju.kobolds.block;
 
 import net.salju.kobolds.init.KoboldsMobs;
+import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.RandomSource;
+import net.minecraft.world.entity.EntitySpawnReason;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LightningBolt;
+import net.minecraft.world.entity.MoverType;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.level.redstone.Orientation;
 import net.minecraft.world.level.block.state.BlockState;
@@ -10,12 +17,6 @@ import net.minecraft.world.level.block.entity.SkullBlockEntity;
 import net.minecraft.world.level.block.SkullBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.entity.EntitySpawnReason;
-import net.minecraft.world.entity.LightningBolt;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.util.RandomSource;
-import net.minecraft.server.level.ServerLevel;
-import net.minecraft.core.BlockPos;
 
 public class KoboldSkull extends SkullBlock {
 	public KoboldSkull(SkullBlock.Type type, BlockBehaviour.Properties props) {
@@ -31,7 +32,7 @@ public class KoboldSkull extends SkullBlock {
 	public void neighborChanged(BlockState state, Level world, BlockPos pos, Block blok, Orientation ori, boolean moving) {
 		super.neighborChanged(state, world, pos, blok, ori, moving);
 		if (world.getBestNeighborSignal(pos) > 0) {
-			if (world instanceof ServerLevel lvl && !world.isDay() && world.canSeeSkyFromBelowWater(pos)) {
+			if (world instanceof ServerLevel lvl && world.isMoonVisible() && world.canSeeSkyFromBelowWater(pos)) {
 				summonSkelebold(lvl, BlockPos.containing((pos.getX() + 0.5), pos.getY(), (pos.getZ() + 0.5)));
 			}
 		}
@@ -40,7 +41,7 @@ public class KoboldSkull extends SkullBlock {
 	@Override
 	public void tick(BlockState state, ServerLevel lvl, BlockPos pos, RandomSource random) {
 		super.tick(state, lvl, pos, random);
-		if (!lvl.isDay() && lvl.canSeeSkyFromBelowWater(pos)) {
+		if (lvl.isMoonVisible() && lvl.canSeeSkyFromBelowWater(pos)) {
 			summonSkelebold(lvl, BlockPos.containing((pos.getX() + 0.5), pos.getY(), (pos.getZ() + 0.5)));
 		}
 	}
@@ -48,7 +49,7 @@ public class KoboldSkull extends SkullBlock {
 	private void summonSkelebold(ServerLevel lvl, BlockPos pos) {
 		lvl.destroyBlock(pos, false);
 		LightningBolt bolt = EntityType.LIGHTNING_BOLT.create(lvl, EntitySpawnReason.MOB_SUMMONED);
-		bolt.moveTo(Vec3.atBottomCenterOf(pos));
+		bolt.move(MoverType.SELF, Vec3.atBottomCenterOf(pos));
 		bolt.setVisualOnly(true);
 		KoboldsMobs.KOBOLD_SKELETON.get().spawn(lvl, pos, EntitySpawnReason.MOB_SUMMONED);
 		lvl.addFreshEntity(bolt);

@@ -39,10 +39,7 @@ public class KoboldChild extends AbstractKoboldEntity {
 	@Override
 	public void readAdditionalSaveData(CompoundTag tag) {
 		super.readAdditionalSaveData(tag);
-		if (tag.contains("Grow")) {
-			int saved = tag.getInt("Grow");
-			this.grow = saved;
-		}
+		this.grow = tag.getInt("Grow").orElse(0);
 	}
 
 	@Override

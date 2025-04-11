@@ -25,12 +25,12 @@ public class KoboldWarriorGoal extends Goal {
 
 	@Override
 	public boolean canUse() {
-		return (checkHand() && !(this.kobold.hasEffect(MobEffects.MOVEMENT_SLOWDOWN)));
+		return (checkHand() && !(this.kobold.hasEffect(MobEffects.SLOWNESS)));
 	}
 
 	@Override
 	public void start() {
-		this.kobold.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 600, 10, false, false));
+		this.kobold.addEffect(new MobEffectInstance(MobEffects.SLOWNESS, 600, 10, false, false));
 		Kobolds.queueServerWork(600, () -> {
 			ItemStack weapon = this.kobold.getMainHandItem();
 			ItemStack off = this.kobold.getOffhandItem();
