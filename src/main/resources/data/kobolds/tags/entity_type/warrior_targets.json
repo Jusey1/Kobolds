@@ -6,7 +6,6 @@
     "minecraft:spider",
     "minecraft:cave_spider",
     "minecraft:creaking",
-    "minecraft:creaking_transient",
     "#kobolds:normal_targets"
   ]
 }
