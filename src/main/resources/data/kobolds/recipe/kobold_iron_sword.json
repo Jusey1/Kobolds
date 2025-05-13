@@ -3,7 +3,6 @@
   "addition": "minecraft:iron_ingot",
   "base": "minecraft:iron_sword",
   "result": {
-    "count": 1,
     "id": "kobolds:kobold_iron_sword"
   },
   "template": "kobolds:kobold_template"

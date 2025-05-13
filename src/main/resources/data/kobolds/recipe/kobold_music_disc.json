@@ -3,7 +3,6 @@
   "addition": "minecraft:iron_ingot",
   "base": "minecraft:music_disc_stal",
   "result": {
-    "count": 1,
     "id": "kobolds:music_disc_kobblestone"
   },
   "template": "kobolds:kobold_template"

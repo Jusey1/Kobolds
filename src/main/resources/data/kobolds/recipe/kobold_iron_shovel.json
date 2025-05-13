@@ -3,7 +3,6 @@
   "addition": "minecraft:iron_ingot",
   "base": "minecraft:iron_shovel",
   "result": {
-    "count": 1,
     "id": "kobolds:kobold_iron_shovel"
   },
   "template": "kobolds:kobold_template"
