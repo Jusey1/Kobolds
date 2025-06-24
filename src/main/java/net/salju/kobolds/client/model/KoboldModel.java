@@ -49,8 +49,6 @@ public class KoboldModel<T extends AbstractKoboldState> extends HumanoidModel<T>
 		this.rightArm.zRot = 0.0F;
 		this.leftArm.yRot = 0.0F;
 		this.leftArm.zRot = 0.0F;
-		this.rightLeg.xRot = 0.0F;
-		this.leftLeg.xRot = 0.0F;
 		this.rightLeg.yRot = 0.0F;
 		this.leftLeg.yRot = 0.0F;
 		this.body.xRot = 0.0F;
@@ -128,12 +126,10 @@ public class KoboldModel<T extends AbstractKoboldState> extends HumanoidModel<T>
 				if (kobold.isLeftHanded) {
 					this.rightArm.xRot = -0.8727F;
 					this.rightArm.yRot = 0.0873F;
-					this.head.xRot = -0.2618F;
 					this.head.xRot = 0.1745F;
 				} else {
 					this.leftArm.xRot = -0.8727F;
 					this.leftArm.yRot = 0.0873F;
-					this.head.xRot = -0.2618F;
 					this.head.xRot = 0.1745F;
 				}
 			}

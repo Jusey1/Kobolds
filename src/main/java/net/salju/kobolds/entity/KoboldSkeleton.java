@@ -38,9 +38,10 @@ public class KoboldSkeleton extends AbstractSkeleton implements CrossbowAttackMo
 
 	@Override
 	public void performRangedAttack(LivingEntity target, float f) {
-		super.performRangedAttack(target, f);
 		if (this.getMainHandItem().getItem() instanceof CrossbowItem) {
 			this.performCrossbowAttack(this, 6.0F);
+		} else {
+			super.performRangedAttack(target, f);
 		}
 	}
 
