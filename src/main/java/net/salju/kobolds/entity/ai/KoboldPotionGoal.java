@@ -6,7 +6,6 @@ import net.minecraft.core.component.DataComponents;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.alchemy.PotionContents;
-import net.minecraft.world.entity.projectile.ProjectileUtil;
 import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -22,7 +21,7 @@ public class KoboldPotionGoal extends Goal {
 
 	@Override
 	public boolean canUse() {
-		return (kobold.isHolding(stack -> stack.getItem() == Items.POTION));
+		return kobold.getOffhandItem().is(Items.POTION);
 	}
 
 	@Override
@@ -30,12 +29,11 @@ public class KoboldPotionGoal extends Goal {
 		kobold.addEffect(new MobEffectInstance(MobEffects.SLOWNESS, 32, 4, false, false));
 		kobold.playSound(SoundEvents.GENERIC_DRINK.value(), 0.5F, 1.0F);
 		Kobolds.queueServerWork(32, () -> {
-			InteractionHand hand = ProjectileUtil.getWeaponHoldingHand(kobold, stack -> stack == Items.POTION);
-			PotionContents target = kobold.getItemInHand(hand).getOrDefault(DataComponents.POTION_CONTENTS, PotionContents.EMPTY);
-			for (MobEffectInstance effect : target.getAllEffects()) {
-				kobold.addEffect(effect);
+			PotionContents target = kobold.getOffhandItem().get(DataComponents.POTION_CONTENTS);
+			if (target != null) {
+				target.forEachEffect(kobold::addEffect, kobold.getOffhandItem().getOrDefault(DataComponents.POTION_DURATION_SCALE, 1.0F));
 			}
-			kobold.setItemInHand(hand, ItemStack.EMPTY);
+			kobold.setItemInHand(InteractionHand.OFF_HAND, ItemStack.EMPTY);
 		});
 	}
 }
