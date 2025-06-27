@@ -33,7 +33,6 @@ import net.minecraft.world.entity.ai.goal.LookAtPlayerGoal;
 import net.minecraft.world.entity.ai.goal.OpenDoorGoal;
 import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
 import net.minecraft.world.entity.ai.goal.RandomStrollGoal;
-import net.minecraft.world.entity.ai.navigation.GroundPathNavigation;
 import net.minecraft.world.entity.ai.targeting.TargetingConditions;
 import net.minecraft.world.entity.monster.CrossbowAttackMob;
 import net.minecraft.world.entity.monster.RangedAttackMob;
@@ -52,6 +51,8 @@ import net.minecraft.world.item.*;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
 import net.minecraft.world.level.storage.loot.LootParams;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.DifficultyInstance;
@@ -76,7 +77,7 @@ public abstract class AbstractKoboldEntity extends PathfinderMob implements Cros
 		super(type, world);
 		this.setCanPickUpLoot(true);
 		this.setPersistenceRequired();
-		((GroundPathNavigation) this.getNavigation()).setCanOpenDoors(true);
+		this.getNavigation().setCanOpenDoors(true);
 	}
 
 	@Override
@@ -90,16 +91,16 @@ public abstract class AbstractKoboldEntity extends PathfinderMob implements Cros
 	}
 
 	@Override
-	public void addAdditionalSaveData(CompoundTag tag) {
+	public void addAdditionalSaveData(ValueOutput tag) {
 		super.addAdditionalSaveData(tag);
 		if (!this.primary.isEmpty()) {
-			tag.put("Primary", this.primary.save(this.level().registryAccess(), new CompoundTag()));
+			tag.store("Primary", ItemStack.CODEC, this.primary);
 		}
 		if (!this.trident.isEmpty()) {
-			tag.put("Trident", this.trident.save(this.level().registryAccess(), new CompoundTag()));
+			tag.store("Trident", ItemStack.CODEC, this.trident);
 		}
 		if (this.getTridentReference() != null) {
-			this.getTridentReference().store(tag, "ThrownTrident");
+			EntityReference.store(this.getTridentReference(), tag, "ThrownTrident");
 		}
 		tag.putInt("Breed", this.breed);
 		tag.putInt("CD", this.cooldown);
@@ -107,25 +108,19 @@ public abstract class AbstractKoboldEntity extends PathfinderMob implements Cros
 	}
 
 	@Override
-	public void readAdditionalSaveData(CompoundTag tag) {
+	public void readAdditionalSaveData(ValueInput tag) {
 		super.readAdditionalSaveData(tag);
-		if (tag.getCompound("Primary").isPresent()) {
-			if (ItemStack.parse(this.level().registryAccess(), tag.getCompound("Primary").get()).isPresent()) {
-				this.primary = ItemStack.parse(this.level().registryAccess(), tag.getCompound("Primary").get()).get();
-			}
+		if (tag.read("Primary", ItemStack.CODEC).isPresent()) {
+			this.primary = tag.read("Primary", ItemStack.CODEC).orElse(ItemStack.EMPTY);
 		}
-		if (tag.getCompound("Trident").isPresent()) {
-			if (ItemStack.parse(this.level().registryAccess(), tag.getCompound("Trident").get()).isPresent()) {
-				this.trident = ItemStack.parse(this.level().registryAccess(), tag.getCompound("Trident").get()).get();
-			}
+		if (tag.read("Trident", ItemStack.CODEC).isPresent()) {
+			this.trident = tag.read("Trident", ItemStack.CODEC).orElse(ItemStack.EMPTY);
 		}
-		if (tag.contains("ThrownTrident")) {
-			EntityReference<Entity> target = EntityReference.read(tag, "ThrownTrident");
-			if (target != null) {
-				this.thrownTrident = Optional.of(target);
-			} else {
-				this.thrownTrident = Optional.empty();
-			}
+		EntityReference<Entity> target = EntityReference.read(tag, "ThrownTrident");
+		if (target != null) {
+			this.thrownTrident = Optional.of(target);
+		} else {
+			this.thrownTrident = Optional.empty();
 		}
 		this.breed = tag.getInt("Breed").orElse(0);
 		this.cooldown = tag.getInt("CD").orElse(0);

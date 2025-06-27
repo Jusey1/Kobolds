@@ -14,7 +14,7 @@ import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.Entity;
 
-@EventBusSubscriber(bus = EventBusSubscriber.Bus.MOD)
+@EventBusSubscriber
 public class KoboldsMobs {
 	public static final DeferredRegister<EntityType<?>> REGISTRY = DeferredRegister.create(Registries.ENTITY_TYPE, Kobolds.MODID);
 	public static final DeferredHolder<EntityType<?>, EntityType<Kobold>> KOBOLD = register("kobold", EntityType.Builder.<Kobold>of(Kobold::new, MobCategory.MISC).sized(0.5f, 1.48f).eyeHeight(1.26F).ridingOffset(-0.45F));

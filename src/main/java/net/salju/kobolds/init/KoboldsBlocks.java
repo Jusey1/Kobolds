@@ -19,7 +19,7 @@ import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.Block;
 
-@EventBusSubscriber(bus = EventBusSubscriber.Bus.MOD)
+@EventBusSubscriber
 public class KoboldsBlocks {
 	public static final DeferredRegister<Block> REGISTRY = DeferredRegister.createBlocks(Kobolds.MODID);
 	public static final DeferredHolder<Block, Block> KOBOLD_SKULL = REGISTRY.register("kobold_skull", () -> new KoboldSkull(KoboldSkull.Types.SKELEBOLD, createBaseProps("kobold_skull").instrument(NoteBlockInstrument.SKELETON).mapColor(MapColor.NONE).sound(SoundType.BONE_BLOCK).strength(1.0F).pushReaction(PushReaction.DESTROY).randomTicks()));

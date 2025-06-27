@@ -13,7 +13,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.renderer.blockentity.SkullBlockRenderer;
 
-@EventBusSubscriber(bus = EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
+@EventBusSubscriber(value = Dist.CLIENT)
 public class KoboldsClient {
 	public static final ModelLayerLocation KOBOLD = new ModelLayerLocation(ResourceLocation.fromNamespaceAndPath(Kobolds.MODID, "kobold"), "main");
 	public static final ModelLayerLocation KOBOLD_RASCAL = new ModelLayerLocation(ResourceLocation.fromNamespaceAndPath(Kobolds.MODID, "kobold_rascal"), "main");
