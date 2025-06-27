@@ -3,6 +3,6 @@
   "description": {
     "translate": "item.kobolds.music_disc_kobblestone.desc"
   },
-  "length_in_seconds": 162,
+  "length_in_seconds": 162.0,
   "sound_event": "kobolds:music_kobblestone"
 }
