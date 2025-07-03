@@ -24,6 +24,7 @@ public class Kobolds {
 		KoboldsItems.REGISTRY.register(bus);
 		KoboldsTabs.REGISTRY.register(bus);
 		KoboldsMobs.REGISTRY.register(bus);
+		KoboldsPotions.REGISTRY.register(bus);
 		KoboldsStructures.REGISTRY.register(bus);
 	}
 

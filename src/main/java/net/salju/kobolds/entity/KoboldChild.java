@@ -11,15 +11,11 @@ import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.storage.ValueInput;
-import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionHand;
 
 public class KoboldChild extends AbstractKoboldEntity {
-	private int grow;
-
 	public KoboldChild(EntityType<KoboldChild> type, Level world) {
 		super(type, world);
 		this.setCanPickUpLoot(false);
@@ -32,18 +28,6 @@ public class KoboldChild extends AbstractKoboldEntity {
 	}
 
 	@Override
-	public void addAdditionalSaveData(ValueOutput tag) {
-		super.addAdditionalSaveData(tag);
-		tag.putInt("Grow", this.grow);
-	}
-
-	@Override
-	public void readAdditionalSaveData(ValueInput tag) {
-		super.readAdditionalSaveData(tag);
-		this.grow = tag.getInt("Grow").orElse(0);
-	}
-
-	@Override
 	public boolean isBaby() {
 		return true;
 	}
@@ -52,9 +36,9 @@ public class KoboldChild extends AbstractKoboldEntity {
 	public void baseTick() {
 		super.baseTick();
 		if (!this.level().isClientSide()) {
-			if (this.grow < 24000 && this.getDisplayName().getString().equals(Component.translatable("entity.kobolds.kobold_child").getString())) {
-				++this.grow;
-			} else if (this.grow >= 24000) {
+			if (!this.getDisplayName().getString().equals(Component.translatable("entity.kobolds.kobold_child").getString())) {
+				this.setAge(-24000);
+			} else if (this.getAge() >= 0) {
 				BlockPos pos = this.blockPosition();
 				this.discard();
 				if (this.level() instanceof ServerLevel lvl) {
@@ -79,11 +63,10 @@ public class KoboldChild extends AbstractKoboldEntity {
 	@Override
 	public InteractionResult mobInteract(Player player, InteractionHand hand) {
 		ItemStack gem = player.getItemInHand(hand);
+		int i = this.getAge();
 		if (gem.is(Items.AMETHYST_SHARD)) {
-			if (!player.isCreative()) {
-				gem.shrink(1);
-			}
-			this.grow = this.grow + 1256;
+			gem.consume(1, player);
+			this.ageUp(getSpeedUpSecondsWhenFeeding(-i), true);
 			return InteractionResult.SUCCESS;
 		}
 		return super.mobInteract(player, hand);

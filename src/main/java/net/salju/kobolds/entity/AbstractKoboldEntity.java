@@ -1,16 +1,12 @@
 package net.salju.kobolds.entity;
 
 import net.salju.kobolds.Kobolds;
-import net.salju.kobolds.init.KoboldsSounds;
-import net.salju.kobolds.init.KoboldsMobs;
-import net.salju.kobolds.init.KoboldsItems;
-import net.salju.kobolds.init.KoboldsTags;
+import net.salju.kobolds.init.*;
 import net.neoforged.neoforge.event.EventHooks;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
@@ -26,6 +22,7 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.goal.FloatGoal;
@@ -63,17 +60,15 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
-public abstract class AbstractKoboldEntity extends PathfinderMob implements CrossbowAttackMob, RangedAttackMob {
+public abstract class AbstractKoboldEntity extends AgeableMob implements CrossbowAttackMob, RangedAttackMob {
 	private static final EntityDataAccessor<Boolean> DATA_CHARGING_STATE = SynchedEntityData.defineId(AbstractKoboldEntity.class, EntityDataSerializers.BOOLEAN);
 	private static final EntityDataAccessor<Boolean> DATA_DIAMOND_EYES = SynchedEntityData.defineId(AbstractKoboldEntity.class, EntityDataSerializers.BOOLEAN);
 	private Optional<EntityReference<Entity>> thrownTrident = Optional.empty();
 	private ItemStack primary = new ItemStack(KoboldsItems.KOBOLD_IRON_SWORD);
 	private ItemStack trident = ItemStack.EMPTY;
-	private int breed;
 	private int cooldown;
-	private int potion;
 
-	protected AbstractKoboldEntity(EntityType<? extends PathfinderMob> type, Level world) {
+	protected AbstractKoboldEntity(EntityType<? extends AgeableMob> type, Level world) {
 		super(type, world);
 		this.setCanPickUpLoot(true);
 		this.setPersistenceRequired();
@@ -102,9 +97,7 @@ public abstract class AbstractKoboldEntity extends PathfinderMob implements Cros
 		if (this.getTridentReference() != null) {
 			EntityReference.store(this.getTridentReference(), tag, "ThrownTrident");
 		}
-		tag.putInt("Breed", this.breed);
 		tag.putInt("CD", this.cooldown);
-		tag.putInt("PCD", this.potion);
 	}
 
 	@Override
@@ -122,9 +115,7 @@ public abstract class AbstractKoboldEntity extends PathfinderMob implements Cros
 		} else {
 			this.thrownTrident = Optional.empty();
 		}
-		this.breed = tag.getInt("Breed").orElse(0);
 		this.cooldown = tag.getInt("CD").orElse(0);
-		this.potion = tag.getInt("PCD").orElse(0);
 	}
 
 	@Override
@@ -154,7 +145,7 @@ public abstract class AbstractKoboldEntity extends PathfinderMob implements Cros
 			double d0 = target.getX() - this.getX();
 			double d1 = target.getY(0.3333333333333333D) - proj.getY();
 			double d2 = target.getZ() - this.getZ();
-			double d3 = (double) Mth.sqrt((float) (d0 * d0 + d2 * d2));
+			double d3 = Mth.sqrt((float) (d0 * d0 + d2 * d2));
 			proj.shoot(d0, d1 + d3 * (double) 0.2F, d2, 1.6F, (float) (14 - this.level().getDifficulty().getId() * 4));
 			this.playSound(SoundEvents.DROWNED_SHOOT, 1.0F, 1.0F / (this.getRandom().nextFloat() * 0.4F + 0.8F));
 			this.level().addFreshEntity(proj);
@@ -307,9 +298,8 @@ public abstract class AbstractKoboldEntity extends PathfinderMob implements Cros
 		if (source.getDirectEntity() instanceof Zombie && !this.isBaby()) {
 			this.playSound(SoundEvents.ZOMBIE_VILLAGER_CONVERTED, 1.0F, 1.0F);
 			if (this.level() instanceof ServerLevel) {
-				InteractionHand hand = ProjectileUtil.getWeaponHoldingHand(this, stack -> stack == Items.POTION);
-				if (this.getItemInHand(hand).is(Items.POTION)) {
-					this.setItemInHand(hand, ItemStack.EMPTY);
+				if (this.getOffhandItem().is(Items.POTION)) {
+					this.setItemInHand(InteractionHand.OFF_HAND, ItemStack.EMPTY);
 				}
 				KoboldZombie zombo = this.convertTo(KoboldsMobs.KOBOLD_ZOMBIE.get(), ConversionParams.single(this, true, true), newbie -> { EventHooks.onLivingConvert(this, newbie); });
 				zombo.setZombo(this);
@@ -334,9 +324,14 @@ public abstract class AbstractKoboldEntity extends PathfinderMob implements Cros
 						player.getItemInHand(hand).shrink(1);
 					}
 					return InteractionResult.SUCCESS;
-				} else if (gem.is(Items.AMETHYST_SHARD) && this.breed <= 0) {
+				} else if (gem.is(Items.AMETHYST_SHARD) && this.getAge() <= 0) {
 					if (this.isEffectiveAi()) {
-						this.setBreed(20000);
+						if (this.getHealth() < this.getMaxHealth()) {
+							this.setAge(1200);
+							this.addEffect(new MobEffectInstance(MobEffects.REGENERATION, 1200, 0));
+						} else {
+							this.setAge(20000);
+						}
 						if (!player.isCreative()) {
 							player.getItemInHand(hand).shrink(1);
 						}
@@ -369,9 +364,11 @@ public abstract class AbstractKoboldEntity extends PathfinderMob implements Cros
 
 	@Override
 	public SpawnGroupData finalizeSpawn(ServerLevelAccessor world, DifficultyInstance difficulty, EntitySpawnReason reason, @Nullable SpawnGroupData data) {
+		SpawnGroupData spawn = super.finalizeSpawn(world, difficulty, reason, data);
 		this.populateDefaultEquipmentSlots(world.getRandom(), difficulty);
 		this.populateDefaultEquipmentEnchantments(world, world.getRandom(), difficulty);
-		return super.finalizeSpawn(world, difficulty, reason, data);
+		this.setBaby(this.isBaby());
+		return spawn;
 	}
 
 	@Override
@@ -417,28 +414,30 @@ public abstract class AbstractKoboldEntity extends PathfinderMob implements Cros
 			if (this.cooldown > 0) {
 				--this.cooldown;
 			}
-			if (this.potion > 0) {
-				--this.potion;
-			} else if (this.getHealth() < 12) {
-				this.givePotion(PotionContents.createItemStack(Items.POTION, Potions.STRONG_HEALING), 600);
+			if (this.getHealth() < 12 && !this.hasEffect(MobEffects.REGENERATION)) {
+				this.givePotion(PotionContents.createItemStack(Items.POTION, KoboldsPotions.AMETHYST));
 			}
-			if (this.breed > 0) {
+			if (this.getAge() > 0) {
 				if (this.level() instanceof ServerLevel lvl) {
-					if (this.breed > 18000) {
+					if (this.canBreed()) {
 						AbstractKoboldEntity target = lvl.getNearestEntity(AbstractKoboldEntity.class, TargetingConditions.forNonCombat().range(8.0).ignoreLineOfSight(), this, this.getX(), this.getY(), this.getZ(), this.getBoundingBox().inflate(8.0D));
 						if (Mth.nextInt(this.random, 1, 10) > 8) {
 							double d = this.random.nextGaussian() * 0.02D;
 							lvl.sendParticles(ParticleTypes.HEART, this.getRandomX(1.0D), this.getRandomY() + 0.5D, this.getRandomZ(1.0D), 3, d, d, d, 0);
 						}
 						if (target != null && !target.is(this)) {
-							if (target.getBreed() > 18000) {
+							if (target.canBreed()) {
 								if (this.distanceTo(target) >= 1.0D) {
 									this.getNavigation().moveTo(target, 1.0F);
 								} else if (this.distanceTo(target) < 1.0D) {
-									BlockPos pos = BlockPos.containing(this.getX(), this.getY(), this.getZ());
-									KoboldsMobs.KOBOLD_CHILD.get().spawn(lvl, pos, EntitySpawnReason.BREEDING);
-									target.setBreed(18000);
-									this.setBreed(18000);
+									KoboldChild child = this.getBreedOffspring(lvl, target);
+									if (child != null) {
+										child.setBaby(true);
+										child.move(MoverType.SELF, this.getOnPos().getBottomCenter());
+										lvl.addFreshEntityWithPassengers(child);
+									}
+									target.setAge(18000);
+									this.setAge(18000);
 								}
 							}
 						}
@@ -447,21 +446,19 @@ public abstract class AbstractKoboldEntity extends PathfinderMob implements Cros
 				if (!this.isDiamond()) {
 					this.getEntityData().set(DATA_DIAMOND_EYES, true);
 				}
-				--this.breed;
-				if (this.breed <= 0 && this.isDiamond()) {
-					this.getEntityData().set(DATA_DIAMOND_EYES, false);
-				}
+			} else if (this.isDiamond()) {
+				this.getEntityData().set(DATA_DIAMOND_EYES, false);
 			}
 		}
 	}
 
 	@Override
 	public boolean hurtServer(ServerLevel lvl, DamageSource source, float amount) {
-		if (!this.level().isClientSide() && this.isAlive() && this.isEffectiveAi() && this.getPotionCD() <= 0) {
+		if (!this.level().isClientSide() && this.isAlive() && this.isEffectiveAi()) {
 			if ((source.is(DamageTypes.ON_FIRE) || source.is(DamageTypes.LAVA)) && !this.hasEffect(MobEffects.FIRE_RESISTANCE)) {
-				this.givePotion(PotionContents.createItemStack(Items.POTION, Potions.LONG_FIRE_RESISTANCE), 120);
+				this.givePotion(PotionContents.createItemStack(Items.POTION, Potions.LONG_FIRE_RESISTANCE));
 			} else if (source.is(DamageTypes.DROWN) && !this.hasEffect(MobEffects.WATER_BREATHING)) {
-				this.givePotion(PotionContents.createItemStack(Items.POTION, Potions.LONG_WATER_BREATHING), 120);
+				this.givePotion(PotionContents.createItemStack(Items.POTION, Potions.LONG_WATER_BREATHING));
 			}
 		}
 		if (this.isBlocking() && source.getDirectEntity() instanceof LivingEntity atk) {
@@ -470,10 +467,24 @@ public abstract class AbstractKoboldEntity extends PathfinderMob implements Cros
 		return (!(source.getEntity() instanceof AbstractKoboldEntity) && !source.is(DamageTypes.CAMPFIRE) && super.hurtServer(lvl, source, amount));
 	}
 
-	public void givePotion(ItemStack stack, int i) {
+	@Override
+	public boolean isBaby() {
+		return false;
+	}
+
+	@Override
+	public boolean canBreed() {
+		return this.getAge() > 18000;
+	}
+
+	@Override
+	public KoboldChild getBreedOffspring(ServerLevel lvl, AgeableMob target) {
+		return KoboldsMobs.KOBOLD_CHILD.get().create(lvl, EntitySpawnReason.BREEDING);
+	}
+
+	public void givePotion(ItemStack stack) {
 		if (this.getOffhandItem().isEmpty()) {
 			this.setItemInHand(InteractionHand.OFF_HAND, stack);
-			this.setPotionCD(i);
 		}
 	}
 
@@ -505,14 +516,6 @@ public abstract class AbstractKoboldEntity extends PathfinderMob implements Cros
 		this.cooldown = i;
 	}
 
-	public void setBreed(int i) {
-		this.breed = i;
-	}
-
-	public void setPotionCD(int i) {
-		this.potion = i;
-	}
-
 	public void setTrident(@Nullable ThrownTrident proj) {
 		this.thrownTrident = Optional.ofNullable(proj).map(EntityReference::new);
 	}
@@ -523,14 +526,6 @@ public abstract class AbstractKoboldEntity extends PathfinderMob implements Cros
 
 	public int getCD() {
 		return this.cooldown;
-	}
-
-	public int getBreed() {
-		return this.breed;
-	}
-
-	public int getPotionCD() {
-		return this.potion;
 	}
 
 	public boolean isPreferredWeapon(ItemStack stack) {
