@@ -22,7 +22,7 @@
           "functions": [
             {
               "function": "minecraft:set_potion",
-              "id": "minecraft:strong_healing"
+              "id": "kobolds:amethyst"
             }
           ]
         },
