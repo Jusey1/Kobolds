@@ -31,7 +31,7 @@ public class KoboldsClient {
 		event.registerLayerDefinition(KOBOLD, KoboldModel::createBodyLayer);
 		event.registerLayerDefinition(KOBOLD_RASCAL, RascalModel::createBodyLayer);
 		event.registerLayerDefinition(KOBOLD_CHILD, KoboldChildModel::createBodyLayer);
-		event.registerLayerDefinition(ZOMBOLD, ZomboldModel::createBodyLayer);
+		event.registerLayerDefinition(ZOMBOLD, KoboldModel::createBodyLayer);
 		event.registerLayerDefinition(SKELEBOLD, SkeleboldModel::createBodyLayer);
 		event.registerLayerDefinition(KOBOLD_SKULL, KoboldSkullModel::createBodyLayer);
 	}

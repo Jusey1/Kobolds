@@ -21,12 +21,12 @@ public class KoboldModel<T extends AbstractKoboldState> extends HumanoidModel<T>
 	}
 
 	public static LayerDefinition createBodyLayer() {
-		MeshDefinition mesh = KoboldModel.createMesh(CubeDeformation.NONE, 0.0F);
+		MeshDefinition mesh = KoboldModel.createMesh(new CubeDeformation(0.0F), 0.0F);
 		return LayerDefinition.create(mesh, 64, 64);
 	}
 
-	public static MeshDefinition createMesh(CubeDeformation cube, float f1) {
-		MeshDefinition mesh = HumanoidModel.createMesh(CubeDeformation.NONE, 0.0F);
+	public static MeshDefinition createMesh(CubeDeformation cube, float f) {
+		MeshDefinition mesh = HumanoidModel.createMesh(cube, f);
 		PartDefinition root = mesh.getRoot();
 		PartDefinition head = root.addOrReplaceChild("head", CubeListBuilder.create().texOffs(0, 0).addBox(-3.5F, -7.0F, -3.5F, 7.0F, 7.0F, 7.0F, new CubeDeformation(0.0F)).texOffs(22, 0).addBox(-2.5F, -3.0F, -6.5F, 5.0F, 3.0F, 3.0F, new CubeDeformation(0.0F)).texOffs(1, 3).addBox(-0.5F, -3.85F, -5.5F, 1.0F, 1.0F, 2.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 4.0F, -0.5F));
 		head.addOrReplaceChild("hat", CubeListBuilder.create().texOffs(0, 50).addBox(-3.5F, -12.0F, -3.0F, 7.0F, 7.0F, 7.0F, new CubeDeformation(0.5F)).texOffs(17, 52).addBox(-6.0F, -10.2F, -5.5F, 12.0F, 0.0F, 12.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 4.0F, -0.5F));

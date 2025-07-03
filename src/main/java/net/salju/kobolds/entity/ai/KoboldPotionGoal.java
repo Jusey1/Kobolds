@@ -21,6 +21,14 @@ public class KoboldPotionGoal extends Goal {
 	}
 
 	@Override
+	public boolean canContinueToUse() {
+		if (!kobold.isUsingItem() && this.isHoldingPotion()) {
+			this.start();
+		}
+		return super.canContinueToUse();
+	}
+
+	@Override
 	public void start() {
 		InteractionHand hand = ProjectileUtil.getWeaponHoldingHand(kobold, item -> new ItemStack(item).is(Items.POTION));
 		kobold.startUsingItem(hand);

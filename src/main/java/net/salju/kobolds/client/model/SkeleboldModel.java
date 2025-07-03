@@ -21,7 +21,7 @@ public class SkeleboldModel<T extends AbstractKoboldState> extends HumanoidModel
 	}
 
 	public static LayerDefinition createBodyLayer() {
-		MeshDefinition mesh = KoboldModel.createMesh(CubeDeformation.NONE, 0.0F);
+		MeshDefinition mesh = KoboldModel.createMesh(new CubeDeformation(0.0F), 0.0F);
 		PartDefinition root = mesh.getRoot();
 		root.addOrReplaceChild("right_arm", CubeListBuilder.create().texOffs(46, 16).addBox(-2.01F, -0.85F, -1.0F, 2.0F, 10.0F, 2.0F, new CubeDeformation(0.0F)), PartPose.offset(-3.0F, 5.0F, 0.0F));
 		root.addOrReplaceChild("left_arm", CubeListBuilder.create().texOffs(33, 16).addBox(0.01F, -0.85F, -1.0F, 2.0F, 10.0F, 2.0F, new CubeDeformation(0.0F)), PartPose.offset(3.0F, 5.0F, 0.0F));
@@ -40,8 +40,6 @@ public class SkeleboldModel<T extends AbstractKoboldState> extends HumanoidModel
 		this.rightArm.zRot = 0.0F;
 		this.leftArm.yRot = 0.0F;
 		this.leftArm.zRot = 0.0F;
-		this.rightLeg.xRot = 0.0F;
-		this.leftLeg.xRot = 0.0F;
 		this.rightLeg.yRot = 0.0F;
 		this.leftLeg.yRot = 0.0F;
 		this.body.xRot = 0.0F;

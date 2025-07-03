@@ -1,10 +1,11 @@
 package net.salju.kobolds.entity.ai;
 
 import net.salju.kobolds.entity.AbstractKoboldEntity;
-import net.minecraft.world.item.ShieldItem;
-import net.minecraft.world.entity.monster.RangedAttackMob;
 import net.minecraft.world.entity.ai.goal.Goal;
+import net.minecraft.world.entity.monster.RangedAttackMob;
+import net.minecraft.world.entity.projectile.ProjectileUtil;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.ShieldItem;
 import net.minecraft.world.InteractionHand;
 
 public class KoboldShieldGoal extends Goal {
@@ -16,7 +17,7 @@ public class KoboldShieldGoal extends Goal {
 
 	@Override
 	public boolean canUse() {
-		return kobold.getOffhandItem().getItem() instanceof ShieldItem && raiseShield();
+		return this.isHoldingShield() && this.raiseShield();
 	}
 
 	@Override
@@ -27,7 +28,8 @@ public class KoboldShieldGoal extends Goal {
 	@Override
 	public void start() {
 		super.start();
-		kobold.startUsingItem(InteractionHand.OFF_HAND);
+		InteractionHand hand = ProjectileUtil.getWeaponHoldingHand(kobold, item -> item instanceof ShieldItem);
+		kobold.startUsingItem(hand);
 	}
 
 	@Override
@@ -36,11 +38,15 @@ public class KoboldShieldGoal extends Goal {
 		kobold.stopUsingItem();
 	}
 
-	protected boolean raiseShield() {
+	private boolean raiseShield() {
 		if (kobold.getTarget() != null && kobold.getTarget().isAlive() && this.kobold.getCD() <= 0) {
 			LivingEntity target = kobold.getTarget();
             return (target instanceof RangedAttackMob && kobold.distanceTo(target) >= 0.2D) || (kobold.distanceTo(target) >= 0.2D && kobold.distanceTo(target) <= 5.2D);
 		}
 		return false;
+	}
+
+	private boolean isHoldingShield() {
+		return kobold.isHolding(stack -> stack.getItem() instanceof ShieldItem);
 	}
 }

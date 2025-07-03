@@ -14,19 +14,15 @@ public class KoboldMeleeGoal<T extends AbstractKoboldEntity> extends MeleeAttack
 
 	@Override
 	public boolean canUse() {
-		return (super.canUse() && this.hasRightWeapon());
+		return super.canUse() && this.hasRightWeapon();
 	}
 
 	@Override
 	public boolean canContinueToUse() {
-		return (super.canContinueToUse() && this.hasRightWeapon());
+		return super.canContinueToUse() && this.hasRightWeapon();
 	}
 
-	public boolean hasRightWeapon() {
-		if (kobold.getMainHandItem().is(KoboldsTags.RANGED)) {
-			return false;
-		} else {
-			return !kobold.getMainHandItem().isEmpty();
-		}
+	private boolean hasRightWeapon() {
+		return !kobold.getMainHandItem().isEmpty() && !kobold.getMainHandItem().is(KoboldsTags.RANGED);
 	}
 }

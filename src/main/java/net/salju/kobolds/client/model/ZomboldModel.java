@@ -4,10 +4,6 @@ import net.salju.kobolds.client.renderer.AbstractKoboldState;
 import net.minecraft.world.item.TridentItem;
 import net.minecraft.world.entity.HumanoidArm;
 import net.minecraft.util.Mth;
-import net.minecraft.client.model.geom.builders.PartDefinition;
-import net.minecraft.client.model.geom.builders.MeshDefinition;
-import net.minecraft.client.model.geom.builders.LayerDefinition;
-import net.minecraft.client.model.geom.builders.CubeDeformation;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.HumanoidModel;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -15,11 +11,6 @@ import com.mojang.blaze3d.vertex.PoseStack;
 public class ZomboldModel<T extends AbstractKoboldState> extends HumanoidModel<T> {
 	public ZomboldModel(ModelPart root) {
 		super(root);
-	}
-
-	public static LayerDefinition createBodyLayer() {
-		MeshDefinition mesh = KoboldModel.createMesh(CubeDeformation.NONE, 0.0F);
-		return LayerDefinition.create(mesh, 64, 64);
 	}
 
 	@Override
@@ -30,8 +21,6 @@ public class ZomboldModel<T extends AbstractKoboldState> extends HumanoidModel<T
 		this.rightArm.zRot = 0.0F;
 		this.leftArm.yRot = 0.0F;
 		this.leftArm.zRot = 0.0F;
-		this.rightLeg.xRot = 0.0F;
-		this.leftLeg.xRot = 0.0F;
 		this.rightLeg.yRot = 0.0F;
 		this.leftLeg.yRot = 0.0F;
 		this.body.xRot = 0.0F;

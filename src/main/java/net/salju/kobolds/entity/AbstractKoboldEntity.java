@@ -160,12 +160,13 @@ public abstract class AbstractKoboldEntity extends AgeableMob implements Crossbo
 		this.noActionTime = 0;
 	}
 
-	public boolean isCharging() {
-		return this.entityData.get(DATA_CHARGING_STATE);
-	}
-
+	@Override
 	public void setChargingCrossbow(boolean check) {
 		this.entityData.set(DATA_CHARGING_STATE, check);
+	}
+
+	public boolean isCharging() {
+		return this.entityData.get(DATA_CHARGING_STATE);
 	}
 
 	@Override

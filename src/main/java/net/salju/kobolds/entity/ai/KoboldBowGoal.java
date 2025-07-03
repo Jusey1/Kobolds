@@ -5,17 +5,12 @@ import net.minecraft.world.item.BowItem;
 import net.minecraft.world.entity.monster.RangedAttackMob;
 import net.minecraft.world.entity.ai.goal.RangedBowAttackGoal;
 
-public class KoboldBowGoal<T extends AbstractKoboldEntity & RangedAttackMob> extends RangedBowAttackGoal {
+public class KoboldBowGoal<T extends AbstractKoboldEntity & RangedAttackMob> extends RangedBowAttackGoal<T> {
 	private final T kobold;
 
 	public KoboldBowGoal(T t, double d, int i, float f) {
 		super(t, d, i, f);
 		this.kobold = t;
-	}
-
-	@Override
-	protected boolean isHoldingBow() {
-		return (kobold.isHolding(stack -> stack.getItem() instanceof BowItem));
 	}
 
 	@Override
@@ -33,5 +28,10 @@ public class KoboldBowGoal<T extends AbstractKoboldEntity & RangedAttackMob> ext
 		super.stop();
 		kobold.getMoveControl().strafe(0.0F, 0.0F);
 		kobold.getNavigation().stop();
+	}
+
+	@Override
+	protected boolean isHoldingBow() {
+		return kobold.isHolding(stack -> stack.getItem() instanceof BowItem);
 	}
 }
