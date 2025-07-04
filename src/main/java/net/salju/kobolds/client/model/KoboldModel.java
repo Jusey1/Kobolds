@@ -67,9 +67,9 @@ public class KoboldModel<T extends AbstractKoboldState> extends HumanoidModel<T>
 			this.leftLeg.yRot = -0.2618F;
 		}
 		if (!kobold.getMainhandItem().isEmpty()) {
-			if (kobold.isAggressive) {
-				if (kobold.isLeftHanded) {
-					if (kobold.getMainhandItem().getItem() instanceof CrossbowItem || kobold.getMainhandItem().getItem() instanceof BowItem || kobold.getMainhandItem().is(KoboldsTags.RANGED)) {
+			if (kobold.getMainhandItem().getItem() instanceof CrossbowItem || kobold.getMainhandItem().getItem() instanceof BowItem) {
+				if (kobold.isAggressive) {
+					if (kobold.isLeftHanded) {
 						if (kobold.isCharging) {
 							this.leftArm.xRot = -0.6981F;
 							this.leftArm.yRot = 0.3491F;
@@ -81,15 +81,7 @@ public class KoboldModel<T extends AbstractKoboldState> extends HumanoidModel<T>
 							this.rightArm.xRot = -1.3963F;
 							this.rightArm.yRot = -0.3054F;
 						}
-					} else if (kobold.getMainhandItem().getItem() instanceof TridentItem) {
-						this.leftArm.xRot = 2.8798F;
-						this.rightArm.xRot = 0.0F;
 					} else {
-						this.leftArm.xRot = -2.0944F;
-						this.leftArm.yRot = -0.1745F;
-					}
-				} else {
-					if (kobold.getMainhandItem().getItem() instanceof CrossbowItem || kobold.getMainhandItem().getItem() instanceof BowItem || kobold.getMainhandItem().is(KoboldsTags.RANGED)) {
 						if (kobold.isCharging) {
 							this.rightArm.xRot = -0.6981F;
 							this.rightArm.yRot = -0.3491F;
@@ -101,9 +93,23 @@ public class KoboldModel<T extends AbstractKoboldState> extends HumanoidModel<T>
 							this.leftArm.xRot = -1.3963F;
 							this.leftArm.yRot = 0.3054F;
 						}
-					} else if (kobold.getMainhandItem().getItem() instanceof TridentItem) {
-						this.rightArm.xRot = 2.8798F;
-						this.leftArm.xRot = 0.0F;
+					}
+				}
+			} else if (kobold.getMainhandItem().is(Items.EMERALD) || kobold.getMainhandItem().is(Items.POTION)) {
+				if (kobold.isLeftHanded) {
+					this.leftArm.xRot = -0.8727F;
+					this.leftArm.yRot = 0.0873F;
+					this.head.xRot = 0.1745F;
+				} else {
+					this.rightArm.xRot = -0.8727F;
+					this.rightArm.yRot = 0.0873F;
+					this.head.xRot = 0.1745F;
+				}
+			} else {
+				if (kobold.isAggressive) {
+					if (kobold.isLeftHanded) {
+						this.leftArm.xRot = -2.0944F;
+						this.leftArm.yRot = -0.1745F;
 					} else {
 						this.rightArm.xRot = -2.0944F;
 						this.rightArm.yRot = 0.1745F;
@@ -122,7 +128,17 @@ public class KoboldModel<T extends AbstractKoboldState> extends HumanoidModel<T>
 						this.leftArm.yRot = 0.2618F;
 					}
 				}
-			} else {
+			} else if (kobold.getOffhandItem().getItem() instanceof TridentItem) {
+				if (kobold.isAggressive) {
+					if (kobold.isLeftHanded) {
+						this.rightArm.xRot = 2.8798F;
+						this.leftArm.xRot = 0.0F;
+					} else {
+						this.leftArm.xRot = 2.8798F;
+						this.rightArm.xRot = 0.0F;
+					}
+				}
+			} else if (kobold.getOffhandItem().is(Items.EMERALD) || kobold.getOffhandItem().is(Items.POTION)) {
 				if (kobold.isLeftHanded) {
 					this.rightArm.xRot = -0.8727F;
 					this.rightArm.yRot = 0.0873F;
@@ -154,7 +170,22 @@ public class KoboldModel<T extends AbstractKoboldState> extends HumanoidModel<T>
 					rightArm.xRot = (float) ((double) rightArm.xRot - ((double) f2 / 1.2D - (double) 1.0F));
 				}
 			} else {
-				if (kobold.getOffhandItem().is(Items.EMERALD)) {
+				if (kobold.getMainhandItem().is(Items.EMERALD)) {
+					float progress = kobold.attackTime;
+					this.body.yRot = Mth.sin(Mth.sqrt(progress) * ((float) Math.PI * -2F)) * -0.2F;
+					this.leftArm.yRot += this.body.yRot;
+					this.rightArm.yRot += this.body.yRot;
+					this.rightArm.xRot += this.body.yRot;
+					progress = 1.0F - kobold.attackTime;
+					progress = progress * progress;
+					progress = progress * progress;
+					progress = 1.0F - progress;
+					float f2 = Mth.sin(progress * (float) Math.PI);
+					float f3 = Mth.sin(kobold.attackTime * (float) Math.PI) * -(this.head.xRot - 0.7F) * 0.75F;
+					leftArm.xRot = (float) ((double) rightArm.xRot - ((double) f2 * 1.2D + (double) f3));
+					leftArm.yRot += this.body.yRot * 2.0F;
+					leftArm.zRot += Mth.sin(kobold.attackTime * (float) Math.PI) * -0.4F;
+				} else if (kobold.getOffhandItem().is(Items.EMERALD)) {
 					float progress = kobold.attackTime;
 					this.body.yRot = Mth.sin(Mth.sqrt(progress) * ((float) Math.PI * 2F)) * 0.2F;
 					this.rightArm.yRot += this.body.yRot;

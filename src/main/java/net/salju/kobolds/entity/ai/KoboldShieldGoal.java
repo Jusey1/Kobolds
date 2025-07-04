@@ -6,7 +6,6 @@ import net.minecraft.world.entity.monster.RangedAttackMob;
 import net.minecraft.world.entity.projectile.ProjectileUtil;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ShieldItem;
-import net.minecraft.world.InteractionHand;
 
 public class KoboldShieldGoal extends Goal {
 	public final AbstractKoboldEntity kobold;
@@ -28,8 +27,7 @@ public class KoboldShieldGoal extends Goal {
 	@Override
 	public void start() {
 		super.start();
-		InteractionHand hand = ProjectileUtil.getWeaponHoldingHand(kobold, item -> item instanceof ShieldItem);
-		kobold.startUsingItem(hand);
+		kobold.startUsingItem(ProjectileUtil.getWeaponHoldingHand(kobold, item -> item instanceof ShieldItem));
 	}
 
 	@Override

@@ -1,6 +1,5 @@
 package net.salju.kobolds.entity.ai;
 
-import net.salju.kobolds.init.KoboldsTags;
 import net.salju.kobolds.entity.AbstractKoboldEntity;
 import net.minecraft.world.entity.ai.goal.MeleeAttackGoal;
 
@@ -23,6 +22,6 @@ public class KoboldMeleeGoal<T extends AbstractKoboldEntity> extends MeleeAttack
 	}
 
 	private boolean hasRightWeapon() {
-		return !kobold.getMainHandItem().isEmpty() && !kobold.getMainHandItem().is(KoboldsTags.RANGED);
+		return !kobold.getMainHandItem().isEmpty();
 	}
 }

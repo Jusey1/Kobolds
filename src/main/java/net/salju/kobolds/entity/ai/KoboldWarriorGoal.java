@@ -4,16 +4,17 @@ import net.salju.kobolds.init.KoboldsMobs;
 import net.salju.kobolds.entity.AbstractKoboldEntity;
 import net.salju.kobolds.Kobolds;
 import net.neoforged.neoforge.event.EventHooks;
-import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.entity.ai.goal.Goal;
+import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.entity.projectile.ProjectileUtil;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.ConversionParams;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.AxeItem;
-import net.minecraft.world.entity.item.ItemEntity;
-import net.minecraft.world.entity.ai.goal.Goal;
-import net.minecraft.world.entity.ConversionParams;
-import net.minecraft.world.entity.EquipmentSlot;
-import net.minecraft.world.effect.MobEffects;
-import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.server.level.ServerLevel;
 
 public class KoboldWarriorGoal extends Goal {
@@ -25,32 +26,35 @@ public class KoboldWarriorGoal extends Goal {
 
 	@Override
 	public boolean canUse() {
-		return (checkHand() && !(this.kobold.hasEffect(MobEffects.SLOWNESS)));
+		return this.isHoldingAxe();
 	}
 
 	@Override
 	public void start() {
-		this.kobold.addEffect(new MobEffectInstance(MobEffects.SLOWNESS, 600, 10, false, false));
+		kobold.addEffect(new MobEffectInstance(MobEffects.SLOWNESS, 600, 10, false, false));
 		Kobolds.queueServerWork(600, () -> {
-			ItemStack weapon = this.kobold.getMainHandItem();
-			ItemStack off = this.kobold.getOffhandItem();
-			LevelAccessor world = this.kobold.level();
-			double x = this.kobold.getX();
-			double y = this.kobold.getY();
-			double z = this.kobold.getZ();
-			if (world instanceof ServerLevel lvl) {
-				ItemEntity drop = new ItemEntity(lvl, x, y, z, weapon);
+			InteractionHand hand = ProjectileUtil.getWeaponHoldingHand(kobold, item -> item instanceof AxeItem);
+			ItemStack weapon = hand.equals(InteractionHand.MAIN_HAND) ? kobold.getOffhandItem() : kobold.getMainHandItem();
+			ItemStack axe = kobold.getItemInHand(hand);
+			if (kobold.level() instanceof ServerLevel lvl) {
+				ItemEntity drop = new ItemEntity(lvl, kobold.getX(), kobold.getY(), kobold.getZ(), weapon);
 				drop.setPickUpDelay(10);
-				world.addFreshEntity(drop);
-				this.kobold.setItemSlot(EquipmentSlot.MAINHAND, off);
-				this.kobold.setDropChance(EquipmentSlot.MAINHAND, 1.0F);
-				this.kobold.setItemSlot(EquipmentSlot.OFFHAND, new ItemStack(Items.SHIELD));
-				this.kobold.convertTo(KoboldsMobs.KOBOLD_WARRIOR.get(), ConversionParams.single(this.kobold, true, true), newbie -> { EventHooks.onLivingConvert(this.kobold, newbie); });
+				lvl.addFreshEntity(drop);
+				if (hand.equals(InteractionHand.MAIN_HAND)) {
+					ItemEntity primary = new ItemEntity(lvl, kobold.getX(), kobold.getY(), kobold.getZ(), kobold.getPrimary());
+					drop.setPickUpDelay(10);
+					lvl.addFreshEntity(primary);
+				}
+				kobold.setItemSlot(EquipmentSlot.MAINHAND, axe);
+				kobold.setDropChance(EquipmentSlot.MAINHAND, 1.0F);
+				kobold.setItemSlot(EquipmentSlot.OFFHAND, new ItemStack(Items.SHIELD));
+				kobold.updateItemData();
+				kobold.convertTo(KoboldsMobs.KOBOLD_WARRIOR.get(), ConversionParams.single(kobold, true, true), newbie -> { EventHooks.onLivingConvert(kobold, newbie); });
 			}
 		});
 	}
 
-	protected boolean checkHand() {
-		return (this.kobold.getOffhandItem().getItem() instanceof AxeItem);
+	private boolean isHoldingAxe() {
+		return kobold.isHolding(stack -> stack.getItem() instanceof AxeItem);
 	}
 }
