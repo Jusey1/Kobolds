@@ -4,7 +4,7 @@ license="MIT License"
 
 [[mods]]
 modId="kobolds"
-version="3.2.8"
+version="3.2.9"
 displayName="Kobolds"
 displayURL="https://discord.gg/s7QaYGUzZU"
 logoFile="logo.png"
@@ -16,6 +16,6 @@ description="Tiny Lizards"
 [[dependencies.kobolds]]
     modId="minecraft"
     type="required"
-    versionRange="[1.21.6]"
+    versionRange="[1.21.7]"
     ordering="NONE"
     side="BOTH"
