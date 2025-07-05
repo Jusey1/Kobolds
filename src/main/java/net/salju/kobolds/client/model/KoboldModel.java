@@ -1,6 +1,5 @@
 package net.salju.kobolds.client.model;
 
-import net.salju.kobolds.init.KoboldsTags;
 import net.salju.kobolds.client.renderer.AbstractKoboldState;
 import net.minecraft.world.entity.HumanoidArm;
 import net.minecraft.util.Mth;

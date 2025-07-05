@@ -23,7 +23,6 @@ public class KoboldEngineer extends AbstractKoboldEntity {
 			Supplementaries.addGoals(this);
 		}
 		this.goalSelector.addGoal(1, new KoboldCrossbowGoal<>(this, 1.0D, 12.0F));
-		this.goalSelector.addGoal(1, new KoboldSpecialRangeGoal<>(this, 1.0D, 12.0F));
 		this.goalSelector.addGoal(1, new KoboldBowGoal<>(this, 1.0D, 20, 15.0F));
 		this.goalSelector.addGoal(1, new KoboldTradeGoal(this, "gameplay/engineer_loot"));
 		this.targetSelector.addGoal(2, new KoboldTargetGoal<>(this, LivingEntity.class, new KoboldAttackSelector(this)));

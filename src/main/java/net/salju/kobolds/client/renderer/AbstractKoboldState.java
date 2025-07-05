@@ -1,13 +1,10 @@
 package net.salju.kobolds.client.renderer;
 
 import net.minecraft.world.entity.HumanoidArm;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 import net.minecraft.client.renderer.entity.state.HumanoidRenderState;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 
-@OnlyIn(Dist.CLIENT)
 public class AbstractKoboldState extends HumanoidRenderState {
 	public ItemStack rightStack = ItemStack.EMPTY;
 	public ItemStack leftStack = ItemStack.EMPTY;
