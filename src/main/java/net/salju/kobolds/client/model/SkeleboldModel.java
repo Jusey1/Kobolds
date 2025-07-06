@@ -134,12 +134,12 @@ public class SkeleboldModel<T extends AbstractKoboldState> extends HumanoidModel
 		switch (arm) {
 			case LEFT -> {
 				this.leftArm.translateAndRotate(pose);
-				pose.translate(0.045, 0.096, 0.0);
+				pose.translate(0.018, 0.096, 0.0);
 				pose.scale(0.75F, 0.75F, 0.75F);
 			}
 			case RIGHT -> {
 				this.rightArm.translateAndRotate(pose);
-				pose.translate(-0.045, 0.096, 0.0);
+				pose.translate(-0.018, 0.096, 0.0);
 				pose.scale(0.75F, 0.75F, 0.75F);
 			}
 		}

@@ -29,6 +29,7 @@ public class KoboldsMobs {
 	public static final DeferredHolder<EntityType<?>, EntityType<KoboldChild>> KOBOLD_CHILD = register("kobold_child", EntityType.Builder.of(KoboldChild::new, MobCategory.MISC).sized(0.4f, 0.76f).eyeHeight(0.66F).ridingOffset(-0.225F));
 	public static final DeferredHolder<EntityType<?>, EntityType<KoboldZombie>> KOBOLD_ZOMBIE = register("kobold_zombie", EntityType.Builder.of(KoboldZombie::new, MobCategory.MONSTER).sized(0.5f, 1.48f).eyeHeight(1.26F).ridingOffset(-0.45F));
 	public static final DeferredHolder<EntityType<?>, EntityType<KoboldSkeleton>> KOBOLD_SKELETON = register("kobold_skeleton", EntityType.Builder.of(KoboldSkeleton::new, MobCategory.MONSTER).sized(0.5f, 1.48f).eyeHeight(1.26F).ridingOffset(-0.45F));
+	public static final DeferredHolder<EntityType<?>, EntityType<KoboldWither>> WITHERBOLD = register("witherbold", EntityType.Builder.of(KoboldWither::new, MobCategory.MONSTER).sized(0.5f, 1.48f).eyeHeight(1.26F).ridingOffset(-0.45F).fireImmune());
 
 	private static <T extends Entity> DeferredHolder<EntityType<?>, EntityType<T>> register(String registryname, EntityType.Builder<T> entityTypeBuilder) {
 		return REGISTRY.register(registryname, () -> entityTypeBuilder.build(ResourceKey.create(Registries.ENTITY_TYPE, ResourceLocation.fromNamespaceAndPath(Kobolds.MODID, registryname))));
@@ -46,5 +47,6 @@ public class KoboldsMobs {
 		event.put(KOBOLD_CHILD.get(), KoboldsManager.createAttributes(18.0, 1.0, 2.0, 0.25).build());
 		event.put(KOBOLD_ZOMBIE.get(), KoboldsManager.createAttributes(18.0, 3.0, 2.0, 0.2).add(Attributes.SPAWN_REINFORCEMENTS_CHANCE).build());
 		event.put(KOBOLD_SKELETON.get(), KoboldsManager.createAttributes(18.0, 3.0, 0.0, 0.25).build());
+		event.put(WITHERBOLD.get(), KoboldsManager.createAttributes(32.0, 3.0, 2.0, 0.25).build());
 	}
 }

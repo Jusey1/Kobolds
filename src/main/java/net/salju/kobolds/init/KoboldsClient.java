@@ -1,7 +1,7 @@
 package net.salju.kobolds.init;
 
 import net.salju.kobolds.Kobolds;
-import net.salju.kobolds.block.KoboldSkull;
+import net.salju.kobolds.block.*;
 import net.salju.kobolds.client.model.*;
 import net.salju.kobolds.client.renderer.*;
 import net.neoforged.fml.common.EventBusSubscriber;
@@ -21,7 +21,9 @@ public class KoboldsClient {
 	public static final ModelLayerLocation KOBOLD_ARMOR_INNER = new ModelLayerLocation(ResourceLocation.fromNamespaceAndPath(Kobolds.MODID, "kobold_armor_inner"), "main");
 	public static final ModelLayerLocation KOBOLD_ARMOR_OUTER = new ModelLayerLocation(ResourceLocation.fromNamespaceAndPath(Kobolds.MODID, "kobold_armor_outer"), "main");
 	public static final ModelLayerLocation KOBOLD_SKULL = new ModelLayerLocation(ResourceLocation.fromNamespaceAndPath(Kobolds.MODID, "kobold_skull"), "main");
+	public static final ModelLayerLocation KOBOLD_WITHER_SKULL = new ModelLayerLocation(ResourceLocation.fromNamespaceAndPath(Kobolds.MODID, "kobold_wither_skull"), "main");
 	public static final ModelLayerLocation SKELEBOLD = new ModelLayerLocation(ResourceLocation.fromNamespaceAndPath(Kobolds.MODID, "skelebold"), "main");
+	public static final ModelLayerLocation WITHERBOLD = new ModelLayerLocation(ResourceLocation.fromNamespaceAndPath(Kobolds.MODID, "witherbold"), "main");
 	public static final ModelLayerLocation ZOMBOLD = new ModelLayerLocation(ResourceLocation.fromNamespaceAndPath(Kobolds.MODID, "zombold"), "main");
 
 	@SubscribeEvent
@@ -33,6 +35,8 @@ public class KoboldsClient {
 		event.registerLayerDefinition(KOBOLD_CHILD, KoboldChildModel::createBodyLayer);
 		event.registerLayerDefinition(ZOMBOLD, KoboldModel::createBodyLayer);
 		event.registerLayerDefinition(SKELEBOLD, SkeleboldModel::createBodyLayer);
+		event.registerLayerDefinition(WITHERBOLD, SkeleboldModel::createBodyLayer);
+		event.registerLayerDefinition(KOBOLD_WITHER_SKULL, KoboldSkullModel::createBodyLayer);
 		event.registerLayerDefinition(KOBOLD_SKULL, KoboldSkullModel::createBodyLayer);
 	}
 
@@ -48,15 +52,18 @@ public class KoboldsClient {
 		event.registerEntityRenderer(KoboldsMobs.KOBOLD_ZOMBIE.get(), KoboldZombieRenderer::new);
 		event.registerEntityRenderer(KoboldsMobs.KOBOLD_SKELETON.get(), KoboldSkeletonRenderer::new);
 		event.registerEntityRenderer(KoboldsMobs.KOBOLD_RASCAL.get(), KoboldRascalRenderer::new);
+		event.registerEntityRenderer(KoboldsMobs.WITHERBOLD.get(), KoboldWitherRenderer::new);
 	}
 
 	@SubscribeEvent
 	public static void registerSkullRenderers(EntityRenderersEvent.CreateSkullModels event) {
 		event.registerSkullModel(KoboldSkull.Types.SKELEBOLD, KOBOLD_SKULL);
+		event.registerSkullModel(KoboldWitherSkull.Types.WITHERBOLD, KOBOLD_WITHER_SKULL);
 	}
 
 	@SubscribeEvent
 	public static void clientSetupEvent(FMLClientSetupEvent event) {
 		event.enqueueWork(() -> SkullBlockRenderer.SKIN_BY_TYPE.put(KoboldSkull.Types.SKELEBOLD, ResourceLocation.fromNamespaceAndPath(Kobolds.MODID, "textures/entity/undead/skeleton.png")));
+		event.enqueueWork(() -> SkullBlockRenderer.SKIN_BY_TYPE.put(KoboldWitherSkull.Types.WITHERBOLD, ResourceLocation.fromNamespaceAndPath(Kobolds.MODID, "textures/entity/undead/skeleton_wither.png")));
 	}
 }

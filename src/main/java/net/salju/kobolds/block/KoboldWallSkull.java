@@ -47,12 +47,16 @@ public class KoboldWallSkull extends WallSkullBlock {
 		}
 	}
 
+	protected EntityType<?> getKoboldSkeleton() {
+		return KoboldsMobs.KOBOLD_SKELETON.get();
+	}
+
 	private void summonSkelebold(ServerLevel lvl, BlockPos pos) {
 		lvl.destroyBlock(pos, false);
 		LightningBolt bolt = EntityType.LIGHTNING_BOLT.create(lvl, EntitySpawnReason.MOB_SUMMONED);
 		bolt.move(MoverType.SELF, Vec3.atBottomCenterOf(pos));
 		bolt.setVisualOnly(true);
-		KoboldsMobs.KOBOLD_SKELETON.get().spawn(lvl, pos, EntitySpawnReason.MOB_SUMMONED);
+		this.getKoboldSkeleton().spawn(lvl, pos, EntitySpawnReason.MOB_SUMMONED);
 		lvl.addFreshEntity(bolt);
 	}
 }
