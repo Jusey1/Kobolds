@@ -1,16 +1,6 @@
 {
   "model": {
     "type": "minecraft:model",
-    "model": "minecraft:item/template_spawn_egg",
-    "tints": [
-      {
-        "type": "minecraft:constant",
-        "value": -3355444
-      },
-      {
-        "type": "minecraft:constant",
-        "value": -13421773
-      }
-    ]
+    "model": "kobolds:item/kobold_skeleton_spawn_egg"
   }
 }

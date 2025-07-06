@@ -1,6 +1,6 @@
 {
   "model": {
     "type": "minecraft:model",
-    "model": "kobolds:item/kobold_spawn_egg"
+    "model": "kobolds:item/witherbold_spawn_egg"
   }
 }
