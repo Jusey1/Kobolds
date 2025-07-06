@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "kobolds:kobold_skull",
+    "minecraft:netherite_sword",
+    "minecraft:wither_rose"
+  ],
+  "result": {
+    "id": "kobolds:kobold_wither_skull"
+  }
+}

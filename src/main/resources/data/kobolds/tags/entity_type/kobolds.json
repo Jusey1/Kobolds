@@ -10,6 +10,7 @@
     "kobolds:kobold_pirate",
     "kobolds:kobold_captain",
     "kobolds:kobold_zombie",
-    "kobolds:kobold_skeleton"
+    "kobolds:kobold_skeleton",
+    "kobolds:witherbold"
   ]
 }
