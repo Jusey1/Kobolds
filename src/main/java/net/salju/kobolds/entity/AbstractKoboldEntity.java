@@ -376,20 +376,6 @@ public abstract class AbstractKoboldEntity extends AgeableMob implements Crossbo
 
 	@Override
 	protected void populateDefaultEquipmentSlots(RandomSource randy, DifficultyInstance souls) {
-		if (this instanceof KoboldWarrior) {
-			this.setItemSlot(EquipmentSlot.MAINHAND, new ItemStack(KoboldsItems.KOBOLD_IRON_AXE.get()));
-			this.setItemSlot(EquipmentSlot.OFFHAND, new ItemStack(Items.SHIELD));
-		} else if (this instanceof KoboldRascal || this instanceof KoboldCaptain) {
-			this.setItemSlot(EquipmentSlot.MAINHAND, new ItemStack(KoboldsItems.KOBOLD_IRON_SWORD.get()));
-		} else if (this instanceof KoboldEngineer) {
-			this.setItemSlot(EquipmentSlot.MAINHAND, new ItemStack(Items.CROSSBOW));
-		} else if (this instanceof Kobold) {
-			if (Math.random() >= 0.6) {
-				this.setItemSlot(EquipmentSlot.MAINHAND, new ItemStack(Items.CROSSBOW));
-			} else {
-				this.setItemSlot(EquipmentSlot.MAINHAND, new ItemStack(KoboldsItems.KOBOLD_IRON_SWORD.get()));
-			}
-		}
 		this.primary = this.getMainHandItem();
 		if (this.getType().equals(KoboldsMobs.KOBOLD_PIRATE.get()) && Math.random() >= 0.75) {
 			this.setItemSlot(EquipmentSlot.MAINHAND, ItemStack.EMPTY);

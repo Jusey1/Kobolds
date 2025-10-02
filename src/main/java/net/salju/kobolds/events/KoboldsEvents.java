@@ -18,9 +18,6 @@ import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.effect.MobEffects;
-import net.minecraft.core.registries.Registries;
-import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
 
 @EventBusSubscriber
 public class KoboldsEvents {
@@ -45,7 +42,7 @@ public class KoboldsEvents {
 	@SubscribeEvent
 	public static void onEntityDeath(LivingDeathEvent event) {
 		if (event.getSource().getEntity() != null && event.getEntity() instanceof Enemy && event.getSource().getEntity() instanceof LivingEntity src) {
-			int e = src.getMainHandItem().getEnchantmentLevel(src.level().registryAccess().lookupOrThrow(Registries.ENCHANTMENT).getOrThrow(ResourceKey.create(Registries.ENCHANTMENT, ResourceLocation.fromNamespaceAndPath(Kobolds.MODID, "prospector"))));
+			int e = src.getMainHandItem().getEnchantmentLevel(KoboldsManager.getEnchantment(src.level().registryAccess(), Kobolds.MODID, "prospector"));
 			if (e > 0) {
 				double check = src.hasEffect(MobEffects.LUCK) ? 0.25 : 0.05;
 				if (!event.getEntity().isAlive() && !event.getEntity().level().isClientSide()) {

@@ -10,6 +10,7 @@ import net.minecraft.core.component.DataComponents;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.util.Mth;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
@@ -26,7 +27,6 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.item.*;
 import net.minecraft.world.item.component.BundleContents;
-
 import javax.annotation.Nullable;
 import java.util.*;
 
@@ -95,6 +95,12 @@ public class KoboldRascal extends AbstractKoboldEntity {
 		this.addEffect(new MobEffectInstance(MobEffects.INVISIBILITY, 24000, 0));
 		return super.finalizeSpawn(world, difficulty, reason, data);
 	}
+
+    @Override
+    protected void populateDefaultEquipmentSlots(RandomSource randy, DifficultyInstance souls) {
+        this.setItemSlot(EquipmentSlot.MAINHAND, new ItemStack(KoboldsItems.KOBOLD_IRON_SWORD.get()));
+        super.populateDefaultEquipmentSlots(randy, souls);
+    }
 
 	@Override
 	protected boolean canReplaceCurrentItem(ItemStack drop, ItemStack hand, EquipmentSlot slot) {

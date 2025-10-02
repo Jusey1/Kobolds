@@ -79,7 +79,7 @@ public class KoboldWither extends AbstractKoboldSkeleton {
 
 	@Override
 	protected void populateDefaultEquipmentEnchantments(ServerLevelAccessor lvl, RandomSource randy, DifficultyInstance difficulty) {
-		this.getMainHandItem().enchant(KoboldsManager.getEnchantment(lvl, "minecraft", "smite"), 5);
+		this.getMainHandItem().enchant(KoboldsManager.getEnchantment(lvl.registryAccess(), "minecraft", "smite"), 5);
 	}
 
 	@Override
