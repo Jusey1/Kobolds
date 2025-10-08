@@ -9,7 +9,6 @@ import net.minecraft.client.renderer.entity.layers.EyesLayer;
 import net.minecraft.client.renderer.entity.RenderLayerParent;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.MultiBufferSource;
-import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.blaze3d.vertex.PoseStack;
 
 public class KoboldEyesLayer<S extends AbstractKoboldState, M extends KoboldModel<S>> extends EyesLayer<S, M> {
@@ -19,13 +18,7 @@ public class KoboldEyesLayer<S extends AbstractKoboldState, M extends KoboldMode
 
 	@Override
 	public void render(PoseStack pose, MultiBufferSource buffer, int i, AbstractKoboldState kobold, float f1, float f2) {
-		VertexConsumer eyes = buffer.getBuffer(this.renderType());
-		if (kobold.isDiamond) {
-			eyes = buffer.getBuffer(this.renderDiamondType());
-		} else if (kobold.isPopper) {
-			eyes = buffer.getBuffer(this.renderPopperType());
-		}
-		this.getParentModel().renderToBuffer(pose, eyes, 15728640, OverlayTexture.NO_OVERLAY);
+        this.getParentModel().renderToBuffer(pose, buffer.getBuffer(this.renderSpecialType(this.getKoboldEyes(kobold))), i, OverlayTexture.NO_OVERLAY);
 	}
 
 	@Override
@@ -33,11 +26,19 @@ public class KoboldEyesLayer<S extends AbstractKoboldState, M extends KoboldMode
 		return RenderType.eyes(ResourceLocation.fromNamespaceAndPath(Kobolds.MODID, "textures/entity/eyes/base.png"));
 	}
 
-	public RenderType renderDiamondType() {
-		return RenderType.eyes(ResourceLocation.fromNamespaceAndPath(Kobolds.MODID, "textures/entity/eyes/diamond.png"));
-	}
+    public RenderType renderSpecialType(String type) {
+        if (!type.isEmpty()) {
+            return RenderType.eyes(ResourceLocation.fromNamespaceAndPath(Kobolds.MODID, "textures/entity/eyes/" + type + ".png"));
+        }
+        return this.renderType();
+    }
 
-	public RenderType renderPopperType() {
-		return RenderType.eyes(ResourceLocation.fromNamespaceAndPath(Kobolds.MODID, "textures/entity/eyes/popper.png"));
-	}
+    public String getKoboldEyes(AbstractKoboldState kobold) {
+        if (kobold.isDiamond) {
+            return "diamond";
+        } else if (kobold.texture.getPath().contains("popper")) {
+            return "popper";
+        }
+        return "base";
+    }
 }

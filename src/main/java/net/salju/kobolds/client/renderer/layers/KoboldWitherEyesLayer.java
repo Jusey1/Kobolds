@@ -18,7 +18,7 @@ public class KoboldWitherEyesLayer<S extends AbstractKoboldState, M extends Skel
 
 	@Override
 	public void render(PoseStack pose, MultiBufferSource buffer, int i, AbstractKoboldState kobold, float f1, float f2) {
-		this.getParentModel().renderToBuffer(pose, buffer.getBuffer(this.renderType()), 15728640, OverlayTexture.NO_OVERLAY);
+		this.getParentModel().renderToBuffer(pose, buffer.getBuffer(this.renderType()), i, OverlayTexture.NO_OVERLAY);
 	}
 
 	@Override

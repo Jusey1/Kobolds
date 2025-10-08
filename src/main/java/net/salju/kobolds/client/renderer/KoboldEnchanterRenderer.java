@@ -42,7 +42,6 @@ public class KoboldEnchanterRenderer extends MobRenderer<AbstractKoboldEntity, A
 			state.texture = ResourceLocation.fromNamespaceAndPath(Kobolds.MODID, "textures/entity/special/james.png");
 		} else if (kobold.getName().getString().equals("Popper")) {
 			state.texture = ResourceLocation.fromNamespaceAndPath(Kobolds.MODID, "textures/entity/special/popper.png");
-			state.isPopper = true;
 		} else {
 			state.texture = ResourceLocation.fromNamespaceAndPath(Kobolds.MODID, "textures/entity/kobolds/enchanter.png");
 		}

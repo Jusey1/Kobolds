@@ -40,7 +40,6 @@ public class KoboldRenderer extends MobRenderer<AbstractKoboldEntity, AbstractKo
 		HumanoidMobRenderer.extractHumanoidRenderState(kobold, state, f1, this.itemModelResolver);
 		if (kobold.getName().getString().equals("Popper")) {
 			state.texture = ResourceLocation.fromNamespaceAndPath(Kobolds.MODID, "textures/entity/special/popper.png");
-			state.isPopper = true;
 		} else {
 			state.texture = ResourceLocation.fromNamespaceAndPath(Kobolds.MODID, "textures/entity/kobolds/base.png");
 		}

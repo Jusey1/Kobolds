@@ -14,7 +14,6 @@ public class AbstractKoboldState extends HumanoidRenderState {
 	public boolean isCharging;
 	public boolean isDiamond;
 	public boolean isLeftHanded;
-	public boolean isPopper;
 	public ResourceLocation texture;
 	public String getZomboType = "base";
 

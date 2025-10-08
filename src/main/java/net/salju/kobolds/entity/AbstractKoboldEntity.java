@@ -62,7 +62,7 @@ public abstract class AbstractKoboldEntity extends AgeableMob implements Crossbo
 	private static final EntityDataAccessor<Boolean> DATA_CHARGING_STATE = SynchedEntityData.defineId(AbstractKoboldEntity.class, EntityDataSerializers.BOOLEAN);
 	private static final EntityDataAccessor<Boolean> DATA_DIAMOND_EYES = SynchedEntityData.defineId(AbstractKoboldEntity.class, EntityDataSerializers.BOOLEAN);
 	private Optional<EntityReference<Entity>> thrownTrident = Optional.empty();
-	private ItemStack primary = new ItemStack(KoboldsItems.KOBOLD_IRON_SWORD);
+	private ItemStack primary = ItemStack.EMPTY;
 	private ItemStack secondary = ItemStack.EMPTY;
 	private int cooldown;
 
