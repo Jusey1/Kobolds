@@ -1,0 +1,10 @@
+{
+  "replace": false,
+  "values": [
+    "kobolds:kobold",
+    "kobolds:kobold_child",
+    "kobolds:kobold_warrior",
+    "kobolds:kobold_enchanter",
+    "kobolds:kobold_engineer"
+  ]
+}
