@@ -387,11 +387,10 @@ public abstract class AbstractKoboldEntity extends AgeableMob implements Crossbo
 		this.populateDefaultEquipmentEnchantments(world, world.getRandom(), difficulty);
 		this.setBaby(this.isBaby());
         if (this.getType().is(KoboldsTags.DRAGON)) {
-            KoboldEvent.DragonEvent dragon = KoboldsManager.onGetDragonEvent(this);
-            KoboldEvent.DragonColorEvent color = KoboldsManager.onGetDragonColorEvent(this, dragon.getDragon());
-            this.setDragonColor(color.getColorInt());
-            if (dragon.getDragon() != null) {
-                this.setDragonFriend(dragon.getDragon());
+            KoboldEvent.DragonEvent event = KoboldsManager.onGetDragonEvent(this);
+            this.setDragonColor(event.getColorInt());
+            if (event.getDragon() != null) {
+                this.setDragonFriend(event.getDragon());
             }
         }
 		return spawn;

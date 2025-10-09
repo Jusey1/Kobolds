@@ -7,13 +7,10 @@ import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.item.enchantment.Enchantment;
-
-import javax.annotation.Nullable;
 
 public class KoboldsManager {
 	public static AttributeSupplier.Builder createAttributes(double h, double d, double a, double s) {
@@ -26,12 +23,6 @@ public class KoboldsManager {
 
     public static KoboldEvent.DragonEvent onGetDragonEvent(AbstractKoboldEntity kobold) {
         KoboldEvent.DragonEvent event = new KoboldEvent.DragonEvent(kobold);
-        NeoForge.EVENT_BUS.post(event);
-        return event;
-    }
-
-    public static KoboldEvent.DragonColorEvent onGetDragonColorEvent(AbstractKoboldEntity kobold, @Nullable LivingEntity dragon) {
-        KoboldEvent.DragonColorEvent event = new KoboldEvent.DragonColorEvent(kobold, dragon);
         NeoForge.EVENT_BUS.post(event);
         return event;
     }

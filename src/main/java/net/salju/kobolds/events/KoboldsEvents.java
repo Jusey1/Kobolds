@@ -30,6 +30,11 @@ public class KoboldsEvents {
 		}
 	}
 
+    @SubscribeEvent
+    public static void onDragon(KoboldEvent.DragonEvent event) {
+        //
+    }
+
 	@SubscribeEvent
 	public static void onAttackTarget(LivingChangeTargetEvent event) {
 		if (event.getEntity() instanceof Zombie && event.getOriginalAboutToBeSetTarget() instanceof KoboldRascal && event.getEntity().getLastHurtByMob() != event.getOriginalAboutToBeSetTarget()) {

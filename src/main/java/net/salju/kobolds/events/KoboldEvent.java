@@ -18,31 +18,19 @@ public class KoboldEvent extends Event {
 
     public static class DragonEvent extends KoboldEvent {
         private @Nullable LivingEntity dragon;
+        private int color;
 
         public DragonEvent(AbstractKoboldEntity target) {
             super(target);
         }
 
-        public @Nullable LivingEntity getDragon() {
+        @Nullable
+        public LivingEntity getDragon() {
             return this.dragon;
         }
 
         public void setDragon(@Nullable LivingEntity target) {
             this.dragon = target;
-        }
-    }
-
-    public static class DragonColorEvent extends KoboldEvent {
-        private final @Nullable LivingEntity dragon;
-        private int color;
-
-        public DragonColorEvent(AbstractKoboldEntity target, @Nullable LivingEntity owner) {
-            super(target);
-            this.dragon = owner;
-        }
-
-        public @Nullable LivingEntity getDragon() {
-            return this.dragon;
         }
 
         public int getColorInt() {
