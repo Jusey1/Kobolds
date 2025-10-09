@@ -44,12 +44,13 @@ public class KoboldRascalRenderer extends MobRenderer<AbstractKoboldEntity, Abst
 	public void extractRenderState(AbstractKoboldEntity kobold, AbstractKoboldState state, float f1) {
 		super.extractRenderState(kobold, state, f1);
 		HumanoidMobRenderer.extractHumanoidRenderState(kobold, state, f1, this.itemModelResolver);
-		state.texture = ResourceLocation.fromNamespaceAndPath(Kobolds.MODID, "textures/entity/kobolds/rascal.png");
+        state.texture = ResourceLocation.fromNamespaceAndPath(Kobolds.MODID, "textures/entity/" + this.getKoboldType(kobold) + ".png");
 		state.isAggressive = kobold.isAggressive();
 		state.isDiamond = kobold.isDiamond();
 		state.isLeftHanded = kobold.isLeftHanded();
 		state.rightStack = kobold.getItemHeldByArm(HumanoidArm.RIGHT);
 		state.leftStack = kobold.getItemHeldByArm(HumanoidArm.LEFT);
+        state.dragonColor = kobold.getDragonColor();
 	}
 
 	@Override
@@ -61,4 +62,11 @@ public class KoboldRascalRenderer extends MobRenderer<AbstractKoboldEntity, Abst
 		super.render(kobold, stack, buffer, i);
 		stack.popPose();
 	}
+
+    public String getKoboldType(AbstractKoboldEntity kobold) {
+        if (kobold.getDragonColor() >= 1) {
+            return "special/dragon/rascal/" + kobold.getDragonColor();
+        }
+        return "kobolds/rascal";
+    }
 }

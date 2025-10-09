@@ -38,6 +38,8 @@ public class KoboldEyesLayer<S extends AbstractKoboldState, M extends KoboldMode
             return "diamond";
         } else if (kobold.texture.getPath().contains("popper")) {
             return "popper";
+        } else if (kobold.dragonColor >= 1) {
+            return "dragon/" + kobold.dragonColor;
         }
         return "base";
     }

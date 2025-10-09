@@ -38,19 +38,14 @@ public class KoboldEngineerRenderer extends MobRenderer<AbstractKoboldEntity, Ab
 	public void extractRenderState(AbstractKoboldEntity kobold, AbstractKoboldState state, float f1) {
 		super.extractRenderState(kobold, state, f1);
 		HumanoidMobRenderer.extractHumanoidRenderState(kobold, state, f1, this.itemModelResolver);
-		if (kobold.getName().getString().equals("Dell") || kobold.getName().getString().equals("Conagher") || kobold.getName().getString().equals("Dell Conagher")) {
-			state.texture = ResourceLocation.fromNamespaceAndPath(Kobolds.MODID, "textures/entity/special/dell.png");
-		} else if (kobold.getName().getString().equals("Popper")) {
-			state.texture = ResourceLocation.fromNamespaceAndPath(Kobolds.MODID, "textures/entity/special/popper.png");
-		} else {
-			state.texture = ResourceLocation.fromNamespaceAndPath(Kobolds.MODID, "textures/entity/kobolds/engineer.png");
-		}
+        state.texture = ResourceLocation.fromNamespaceAndPath(Kobolds.MODID, "textures/entity/" + this.getKoboldType(kobold) + ".png");
 		state.isAggressive = kobold.isAggressive();
 		state.isCharging = kobold.isCharging();
 		state.isDiamond = kobold.isDiamond();
 		state.isLeftHanded = kobold.isLeftHanded();
 		state.rightStack = kobold.getItemHeldByArm(HumanoidArm.RIGHT);
 		state.leftStack = kobold.getItemHeldByArm(HumanoidArm.LEFT);
+        state.dragonColor = kobold.getDragonColor();
 	}
 
 	@Override
@@ -62,4 +57,15 @@ public class KoboldEngineerRenderer extends MobRenderer<AbstractKoboldEntity, Ab
 		super.render(kobold, stack, buffer, i);
 		stack.popPose();
 	}
+
+    public String getKoboldType(AbstractKoboldEntity kobold) {
+        if (kobold.getName().getString().equals("Dell") || kobold.getName().getString().equals("Conagher") || kobold.getName().getString().equals("Dell Conagher")) {
+            return "special/dell";
+        } else if (kobold.getName().getString().equals("Popper")) {
+            return "special/popper";
+        } else if (kobold.getDragonColor() >= 1) {
+            return "special/dragon/engineer/" + kobold.getDragonColor();
+        }
+        return "kobolds/engineer";
+    }
 }

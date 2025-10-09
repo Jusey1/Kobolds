@@ -38,17 +38,12 @@ public class KoboldEnchanterRenderer extends MobRenderer<AbstractKoboldEntity, A
 	public void extractRenderState(AbstractKoboldEntity kobold, AbstractKoboldState state, float f1) {
 		super.extractRenderState(kobold, state, f1);
 		HumanoidMobRenderer.extractHumanoidRenderState(kobold, state, f1, this.itemModelResolver);
-		if (kobold.getName().getString().equals("James")) {
-			state.texture = ResourceLocation.fromNamespaceAndPath(Kobolds.MODID, "textures/entity/special/james.png");
-		} else if (kobold.getName().getString().equals("Popper")) {
-			state.texture = ResourceLocation.fromNamespaceAndPath(Kobolds.MODID, "textures/entity/special/popper.png");
-		} else {
-			state.texture = ResourceLocation.fromNamespaceAndPath(Kobolds.MODID, "textures/entity/kobolds/enchanter.png");
-		}
+        state.texture = ResourceLocation.fromNamespaceAndPath(Kobolds.MODID, "textures/entity/" + this.getKoboldType(kobold) + ".png");
 		state.isDiamond = kobold.isDiamond();
 		state.isLeftHanded = kobold.isLeftHanded();
 		state.rightStack = kobold.getItemHeldByArm(HumanoidArm.RIGHT);
 		state.leftStack = kobold.getItemHeldByArm(HumanoidArm.LEFT);
+        state.dragonColor = kobold.getDragonColor();
 	}
 
 	@Override
@@ -60,4 +55,15 @@ public class KoboldEnchanterRenderer extends MobRenderer<AbstractKoboldEntity, A
 		super.render(kobold, stack, buffer, i);
 		stack.popPose();
 	}
+
+    public String getKoboldType(AbstractKoboldEntity kobold) {
+        if (kobold.getName().getString().equals("James")) {
+            return "special/james";
+        } else if (kobold.getName().getString().equals("Popper")) {
+            return "special/popper";
+        } else if (kobold.getDragonColor() >= 1) {
+            return "special/dragon/enchanter/" + kobold.getDragonColor();
+        }
+        return "kobolds/enchanter";
+    }
 }

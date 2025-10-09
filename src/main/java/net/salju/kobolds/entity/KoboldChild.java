@@ -1,5 +1,6 @@
 package net.salju.kobolds.entity;
 
+import net.minecraft.world.entity.LivingEntity;
 import net.salju.kobolds.init.KoboldsMobs;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
@@ -44,16 +45,21 @@ public class KoboldChild extends AbstractKoboldEntity {
 				if (this.level() instanceof ServerLevel lvl) {
 					if (this.level().getBiome(pos).is(BiomeTags.IS_JUNGLE)) {
 						if (Math.random() < 0.06) {
-							KoboldsMobs.KOBOLD_CAPTAIN.get().spawn(lvl, pos, EntitySpawnReason.BREEDING);
+							KoboldCaptain kobold = KoboldsMobs.KOBOLD_CAPTAIN.get().spawn(lvl, pos, EntitySpawnReason.BREEDING);
+                            this.applyDragon(kobold, lvl);
 						} else {
-							KoboldsMobs.KOBOLD_PIRATE.get().spawn(lvl, pos, EntitySpawnReason.BREEDING);
+							Kobold kobold = KoboldsMobs.KOBOLD_PIRATE.get().spawn(lvl, pos, EntitySpawnReason.BREEDING);
+                            this.applyDragon(kobold, lvl);
 						}
 					} else if (Math.random() > 0.95) {
-						KoboldsMobs.KOBOLD_ENGINEER.get().spawn(lvl, pos, EntitySpawnReason.BREEDING);
+						KoboldEngineer kobold = KoboldsMobs.KOBOLD_ENGINEER.get().spawn(lvl, pos, EntitySpawnReason.BREEDING);
+                        this.applyDragon(kobold, lvl);
 					} else if (Math.random() < 0.1) {
-						KoboldsMobs.KOBOLD_ENCHANTER.get().spawn(lvl, pos, EntitySpawnReason.BREEDING);
+						KoboldEnchanter kobold = KoboldsMobs.KOBOLD_ENCHANTER.get().spawn(lvl, pos, EntitySpawnReason.BREEDING);
+                        this.applyDragon(kobold, lvl);
 					} else {
-						KoboldsMobs.KOBOLD.get().spawn(lvl, pos, EntitySpawnReason.BREEDING);
+						Kobold kobold = KoboldsMobs.KOBOLD.get().spawn(lvl, pos, EntitySpawnReason.BREEDING);
+                        this.applyDragon(kobold, lvl);
 					}
 				}
 			}
@@ -71,4 +77,13 @@ public class KoboldChild extends AbstractKoboldEntity {
 		}
 		return super.mobInteract(player, hand);
 	}
+
+    public void applyDragon(AbstractKoboldEntity kobold, ServerLevel lvl) {
+        if (kobold != null) {
+            kobold.setDragonColor(this.getDragonColor());
+            if (this.getDragonReference() != null && lvl.getEntity(this.getDragonReference().getUUID()) instanceof LivingEntity dragon) {
+                kobold.setDragonFriend(dragon);
+            }
+        }
+    }
 }

@@ -36,6 +36,8 @@ public class KoboldPirateEyesLayer<S extends AbstractKoboldState, M extends Kobo
     public String getKoboldEyes(AbstractKoboldState kobold) {
         if (kobold.isDiamond) {
             return "diamond_pirate";
+        } else if (kobold.dragonColor >= 1) {
+            return "dragon/pirate/" + kobold.dragonColor;
         }
         return "base_pirate";
     }
