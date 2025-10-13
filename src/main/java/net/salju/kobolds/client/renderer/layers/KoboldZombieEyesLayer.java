@@ -8,7 +8,7 @@ import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.renderer.entity.layers.EyesLayer;
 import net.minecraft.client.renderer.entity.RenderLayerParent;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.SubmitNodeCollector;
 import com.mojang.blaze3d.vertex.PoseStack;
 
 public class KoboldZombieEyesLayer<S extends AbstractKoboldState, M extends ZomboldModel<S>> extends EyesLayer<S, M> {
@@ -17,8 +17,8 @@ public class KoboldZombieEyesLayer<S extends AbstractKoboldState, M extends Zomb
 	}
 
 	@Override
-	public void render(PoseStack pose, MultiBufferSource buffer, int i, AbstractKoboldState zombo, float f1, float f2) {
-        this.getParentModel().renderToBuffer(pose, buffer.getBuffer(this.renderSpecialType(this.getZomboldEyes(zombo))), i, OverlayTexture.NO_OVERLAY);
+	public void submit(PoseStack pose, SubmitNodeCollector buffer, int i, S zombo, float f1, float f2) {
+        buffer.order(1).submitModel(this.getParentModel(), zombo, pose, this.renderSpecialType(this.getZomboldEyes(zombo)), i, OverlayTexture.NO_OVERLAY, -1, null, zombo.outlineColor, null);
 	}
 
 	@Override

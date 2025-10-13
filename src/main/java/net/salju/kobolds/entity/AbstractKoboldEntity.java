@@ -1,5 +1,6 @@
 package net.salju.kobolds.entity;
 
+import net.minecraft.world.entity.animal.wolf.Wolf;
 import net.salju.kobolds.Kobolds;
 import net.salju.kobolds.events.*;
 import net.salju.kobolds.init.*;
@@ -566,11 +567,11 @@ public abstract class AbstractKoboldEntity extends AgeableMob implements Crossbo
     }
 
 	public void setTrident(@Nullable ThrownTrident proj) {
-		this.thrownTrident = Optional.ofNullable(proj).map(EntityReference::new);
+		this.thrownTrident = Optional.ofNullable(proj).map(EntityReference::of);
 	}
 
     public void setDragonFriend(LivingEntity dragon) {
-        this.dragonFriend = Optional.ofNullable(dragon).map(EntityReference::new);
+        this.dragonFriend = Optional.ofNullable(dragon).map(EntityReference::of);
     }
 
 	public boolean isDiamond() {

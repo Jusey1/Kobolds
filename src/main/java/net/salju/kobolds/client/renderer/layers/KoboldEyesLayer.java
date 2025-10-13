@@ -8,7 +8,7 @@ import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.renderer.entity.layers.EyesLayer;
 import net.minecraft.client.renderer.entity.RenderLayerParent;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.SubmitNodeCollector;
 import com.mojang.blaze3d.vertex.PoseStack;
 
 public class KoboldEyesLayer<S extends AbstractKoboldState, M extends KoboldModel<S>> extends EyesLayer<S, M> {
@@ -17,8 +17,8 @@ public class KoboldEyesLayer<S extends AbstractKoboldState, M extends KoboldMode
 	}
 
 	@Override
-	public void render(PoseStack pose, MultiBufferSource buffer, int i, AbstractKoboldState kobold, float f1, float f2) {
-        this.getParentModel().renderToBuffer(pose, buffer.getBuffer(this.renderSpecialType(this.getKoboldEyes(kobold))), i, OverlayTexture.NO_OVERLAY);
+	public void submit(PoseStack pose, SubmitNodeCollector buffer, int i, S kobold, float f1, float f2) {
+        buffer.order(1).submitModel(this.getParentModel(), kobold, pose, this.renderSpecialType(this.getKoboldEyes(kobold)), i, OverlayTexture.NO_OVERLAY, -1, null, kobold.outlineColor, null);
 	}
 
 	@Override

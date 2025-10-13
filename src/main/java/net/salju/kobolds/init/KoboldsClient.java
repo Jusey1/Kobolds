@@ -9,27 +9,25 @@ import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.neoforge.client.event.EntityRenderersEvent;
 import net.neoforged.api.distmarker.Dist;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.renderer.blockentity.SkullBlockRenderer;
+import net.minecraft.client.renderer.entity.ArmorModelSet;
+import net.minecraft.resources.ResourceLocation;
 
 @EventBusSubscriber(value = Dist.CLIENT)
 public class KoboldsClient {
-	public static final ModelLayerLocation KOBOLD = new ModelLayerLocation(ResourceLocation.fromNamespaceAndPath(Kobolds.MODID, "kobold"), "main");
-	public static final ModelLayerLocation KOBOLD_RASCAL = new ModelLayerLocation(ResourceLocation.fromNamespaceAndPath(Kobolds.MODID, "kobold_rascal"), "main");
-	public static final ModelLayerLocation KOBOLD_CHILD = new ModelLayerLocation(ResourceLocation.fromNamespaceAndPath(Kobolds.MODID, "kobold_child"), "main");
-	public static final ModelLayerLocation KOBOLD_ARMOR_INNER = new ModelLayerLocation(ResourceLocation.fromNamespaceAndPath(Kobolds.MODID, "kobold_armor_inner"), "main");
-	public static final ModelLayerLocation KOBOLD_ARMOR_OUTER = new ModelLayerLocation(ResourceLocation.fromNamespaceAndPath(Kobolds.MODID, "kobold_armor_outer"), "main");
-	public static final ModelLayerLocation KOBOLD_SKULL = new ModelLayerLocation(ResourceLocation.fromNamespaceAndPath(Kobolds.MODID, "kobold_skull"), "main");
-	public static final ModelLayerLocation KOBOLD_WITHER_SKULL = new ModelLayerLocation(ResourceLocation.fromNamespaceAndPath(Kobolds.MODID, "kobold_wither_skull"), "main");
-	public static final ModelLayerLocation SKELEBOLD = new ModelLayerLocation(ResourceLocation.fromNamespaceAndPath(Kobolds.MODID, "skelebold"), "main");
-	public static final ModelLayerLocation WITHERBOLD = new ModelLayerLocation(ResourceLocation.fromNamespaceAndPath(Kobolds.MODID, "witherbold"), "main");
-	public static final ModelLayerLocation ZOMBOLD = new ModelLayerLocation(ResourceLocation.fromNamespaceAndPath(Kobolds.MODID, "zombold"), "main");
+    public static final ArmorModelSet<ModelLayerLocation> KOBOLD_ARMOR = registerArmorSet("kobold_armor");
+	public static final ModelLayerLocation KOBOLD = registerModel("kobold", "main");
+	public static final ModelLayerLocation KOBOLD_RASCAL = registerModel("kobold_rascal", "main");
+	public static final ModelLayerLocation KOBOLD_CHILD = registerModel("kobold_child", "main");
+	public static final ModelLayerLocation KOBOLD_SKULL = registerModel("kobold_skull", "main");
+	public static final ModelLayerLocation KOBOLD_WITHER_SKULL = registerModel("kobold_wither_skull", "main");
+	public static final ModelLayerLocation SKELEBOLD = registerModel("skelebold", "main");
+	public static final ModelLayerLocation WITHERBOLD = registerModel("witherbold", "main");
+	public static final ModelLayerLocation ZOMBOLD = registerModel("zombold", "main");
 
 	@SubscribeEvent
 	public static void registerLayerDefinitions(EntityRenderersEvent.RegisterLayerDefinitions event) {
-		event.registerLayerDefinition(KOBOLD_ARMOR_INNER, KoboldArmorModel::createInnerArmorLayer);
-		event.registerLayerDefinition(KOBOLD_ARMOR_OUTER, KoboldArmorModel::createOuterArmorLayer);
 		event.registerLayerDefinition(KOBOLD, KoboldModel::createBodyLayer);
 		event.registerLayerDefinition(KOBOLD_RASCAL, RascalModel::createBodyLayer);
 		event.registerLayerDefinition(KOBOLD_CHILD, KoboldChildModel::createBodyLayer);
@@ -57,8 +55,8 @@ public class KoboldsClient {
 
 	@SubscribeEvent
 	public static void registerSkullRenderers(EntityRenderersEvent.CreateSkullModels event) {
-		event.registerSkullModel(KoboldSkull.Types.SKELEBOLD, KOBOLD_SKULL);
-		event.registerSkullModel(KoboldWitherSkull.Types.WITHERBOLD, KOBOLD_WITHER_SKULL);
+		event.registerSkullModel(KoboldSkull.Types.SKELEBOLD, KOBOLD_SKULL, ResourceLocation.fromNamespaceAndPath(Kobolds.MODID, "textures/entity/undead/skeleton.png"));
+		event.registerSkullModel(KoboldWitherSkull.Types.WITHERBOLD, KOBOLD_WITHER_SKULL, ResourceLocation.fromNamespaceAndPath(Kobolds.MODID, "textures/entity/undead/skeleton_wither.png"));
 	}
 
 	@SubscribeEvent
@@ -66,4 +64,12 @@ public class KoboldsClient {
 		event.enqueueWork(() -> SkullBlockRenderer.SKIN_BY_TYPE.put(KoboldSkull.Types.SKELEBOLD, ResourceLocation.fromNamespaceAndPath(Kobolds.MODID, "textures/entity/undead/skeleton.png")));
 		event.enqueueWork(() -> SkullBlockRenderer.SKIN_BY_TYPE.put(KoboldWitherSkull.Types.WITHERBOLD, ResourceLocation.fromNamespaceAndPath(Kobolds.MODID, "textures/entity/undead/skeleton_wither.png")));
 	}
+
+    private static ArmorModelSet<ModelLayerLocation> registerArmorSet(String path) {
+        return new ArmorModelSet(registerModel(path, "helmet"), registerModel(path, "chestplate"), registerModel(path, "leggings"), registerModel(path, "boots"));
+    }
+
+    private static ModelLayerLocation registerModel(String path, String model) {
+        return new ModelLayerLocation(ResourceLocation.fromNamespaceAndPath(Kobolds.MODID, path), model);
+    }
 }

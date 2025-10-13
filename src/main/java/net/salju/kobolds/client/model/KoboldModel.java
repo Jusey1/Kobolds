@@ -205,7 +205,7 @@ public class KoboldModel<T extends AbstractKoboldState> extends HumanoidModel<T>
 	}
 
 	@Override
-	public void translateToHand(HumanoidArm arm, PoseStack pose) {
+	public void translateToHand(AbstractKoboldState state, HumanoidArm arm, PoseStack pose) {
 		switch (arm) {
 			case LEFT -> {
 				this.leftArm.translateAndRotate(pose);

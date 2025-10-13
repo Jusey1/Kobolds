@@ -88,7 +88,7 @@ public class RascalModel<T extends AbstractKoboldState> extends KoboldModel<T> {
 	}
 
 	@Override
-	public void translateToHand(HumanoidArm arm, PoseStack pose) {
+	public void translateToHand(AbstractKoboldState state, HumanoidArm arm, PoseStack pose) {
 		switch (arm) {
 			case LEFT, RIGHT -> {
 				this.rightArm.translateAndRotate(pose);

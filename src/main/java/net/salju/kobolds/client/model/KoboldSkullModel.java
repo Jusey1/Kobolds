@@ -32,9 +32,10 @@ public class KoboldSkullModel extends SkullModelBase {
 		return mesh;
 	}
 
-	@Override
-	public void setupAnim(float ani, float yaw, float pitch) {
-		this.head.yRot = yaw * ((float) Math.PI / 180);
-		this.head.xRot = pitch * ((float) Math.PI / 180);
-	}
+    @Override
+    public void setupAnim(SkullModelBase.State state) {
+        super.setupAnim(state);
+        this.head.yRot = state.yRot * ((float) Math.PI / 180F);
+        this.head.xRot = state.xRot * ((float) Math.PI / 180F);
+    }
 }

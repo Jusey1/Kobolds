@@ -5,14 +5,14 @@ import net.salju.kobolds.client.renderer.layers.KoboldWitherEyesLayer;
 import net.salju.kobolds.entity.KoboldWither;
 import net.salju.kobolds.init.KoboldsClient;
 import net.salju.kobolds.client.model.SkeleboldModel;
-import net.salju.kobolds.client.model.KoboldArmorModel;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.client.renderer.entity.layers.ItemInHandLayer;
 import net.minecraft.client.renderer.entity.layers.HumanoidArmorLayer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.HumanoidMobRenderer;
 import net.minecraft.client.renderer.entity.MobRenderer;
-import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.SubmitNodeCollector;
+import net.minecraft.client.renderer.state.CameraRenderState;
 import net.minecraft.world.entity.HumanoidArm;
 import com.mojang.blaze3d.vertex.PoseStack;
 
@@ -21,7 +21,7 @@ public class KoboldWitherRenderer extends MobRenderer<KoboldWither, AbstractKobo
 		super(context, new SkeleboldModel(context.bakeLayer(KoboldsClient.WITHERBOLD)), 0.36f);
 		this.addLayer(new KoboldWitherEyesLayer<>(this));
 		this.addLayer(new ItemInHandLayer<>(this));
-		this.addLayer(new HumanoidArmorLayer(this, new KoboldArmorModel(context.bakeLayer(KoboldsClient.KOBOLD_ARMOR_INNER)), new KoboldArmorModel(context.bakeLayer(KoboldsClient.KOBOLD_ARMOR_OUTER)), context.getEquipmentRenderer()));
+        this.addLayer(new HumanoidArmorLayer(this, KoboldsClient.KOBOLD_ARMOR, KoboldsClient.KOBOLD_ARMOR, context.getEquipmentRenderer()));
 	}
 
 	@Override
@@ -47,12 +47,12 @@ public class KoboldWitherRenderer extends MobRenderer<KoboldWither, AbstractKobo
 	}
 
 	@Override
-	public void render(AbstractKoboldState witherbold, PoseStack pose, MultiBufferSource buffer, int i) {
+	public void submit(AbstractKoboldState witherbold, PoseStack pose, SubmitNodeCollector buffer, CameraRenderState c) {
 		pose.pushPose();
 		pose.translate(-0.025, 0, 0);
 		float scale = 0.875F;
 		pose.scale(scale, scale, scale);
-		super.render(witherbold, pose, buffer, i);
+		super.submit(witherbold, pose, buffer, c);
 		pose.popPose();
 	}
 }

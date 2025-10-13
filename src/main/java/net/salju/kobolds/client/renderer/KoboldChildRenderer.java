@@ -9,7 +9,8 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.client.renderer.entity.HumanoidMobRenderer;
 import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
-import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.SubmitNodeCollector;
+import net.minecraft.client.renderer.state.CameraRenderState;
 import com.mojang.blaze3d.vertex.PoseStack;
 
 public class KoboldChildRenderer extends MobRenderer<AbstractKoboldEntity, AbstractKoboldState, KoboldChildModel<AbstractKoboldState>> {
@@ -38,13 +39,13 @@ public class KoboldChildRenderer extends MobRenderer<AbstractKoboldEntity, Abstr
 	}
 
 	@Override
-	public void render(AbstractKoboldState kobold, PoseStack stack, MultiBufferSource buffer, int i) {
-		stack.pushPose();
-		stack.translate(-0.025, 0, 0);
+	public void submit(AbstractKoboldState kobold, PoseStack pose, SubmitNodeCollector buffer, CameraRenderState c) {
+		pose.pushPose();
+		pose.translate(-0.025, 0, 0);
 		float scale = 0.45F;
-		stack.scale(scale, scale, scale);
-		super.render(kobold, stack, buffer, i);
-		stack.popPose();
+		pose.scale(scale, scale, scale);
+		super.submit(kobold, pose, buffer, c);
+		pose.popPose();
 	}
 
     public String getKoboldType(AbstractKoboldEntity kobold) {

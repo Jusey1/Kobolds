@@ -135,11 +135,6 @@ public class KoboldWither extends AbstractKoboldSkeleton {
 	}
 
 	@Override
-	public boolean shouldDespawnInPeaceful() {
-		return false;
-	}
-
-	@Override
 	protected SoundEvent getAmbientSound() {
 		return SoundEvents.WITHER_SKELETON_AMBIENT;
 	}

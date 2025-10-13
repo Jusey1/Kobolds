@@ -60,7 +60,7 @@ public class AbstractKoboldStructure extends Structure {
 		if (!underCheck(context, pos) || waterCheck(context, pos)) {
 			return Optional.empty();
 		}
-		return JigsawPlacement.addPieces(context, this.startPool, this.jiggy, 7, pos, false, this.heightmap, 120, PoolAliasLookup.EMPTY, this.dims, this.water);
+		return JigsawPlacement.addPieces(context, this.startPool, this.jiggy, 7, pos, false, this.heightmap, new JigsawStructure.MaxDistance(120), PoolAliasLookup.EMPTY, this.dims, this.water);
 	}
 
 	@Override
