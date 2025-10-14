@@ -28,6 +28,10 @@ public class KoboldsClient {
 
 	@SubscribeEvent
 	public static void registerLayerDefinitions(EntityRenderersEvent.RegisterLayerDefinitions event) {
+        event.registerLayerDefinition(KOBOLD_ARMOR.head(), KoboldArmorModel::createHeadLayer);
+        event.registerLayerDefinition(KOBOLD_ARMOR.chest(), KoboldArmorModel::createBodyLayer);
+        event.registerLayerDefinition(KOBOLD_ARMOR.legs(), KoboldArmorModel::createLegsLayer);
+        event.registerLayerDefinition(KOBOLD_ARMOR.feet(), KoboldArmorModel::createBootsLayer);
 		event.registerLayerDefinition(KOBOLD, KoboldModel::createBodyLayer);
 		event.registerLayerDefinition(KOBOLD_RASCAL, RascalModel::createBodyLayer);
 		event.registerLayerDefinition(KOBOLD_CHILD, KoboldChildModel::createBodyLayer);

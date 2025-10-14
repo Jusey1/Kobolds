@@ -6,6 +6,7 @@ import net.salju.kobolds.entity.KoboldZombie;
 import net.salju.kobolds.client.renderer.layers.KoboldZombieEyesLayer;
 import net.salju.kobolds.client.model.ZomboldModel;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.client.renderer.entity.ArmorModelSet;
 import net.minecraft.client.renderer.entity.HumanoidMobRenderer;
 import net.minecraft.client.renderer.entity.layers.ItemInHandLayer;
 import net.minecraft.client.renderer.entity.layers.HumanoidArmorLayer;
@@ -21,7 +22,7 @@ public class KoboldZombieRenderer extends MobRenderer<KoboldZombie, AbstractKobo
 		super(context, new ZomboldModel(context.bakeLayer(KoboldsClient.ZOMBOLD)), 0.36f);
 		this.addLayer(new ItemInHandLayer<>(this));
 		this.addLayer(new KoboldZombieEyesLayer<>(this));
-        this.addLayer(new HumanoidArmorLayer(this, KoboldsClient.KOBOLD_ARMOR, KoboldsClient.KOBOLD_ARMOR, context.getEquipmentRenderer()));
+        this.addLayer(new HumanoidArmorLayer(this, ArmorModelSet.bake(KoboldsClient.KOBOLD_ARMOR, context.getModelSet(), ZomboldModel::new), ArmorModelSet.bake(KoboldsClient.KOBOLD_ARMOR, context.getModelSet(), ZomboldModel::new), context.getEquipmentRenderer()));
 	}
 
 	@Override

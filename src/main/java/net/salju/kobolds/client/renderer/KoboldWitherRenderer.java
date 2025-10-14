@@ -1,11 +1,12 @@
 package net.salju.kobolds.client.renderer;
 
 import net.salju.kobolds.Kobolds;
-import net.salju.kobolds.client.renderer.layers.KoboldWitherEyesLayer;
-import net.salju.kobolds.entity.KoboldWither;
 import net.salju.kobolds.init.KoboldsClient;
+import net.salju.kobolds.entity.KoboldWither;
+import net.salju.kobolds.client.renderer.layers.KoboldWitherEyesLayer;
 import net.salju.kobolds.client.model.SkeleboldModel;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.client.renderer.entity.ArmorModelSet;
 import net.minecraft.client.renderer.entity.layers.ItemInHandLayer;
 import net.minecraft.client.renderer.entity.layers.HumanoidArmorLayer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
@@ -21,7 +22,7 @@ public class KoboldWitherRenderer extends MobRenderer<KoboldWither, AbstractKobo
 		super(context, new SkeleboldModel(context.bakeLayer(KoboldsClient.WITHERBOLD)), 0.36f);
 		this.addLayer(new KoboldWitherEyesLayer<>(this));
 		this.addLayer(new ItemInHandLayer<>(this));
-        this.addLayer(new HumanoidArmorLayer(this, KoboldsClient.KOBOLD_ARMOR, KoboldsClient.KOBOLD_ARMOR, context.getEquipmentRenderer()));
+        this.addLayer(new HumanoidArmorLayer(this, ArmorModelSet.bake(KoboldsClient.KOBOLD_ARMOR, context.getModelSet(), SkeleboldModel::new), ArmorModelSet.bake(KoboldsClient.KOBOLD_ARMOR, context.getModelSet(), SkeleboldModel::new), context.getEquipmentRenderer()));
 	}
 
 	@Override

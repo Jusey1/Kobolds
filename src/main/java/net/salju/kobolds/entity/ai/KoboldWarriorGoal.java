@@ -14,7 +14,6 @@ import net.minecraft.world.entity.ConversionParams;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.AxeItem;
-import net.minecraft.world.InteractionHand;
 import net.minecraft.server.level.ServerLevel;
 
 public class KoboldWarriorGoal extends Goal {
@@ -33,22 +32,20 @@ public class KoboldWarriorGoal extends Goal {
 	public void start() {
 		kobold.addEffect(new MobEffectInstance(MobEffects.SLOWNESS, 600, 10, false, false));
 		Kobolds.queueServerWork(600, () -> {
-			InteractionHand hand = ProjectileUtil.getWeaponHoldingHand(kobold, item -> item instanceof AxeItem);
-			ItemStack weapon = hand.equals(InteractionHand.MAIN_HAND) ? kobold.getOffhandItem() : kobold.getMainHandItem();
-			ItemStack axe = kobold.getItemInHand(hand);
 			if (kobold.level() instanceof ServerLevel lvl) {
-				ItemEntity drop = new ItemEntity(lvl, kobold.getX(), kobold.getY(), kobold.getZ(), weapon);
-				drop.setPickUpDelay(10);
-				lvl.addFreshEntity(drop);
-				if (hand.equals(InteractionHand.MAIN_HAND)) {
-					ItemEntity primary = new ItemEntity(lvl, kobold.getX(), kobold.getY(), kobold.getZ(), kobold.getPrimary());
-					drop.setPickUpDelay(10);
-					lvl.addFreshEntity(primary);
+				ItemEntity primary = new ItemEntity(lvl, kobold.getX(), kobold.getY(), kobold.getZ(), kobold.getPrimary());
+				primary.setPickUpDelay(10);
+				lvl.addFreshEntity(primary);
+				if (!kobold.getSecondary().isEmpty()) {
+					ItemEntity secondary = new ItemEntity(lvl, kobold.getX(), kobold.getY(), kobold.getZ(), kobold.getSecondary());
+					secondary.setPickUpDelay(10);
+					lvl.addFreshEntity(secondary);
 				}
-				kobold.setItemSlot(EquipmentSlot.MAINHAND, axe);
+				kobold.setItemSlot(EquipmentSlot.MAINHAND, kobold.getItemInHand(ProjectileUtil.getWeaponHoldingHand(kobold, item -> item instanceof AxeItem)));
 				kobold.setDropChance(EquipmentSlot.MAINHAND, 1.0F);
 				kobold.setItemSlot(EquipmentSlot.OFFHAND, new ItemStack(Items.SHIELD));
-				kobold.updateItemData();
+				kobold.setPrimary(kobold.getMainHandItem());
+                kobold.setSecondary(kobold.getOffhandItem());
 				kobold.convertTo(KoboldsMobs.KOBOLD_WARRIOR.get(), ConversionParams.single(kobold, true, true), newbie -> { EventHooks.onLivingConvert(kobold, newbie); });
 			}
 		});

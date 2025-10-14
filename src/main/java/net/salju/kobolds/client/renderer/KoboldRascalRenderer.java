@@ -8,7 +8,6 @@ import net.salju.kobolds.client.model.RascalModel;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.client.renderer.entity.HumanoidMobRenderer;
 import net.minecraft.client.renderer.entity.layers.ItemInHandLayer;
-import net.minecraft.client.renderer.entity.layers.HumanoidArmorLayer;
 import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.SubmitNodeCollector;
@@ -27,7 +26,6 @@ public class KoboldRascalRenderer extends MobRenderer<AbstractKoboldEntity, Abst
 				}
 			}
 		});
-        this.addLayer(new HumanoidArmorLayer(this, KoboldsClient.KOBOLD_ARMOR, KoboldsClient.KOBOLD_ARMOR, context.getEquipmentRenderer()));
 	}
 
 	@Override

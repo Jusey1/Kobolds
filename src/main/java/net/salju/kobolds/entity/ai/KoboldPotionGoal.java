@@ -25,15 +25,11 @@ public class KoboldPotionGoal extends Goal {
 	@Override
 	public boolean canContinueToUse() {
 		if (!kobold.isUsingItem() && this.isHoldingPotion()) {
-			InteractionHand hand = ProjectileUtil.getWeaponHoldingHand(kobold, item -> new ItemStack(item).is(Items.POTION));
+			InteractionHand hand = ProjectileUtil.getWeaponHoldingHand(kobold, item -> new ItemStack(item).is(Items.POTION) || new ItemStack(item).is(Items.GLASS_BOTTLE));
 			if (kobold.hasEffect(MobEffects.SLOWNESS)) {
 				kobold.removeEffect(MobEffects.SLOWNESS);
 			}
-			if (hand.equals(InteractionHand.MAIN_HAND)) {
-				kobold.setItemInHand(hand, (kobold.getOffhandItem().getItem() instanceof TridentItem ? ItemStack.EMPTY : kobold.getPrimary()));
-			} else {
-				kobold.setItemInHand(hand, (kobold.getSecondary().getItem() instanceof TridentItem ? ItemStack.EMPTY : kobold.getSecondary()));
-			}
+            kobold.setItemInHand(hand, ItemStack.EMPTY);
 		}
 		return super.canContinueToUse();
 	}
@@ -46,6 +42,6 @@ public class KoboldPotionGoal extends Goal {
 	}
 
 	private boolean isHoldingPotion() {
-		return kobold.isHolding(stack -> stack.is(Items.POTION));
+		return kobold.isHolding(stack -> stack.is(Items.POTION)) || kobold.isHolding(stack -> stack.is(Items.GLASS_BOTTLE));
 	}
 }

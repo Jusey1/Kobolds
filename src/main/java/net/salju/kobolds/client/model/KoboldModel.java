@@ -28,7 +28,7 @@ public class KoboldModel<T extends AbstractKoboldState> extends HumanoidModel<T>
 		MeshDefinition mesh = HumanoidModel.createMesh(cube, f);
 		PartDefinition root = mesh.getRoot();
 		PartDefinition head = root.addOrReplaceChild("head", CubeListBuilder.create().texOffs(0, 0).addBox(-3.5F, -7.0F, -3.5F, 7.0F, 7.0F, 7.0F, new CubeDeformation(0.0F)).texOffs(22, 0).addBox(-2.5F, -3.0F, -6.5F, 5.0F, 3.0F, 3.0F, new CubeDeformation(0.0F)).texOffs(1, 3).addBox(-0.5F, -3.85F, -5.5F, 1.0F, 1.0F, 2.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 4.0F, -0.5F));
-		head.addOrReplaceChild("hat", CubeListBuilder.create().texOffs(0, 50).addBox(-3.5F, -12.0F, -3.0F, 7.0F, 7.0F, 7.0F, new CubeDeformation(0.5F)).texOffs(17, 52).addBox(-6.0F, -10.2F, -5.5F, 12.0F, 0.0F, 12.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 4.0F, -0.5F));
+		head.addOrReplaceChild("hat", CubeListBuilder.create().texOffs(0, 50).addBox(-3.5F, -12.0F, -3.0F, 7.0F, 7.0F, 7.0F, new CubeDeformation(0.5F)).texOffs(17, 52).addBox(-6.0F, -10.215F, -5.5F, 12.0F, 0.0F, 12.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 5.0F, -0.5F));
 		head.addOrReplaceChild("left_horn", CubeListBuilder.create().texOffs(36, 0).addBox(-0.5F, -4.0F, -1.0F, 2.0F, 5.0F, 2.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(1.5F, -7.0F, 2.0F, -0.6109F, 0.3054F, 0.1745F));
 		head.addOrReplaceChild("right_horn", CubeListBuilder.create().texOffs(45, 0).addBox(-1.5F, -4.0F, -1.0F, 2.0F, 5.0F, 2.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(-1.5F, -7.0F, 2.0F, -0.6109F, -0.3054F, -0.1745F));
 		root.addOrReplaceChild("right_arm", CubeListBuilder.create().texOffs(46, 16).addBox(-3.0F, -0.85F, -1.5F, 3.0F, 10.0F, 3.0F, new CubeDeformation(0.0F)), PartPose.offset(-3.0F, 5.0F, 0.0F));
@@ -94,16 +94,16 @@ public class KoboldModel<T extends AbstractKoboldState> extends HumanoidModel<T>
 						}
 					}
 				}
-			} else if (kobold.getMainhandItem().is(Items.EMERALD) || kobold.getMainhandItem().is(Items.POTION)) {
-				if (kobold.isLeftHanded) {
-					this.leftArm.xRot = -0.8727F;
-					this.leftArm.yRot = 0.0873F;
-					this.head.xRot = 0.1745F;
-				} else {
-					this.rightArm.xRot = -0.8727F;
-					this.rightArm.yRot = 0.0873F;
-					this.head.xRot = 0.1745F;
-				}
+			} else if (kobold.getMainhandItem().getItem() instanceof TridentItem) {
+                if (kobold.isAggressive) {
+                    if (kobold.isLeftHanded) {
+                        this.leftArm.xRot = 2.8798F;
+                        this.rightArm.xRot = 0.0F;
+                    } else {
+                        this.rightArm.xRot = 2.8798F;
+                        this.leftArm.xRot = 0.0F;
+                    }
+                }
 			} else {
 				if (kobold.isAggressive) {
 					if (kobold.isLeftHanded) {
@@ -125,16 +125,6 @@ public class KoboldModel<T extends AbstractKoboldState> extends HumanoidModel<T>
 					} else {
 						this.leftArm.xRot = -0.6981F;
 						this.leftArm.yRot = 0.2618F;
-					}
-				}
-			} else if (kobold.getOffhandItem().getItem() instanceof TridentItem) {
-				if (kobold.isAggressive) {
-					if (kobold.isLeftHanded) {
-						this.rightArm.xRot = 2.8798F;
-						this.leftArm.xRot = 0.0F;
-					} else {
-						this.leftArm.xRot = 2.8798F;
-						this.rightArm.xRot = 0.0F;
 					}
 				}
 			} else if (kobold.getOffhandItem().is(Items.EMERALD) || kobold.getOffhandItem().is(Items.POTION)) {

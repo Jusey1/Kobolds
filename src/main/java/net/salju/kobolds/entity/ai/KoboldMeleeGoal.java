@@ -22,6 +22,6 @@ public class KoboldMeleeGoal<T extends AbstractKoboldEntity> extends MeleeAttack
 	}
 
 	private boolean hasRightWeapon() {
-		return !kobold.getMainHandItem().isEmpty();
+		return kobold.isPreferredWeapon(this.kobold.getMainHandItem());
 	}
 }

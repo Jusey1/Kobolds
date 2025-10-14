@@ -2,7 +2,6 @@ package net.salju.kobolds.entity;
 
 import net.salju.kobolds.init.KoboldsItems;
 import net.salju.kobolds.init.KoboldsSounds;
-import net.salju.kobolds.init.KoboldsTags;
 import net.salju.kobolds.entity.ai.KoboldRevengeGoal;
 import net.salju.kobolds.entity.ai.KoboldPotionGoal;
 import net.salju.kobolds.entity.ai.KoboldMeleeGoal;
@@ -104,7 +103,7 @@ public class KoboldRascal extends AbstractKoboldEntity {
 
 	@Override
 	protected boolean canReplaceCurrentItem(ItemStack drop, ItemStack hand, EquipmentSlot slot) {
-		if (drop.is(ItemTags.SWORDS) || drop.is(KoboldsTags.ARMOR)) {
+		if (drop.is(ItemTags.SWORDS)) {
 			return super.canReplaceCurrentItem(drop, hand, slot);
 		} else {
 			return false;
