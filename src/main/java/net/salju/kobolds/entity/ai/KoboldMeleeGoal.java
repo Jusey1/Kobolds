@@ -1,7 +1,9 @@
 package net.salju.kobolds.entity.ai;
 
 import net.salju.kobolds.entity.AbstractKoboldEntity;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.MeleeAttackGoal;
+import net.minecraft.world.entity.EquipmentSlot;
 
 public class KoboldMeleeGoal<T extends AbstractKoboldEntity> extends MeleeAttackGoal {
 	private final T kobold;
@@ -21,7 +23,7 @@ public class KoboldMeleeGoal<T extends AbstractKoboldEntity> extends MeleeAttack
 		return super.canContinueToUse() && this.hasRightWeapon();
 	}
 
-	private boolean hasRightWeapon() {
-		return kobold.isPreferredWeapon(this.kobold.getMainHandItem());
-	}
+    private boolean hasRightWeapon() {
+        return kobold.getMainHandItem().getAttributeModifiers().compute(kobold.getAttributeBaseValue(Attributes.ATTACK_DAMAGE), EquipmentSlot.MAINHAND) > 2.0;
+    }
 }
