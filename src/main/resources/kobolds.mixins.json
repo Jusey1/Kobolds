@@ -1,0 +1,15 @@
+{
+  "required": true,
+  "package": "net.salju.kobolds.mixins",
+  "compatibilityLevel": "JAVA_17",
+  "refmap": "kobolds.refmap.json",
+  "mixins": [
+     "TridentMixin"
+  ],
+  "client": [
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  },
+  "minVersion": "0.8"
+}
