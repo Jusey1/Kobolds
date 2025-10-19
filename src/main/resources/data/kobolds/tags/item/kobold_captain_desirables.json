@@ -1,0 +1,34 @@
+{
+  "replace": false,
+  "values": [
+    "#kobolds:kobold_captain_valuable",
+    "kobolds:kobold_skull",
+    "minecraft:enchanted_book",
+    "minecraft:experience_bottle",
+    "minecraft:golden_shovel",
+    "minecraft:golden_pickaxe",
+    "minecraft:golden_axe",
+    "minecraft:golden_hoe",
+    "minecraft:golden_sword",
+    "minecraft:golden_helmet",
+    "minecraft:golden_chestplate",
+    "minecraft:golden_leggings",
+    "minecraft:golden_boots",
+    "minecraft:golden_horse_armor",
+    "minecraft:golden_apple",
+    "minecraft:golden_carrot",
+    "minecraft:skeleton_skull",
+    {
+      "id": "farmersdelight:golden_knife",
+      "required": false
+    },
+    {
+      "id": "horseshoes:gold_horseshoes",
+      "required": false
+    },
+    {
+      "id": "supernatural:gothic_golden_helmet",
+      "required": false
+    }
+  ]
+}

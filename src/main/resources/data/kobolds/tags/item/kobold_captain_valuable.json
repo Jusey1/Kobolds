@@ -1,0 +1,10 @@
+{
+  "replace": false,
+  "values": [
+    "kobolds:kobold_wither_skull",
+    "minecraft:enchanted_golden_apple",
+    "minecraft:nether_star",
+    "minecraft:totem_of_undying",
+    "minecraft:wither_skeleton_skull"
+  ]
+}
