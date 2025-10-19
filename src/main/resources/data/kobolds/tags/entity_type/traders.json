@@ -4,7 +4,6 @@
     "kobolds:kobold",
     "kobolds:kobold_enchanter",
     "kobolds:kobold_engineer",
-    "kobolds:kobold_pirate",
-    "kobolds:kobold_captain"
+    "kobolds:kobold_pirate"
   ]
 }
