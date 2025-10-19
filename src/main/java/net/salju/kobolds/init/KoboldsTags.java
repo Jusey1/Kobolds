@@ -24,4 +24,6 @@ public class KoboldsTags {
 	public static final TagKey<Item> BASIC = ItemTags.create(ResourceLocation.fromNamespaceAndPath(Kobolds.MODID, "kobold_weapons"));
 	public static final TagKey<Item> WAR = ItemTags.create(ResourceLocation.fromNamespaceAndPath(Kobolds.MODID, "kobold_warrior_weapons"));
 	public static final TagKey<Item> ENGI = ItemTags.create(ResourceLocation.fromNamespaceAndPath(Kobolds.MODID, "kobold_engineer_weapons"));
+    public static final TagKey<Item> CAPTAIN = ItemTags.create(ResourceLocation.fromNamespaceAndPath(Kobolds.MODID, "kobold_captain_desirables"));
+    public static final TagKey<Item> VALUABLE = ItemTags.create(ResourceLocation.fromNamespaceAndPath(Kobolds.MODID, "kobold_captain_valuable"));
 }

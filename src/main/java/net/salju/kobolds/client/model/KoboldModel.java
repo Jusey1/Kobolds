@@ -127,7 +127,7 @@ public class KoboldModel<T extends AbstractKoboldState> extends HumanoidModel<T>
 						this.leftArm.yRot = 0.2618F;
 					}
 				}
-			} else if (kobold.getOffhandItem().is(Items.EMERALD) || kobold.getOffhandItem().is(Items.POTION)) {
+			} else {
 				if (kobold.isLeftHanded) {
 					this.rightArm.xRot = -0.8727F;
 					this.rightArm.yRot = 0.0873F;
@@ -159,37 +159,20 @@ public class KoboldModel<T extends AbstractKoboldState> extends HumanoidModel<T>
 					rightArm.xRot = (float) ((double) rightArm.xRot - ((double) f2 / 1.2D - (double) 1.0F));
 				}
 			} else {
-				if (kobold.getMainhandItem().is(Items.EMERALD)) {
-					float progress = kobold.attackTime;
-					this.body.yRot = Mth.sin(Mth.sqrt(progress) * ((float) Math.PI * -2F)) * -0.2F;
-					this.leftArm.yRot += this.body.yRot;
-					this.rightArm.yRot += this.body.yRot;
-					this.rightArm.xRot += this.body.yRot;
-					progress = 1.0F - kobold.attackTime;
-					progress = progress * progress;
-					progress = progress * progress;
-					progress = 1.0F - progress;
-					float f2 = Mth.sin(progress * (float) Math.PI);
-					float f3 = Mth.sin(kobold.attackTime * (float) Math.PI) * -(this.head.xRot - 0.7F) * 0.75F;
-					leftArm.xRot = (float) ((double) rightArm.xRot - ((double) f2 * 1.2D + (double) f3));
-					leftArm.yRot += this.body.yRot * 2.0F;
-					leftArm.zRot += Mth.sin(kobold.attackTime * (float) Math.PI) * -0.4F;
-				} else if (kobold.getOffhandItem().is(Items.EMERALD)) {
-					float progress = kobold.attackTime;
-					this.body.yRot = Mth.sin(Mth.sqrt(progress) * ((float) Math.PI * 2F)) * 0.2F;
-					this.rightArm.yRot += this.body.yRot;
-					this.leftArm.yRot += this.body.yRot;
-					this.leftArm.xRot += this.body.yRot;
-					progress = 1.0F - kobold.attackTime;
-					progress = progress * progress;
-					progress = progress * progress;
-					progress = 1.0F - progress;
-					float f2 = Mth.sin(progress * (float) Math.PI);
-					float f3 = Mth.sin(kobold.attackTime * (float) Math.PI) * -(this.head.xRot - 0.7F) * 0.75F;
-					rightArm.xRot = (float) ((double) rightArm.xRot - ((double) f2 * 1.2D + (double) f3));
-					rightArm.yRot += this.body.yRot * 2.0F;
-					rightArm.zRot += Mth.sin(kobold.attackTime * (float) Math.PI) * -0.4F;
-				}
+				float progress = kobold.attackTime;
+				this.body.yRot = Mth.sin(Mth.sqrt(progress) * ((float) Math.PI * 2F)) * 0.2F;
+				this.rightArm.yRot += this.body.yRot;
+				this.leftArm.yRot += this.body.yRot;
+				this.leftArm.xRot += this.body.yRot;
+				progress = 1.0F - kobold.attackTime;
+				progress = progress * progress;
+				progress = progress * progress;
+				progress = 1.0F - progress;
+				float f2 = Mth.sin(progress * (float) Math.PI);
+				float f3 = Mth.sin(kobold.attackTime * (float) Math.PI) * -(this.head.xRot - 0.7F) * 0.75F;
+				rightArm.xRot = (float) ((double) rightArm.xRot - ((double) f2 * 1.2D + (double) f3));
+				rightArm.yRot += this.body.yRot * 2.0F;
+				rightArm.zRot += Mth.sin(kobold.attackTime * (float) Math.PI) * -0.4F;
 			}
 		}
 	}

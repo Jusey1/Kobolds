@@ -1,5 +1,6 @@
 package net.salju.kobolds.entity;
 
+import net.salju.kobolds.init.KoboldsTags;
 import net.salju.kobolds.init.KoboldsItems;
 import net.salju.kobolds.entity.ai.*;
 import net.salju.kobolds.compat.Supplementaries;
@@ -8,9 +9,13 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.DifficultyInstance;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
 
 public class KoboldCaptain extends AbstractKoboldEntity {
 	public KoboldCaptain(EntityType<KoboldCaptain> type, Level world) {
@@ -29,10 +34,34 @@ public class KoboldCaptain extends AbstractKoboldEntity {
 		this.goalSelector.addGoal(1, new KoboldTridentGoal(this, 1.0D, 40, 12.0F));
 		this.goalSelector.addGoal(1, new KoboldCrossbowGoal<>(this, 1.0D, 12.0F));
 		this.goalSelector.addGoal(1, new KoboldBowGoal<>(this, 1.0D, 20, 15.0F));
-		this.goalSelector.addGoal(1, new KoboldTradeGoal(this, "gameplay/captain_loot"));
-		this.goalSelector.addGoal(2, new KoboldMeleeGoal(this, 1.2D, false));
+        this.goalSelector.addGoal(1, new KoboldCaptainGoal(this));
+		this.goalSelector.addGoal(2, new KoboldMeleeGoal<>(this, 1.2D, false));
 		this.targetSelector.addGoal(2, new KoboldTargetGoal<>(this, LivingEntity.class, new KoboldAttackSelector(this)));
 	}
+
+    @Override
+    public InteractionResult mobInteract(Player player, InteractionHand hand) {
+        ItemStack gem = player.getItemInHand(hand).copy();
+        if (gem.is(KoboldsTags.CAPTAIN)) {
+            if (this.isEffectiveAi()) {
+                gem.setCount(1);
+                this.setItemInHand(InteractionHand.OFF_HAND, gem);
+                if (!player.isCreative()) {
+                    player.getItemInHand(hand).shrink(1);
+                }
+            }
+            return InteractionResult.SUCCESS;
+        }
+        return super.mobInteract(player, hand);
+    }
+
+    @Override
+    protected boolean canReplaceCurrentItem(ItemStack drop, ItemStack hand, EquipmentSlot slot) {
+        if (drop.is(Items.EMERALD)) {
+            return false;
+        }
+        return super.canReplaceCurrentItem(drop, hand, slot);
+    }
 
     @Override
     protected void populateDefaultEquipmentSlots(RandomSource randy, DifficultyInstance souls) {

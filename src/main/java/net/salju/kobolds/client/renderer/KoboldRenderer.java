@@ -22,7 +22,7 @@ public class KoboldRenderer extends MobRenderer<AbstractKoboldEntity, AbstractKo
 		super(context, new KoboldModel(context.bakeLayer(KoboldsClient.KOBOLD)), 0.36f);
 		this.addLayer(new ItemInHandLayer<>(this));
 		this.addLayer(new KoboldEyesLayer<>(this));
-        this.addLayer(new HumanoidArmorLayer(this, ArmorModelSet.bake(KoboldsClient.KOBOLD_ARMOR, context.getModelSet(), KoboldModel::new), ArmorModelSet.bake(KoboldsClient.KOBOLD_ARMOR, context.getModelSet(), KoboldModel::new), context.getEquipmentRenderer()));
+		this.addLayer(new HumanoidArmorLayer(this, ArmorModelSet.bake(KoboldsClient.KOBOLD_ARMOR, context.getModelSet(), KoboldModel::new), ArmorModelSet.bake(KoboldsClient.KOBOLD_ARMOR, context.getModelSet(), KoboldModel::new), context.getEquipmentRenderer()));
 	}
 
 	@Override
