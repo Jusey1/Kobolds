@@ -7,8 +7,6 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LightningBolt;
-import net.minecraft.world.entity.MoverType;
-import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.level.redstone.Orientation;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.BlockBehaviour;
@@ -53,10 +51,12 @@ public class KoboldSkull extends SkullBlock {
 	private void summonSkelebold(ServerLevel lvl, BlockPos pos) {
 		lvl.destroyBlock(pos, false);
 		LightningBolt bolt = EntityType.LIGHTNING_BOLT.create(lvl, EntitySpawnReason.MOB_SUMMONED);
-		bolt.move(MoverType.SELF, Vec3.atBottomCenterOf(pos));
-		bolt.setVisualOnly(true);
-		this.getKoboldSkeleton().spawn(lvl, pos, EntitySpawnReason.MOB_SUMMONED);
-		lvl.addFreshEntity(bolt);
+        if (bolt != null) {
+            bolt.snapTo(pos.getX(), pos.getY(), pos.getZ());
+            bolt.setVisualOnly(true);
+            this.getKoboldSkeleton().spawn(lvl, pos, EntitySpawnReason.MOB_SUMMONED);
+            lvl.addFreshEntity(bolt);
+        }
 	}
 
 	public enum Types implements SkullBlock.Type {
