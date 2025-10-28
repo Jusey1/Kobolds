@@ -29,22 +29,6 @@
     "minecraft:netherite_helmet",
     "minecraft:netherite_chestplate",
     "minecraft:netherite_leggings",
-    "minecraft:netherite_boots",
-    {
-      "id": "supernatural:gothic_iron_helmet",
-      "required": false
-    },
-    {
-      "id": "supernatural:gothic_golden_helmet",
-      "required": false
-    },
-    {
-      "id": "supernatural:gothic_diamond_helmet",
-      "required": false
-    },
-    {
-      "id": "supernatural:gothic_netherite_helmet",
-      "required": false
-    }
+    "minecraft:netherite_boots"
   ]
 }
