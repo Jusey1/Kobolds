@@ -46,7 +46,6 @@ public class RascalModel<T extends AbstractKoboldState> extends KoboldModel<T> {
 		this.head.yRot = kobold.yRot * ((float) Math.PI / 180F);
 		this.head.xRot = kobold.xRot * ((float) Math.PI / 180F);
 		this.rightArm.zRot += Mth.cos(kobold.ageInTicks * 0.04F) * 0.04F + 0.04F;
-		this.leftArm.zRot -= Mth.cos(kobold.ageInTicks * 0.04F) * 0.04F + 0.04F;
 		if (kobold.isPassenger) {
 			this.rightLeg.xRot = -1.5708F;
 			this.leftLeg.xRot = -1.5708F;

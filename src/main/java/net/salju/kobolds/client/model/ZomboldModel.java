@@ -1,14 +1,11 @@
 package net.salju.kobolds.client.model;
 
 import net.salju.kobolds.client.renderer.AbstractKoboldState;
-import net.minecraft.world.item.TridentItem;
-import net.minecraft.world.entity.HumanoidArm;
-import net.minecraft.util.Mth;
 import net.minecraft.client.model.geom.ModelPart;
-import net.minecraft.client.model.HumanoidModel;
-import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.util.Mth;
+import net.minecraft.world.item.TridentItem;
 
-public class ZomboldModel<T extends AbstractKoboldState> extends HumanoidModel<T> {
+public class ZomboldModel<T extends AbstractKoboldState> extends KoboldModel<T> {
 	public ZomboldModel(ModelPart root) {
 		super(root);
 	}
@@ -65,22 +62,6 @@ public class ZomboldModel<T extends AbstractKoboldState> extends HumanoidModel<T
 			float f2 = Mth.sin(progress * (float) Math.PI);
 			leftArm.xRot = (float) ((double) leftArm.xRot - ((double) f2 / 1.2D - (double) 1.0F));
 			rightArm.xRot = (float) ((double) rightArm.xRot - ((double) f2 / 1.2D - (double) 1.0F));
-		}
-	}
-
-	@Override
-	public void translateToHand(AbstractKoboldState state, HumanoidArm arm, PoseStack pose) {
-		switch (arm) {
-			case LEFT -> {
-				this.leftArm.translateAndRotate(pose);
-				pose.translate(0.045, 0.096, 0.0);
-				pose.scale(0.75F, 0.75F, 0.75F);
-			}
-			case RIGHT -> {
-				this.rightArm.translateAndRotate(pose);
-				pose.translate(-0.045, 0.096, 0.0);
-				pose.scale(0.75F, 0.75F, 0.75F);
-			}
 		}
 	}
 }

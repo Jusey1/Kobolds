@@ -39,8 +39,8 @@ public abstract class AbstractKoboldSkeleton extends AbstractSkeleton implements
 	}
 
 	@Override
-	public void setChargingCrossbow(boolean charging) {
-		this.entityData.set(DATA_CHARGING_STATE, charging);
+	public void setChargingCrossbow(boolean check) {
+		this.entityData.set(DATA_CHARGING_STATE, check);
 	}
 
 	@Override

@@ -1,8 +1,8 @@
 package net.salju.kobolds.client.renderer.layers;
 
 import net.salju.kobolds.Kobolds;
+import net.salju.kobolds.client.model.KoboldModel;
 import net.salju.kobolds.client.renderer.AbstractKoboldState;
-import net.salju.kobolds.client.model.ZomboldModel;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.renderer.entity.layers.EyesLayer;
@@ -11,7 +11,7 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.SubmitNodeCollector;
 import com.mojang.blaze3d.vertex.PoseStack;
 
-public class KoboldZombieEyesLayer<S extends AbstractKoboldState, M extends ZomboldModel<S>> extends EyesLayer<S, M> {
+public class KoboldZombieEyesLayer<S extends AbstractKoboldState, M extends KoboldModel<S>> extends EyesLayer<S, M> {
 	public KoboldZombieEyesLayer(RenderLayerParent<S, M> parent) {
 		super(parent);
 	}

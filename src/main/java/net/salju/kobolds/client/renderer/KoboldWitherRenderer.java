@@ -1,59 +1,19 @@
 package net.salju.kobolds.client.renderer;
 
-import net.salju.kobolds.Kobolds;
 import net.salju.kobolds.init.KoboldsClient;
-import net.salju.kobolds.entity.KoboldWither;
-import net.salju.kobolds.client.renderer.layers.KoboldWitherEyesLayer;
 import net.salju.kobolds.client.model.SkeleboldModel;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.client.renderer.entity.ArmorModelSet;
-import net.minecraft.client.renderer.entity.layers.ItemInHandLayer;
-import net.minecraft.client.renderer.entity.layers.HumanoidArmorLayer;
+import net.salju.kobolds.client.renderer.layers.KoboldWitherEyesLayer;
+import net.salju.kobolds.entity.AbstractKoboldEntity;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
-import net.minecraft.client.renderer.entity.HumanoidMobRenderer;
-import net.minecraft.client.renderer.entity.MobRenderer;
-import net.minecraft.client.renderer.SubmitNodeCollector;
-import net.minecraft.client.renderer.state.CameraRenderState;
-import net.minecraft.world.entity.HumanoidArm;
-import com.mojang.blaze3d.vertex.PoseStack;
 
-public class KoboldWitherRenderer extends MobRenderer<KoboldWither, AbstractKoboldState, SkeleboldModel<AbstractKoboldState>> {
+public class KoboldWitherRenderer extends AbstractKoboldRenderer {
 	public KoboldWitherRenderer(EntityRendererProvider.Context context) {
-		super(context, new SkeleboldModel(context.bakeLayer(KoboldsClient.WITHERBOLD)), 0.36f);
+		super(context, new SkeleboldModel<>(context.bakeLayer(KoboldsClient.WITHERBOLD)), true);
 		this.addLayer(new KoboldWitherEyesLayer<>(this));
-		this.addLayer(new ItemInHandLayer<>(this));
-        this.addLayer(new HumanoidArmorLayer(this, ArmorModelSet.bake(KoboldsClient.KOBOLD_ARMOR, context.getModelSet(), SkeleboldModel::new), ArmorModelSet.bake(KoboldsClient.KOBOLD_ARMOR, context.getModelSet(), SkeleboldModel::new), context.getEquipmentRenderer()));
 	}
 
-	@Override
-	public ResourceLocation getTextureLocation(AbstractKoboldState witherbold) {
-		return witherbold.texture;
-	}
-
-	@Override
-	public AbstractKoboldState createRenderState() {
-		return new AbstractKoboldState();
-	}
-
-	@Override
-	public void extractRenderState(KoboldWither witherbold, AbstractKoboldState state, float f1) {
-		super.extractRenderState(witherbold, state, f1);
-		HumanoidMobRenderer.extractHumanoidRenderState(witherbold, state, f1, this.itemModelResolver);
-		state.texture = ResourceLocation.fromNamespaceAndPath(Kobolds.MODID, "textures/entity/undead/skeleton_wither.png");
-		state.isAggressive = witherbold.isAggressive();
-		state.isCharging = witherbold.isCharging();
-		state.isLeftHanded = witherbold.isLeftHanded();
-		state.rightStack = witherbold.getItemHeldByArm(HumanoidArm.RIGHT);
-		state.leftStack = witherbold.getItemHeldByArm(HumanoidArm.LEFT);
-	}
-
-	@Override
-	public void submit(AbstractKoboldState witherbold, PoseStack pose, SubmitNodeCollector buffer, CameraRenderState c) {
-		pose.pushPose();
-		pose.translate(-0.025, 0, 0);
-		float scale = 0.875F;
-		pose.scale(scale, scale, scale);
-		super.submit(witherbold, pose, buffer, c);
-		pose.popPose();
-	}
+    @Override
+    public String getKoboldType(AbstractKoboldEntity kobold) {
+        return "undead/skeleton_wither";
+    }
 }

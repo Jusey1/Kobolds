@@ -28,6 +28,14 @@ public class KoboldSkeleton extends AbstractKoboldSkeleton {
 		this.setDropChance(EquipmentSlot.MAINHAND, 0.15F);
 	}
 
+    @Override
+    public void tick() {
+        super.tick();
+        if (this.getTarget() != null && this.getTarget().isAlive() && !this.isAggressive()) {
+            this.setAggressive(true);
+        }
+    }
+
 	@Override
 	protected SoundEvent getAmbientSound() {
 		return SoundEvents.SKELETON_AMBIENT;
