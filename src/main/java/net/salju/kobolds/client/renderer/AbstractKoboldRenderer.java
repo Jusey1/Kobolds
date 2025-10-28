@@ -3,12 +3,12 @@ package net.salju.kobolds.client.renderer;
 import net.salju.kobolds.Kobolds;
 import net.salju.kobolds.init.KoboldsClient;
 import net.salju.kobolds.client.model.KoboldModel;
+import net.salju.kobolds.client.renderer.layers.KoboldItemInHandLayer;
 import net.salju.kobolds.entity.AbstractKoboldEntity;
 import net.salju.kobolds.entity.KoboldSkeleton;
 import net.salju.kobolds.entity.KoboldZombie;
 import net.minecraft.client.renderer.entity.ArmorModelSet;
 import net.minecraft.client.renderer.entity.HumanoidMobRenderer;
-import net.minecraft.client.renderer.entity.layers.ItemInHandLayer;
 import net.minecraft.client.renderer.entity.layers.HumanoidArmorLayer;
 import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
@@ -25,7 +25,7 @@ public abstract class AbstractKoboldRenderer extends MobRenderer<Mob, AbstractKo
 		super(context, model, 0.36F);
         if (check) {
             this.addLayer(new HumanoidArmorLayer<>(this, ArmorModelSet.bake(KoboldsClient.KOBOLD_ARMOR, context.getModelSet(), KoboldModel::new), ArmorModelSet.bake(KoboldsClient.KOBOLD_ARMOR, context.getModelSet(), KoboldModel::new), context.getEquipmentRenderer()));
-            this.addLayer(new ItemInHandLayer<>(this));
+            this.addLayer(new KoboldItemInHandLayer<>(this));
         }
 	}
 
