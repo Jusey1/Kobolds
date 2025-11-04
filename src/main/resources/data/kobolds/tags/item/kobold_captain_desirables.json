@@ -25,10 +25,6 @@
     {
       "id": "horseshoes:gold_horseshoes",
       "required": false
-    },
-    {
-      "id": "supernatural:gothic_golden_helmet",
-      "required": false
     }
   ]
 }
