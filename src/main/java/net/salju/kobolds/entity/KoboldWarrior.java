@@ -36,10 +36,10 @@ public class KoboldWarrior extends AbstractKoboldEntity {
 	}
 
     @Override
-    protected void populateDefaultEquipmentSlots(RandomSource randy, DifficultyInstance souls) {
+    protected void populateDefaultEquipmentSlots(RandomSource randy, DifficultyInstance difficulty) {
         this.setItemSlot(EquipmentSlot.MAINHAND, new ItemStack(KoboldsItems.KOBOLD_IRON_AXE.get()));
         this.setItemSlot(EquipmentSlot.OFFHAND, new ItemStack(Items.SHIELD));
-        super.populateDefaultEquipmentSlots(randy, souls);
+        super.populateDefaultEquipmentSlots(randy, difficulty);
     }
 
 	@Override

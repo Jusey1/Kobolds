@@ -96,18 +96,17 @@ public class KoboldRascal extends AbstractKoboldEntity {
 	}
 
     @Override
-    protected void populateDefaultEquipmentSlots(RandomSource randy, DifficultyInstance souls) {
+    protected void populateDefaultEquipmentSlots(RandomSource randy, DifficultyInstance difficulty) {
         this.setItemSlot(EquipmentSlot.MAINHAND, new ItemStack(KoboldsItems.KOBOLD_IRON_SWORD.get()));
-        super.populateDefaultEquipmentSlots(randy, souls);
+        super.populateDefaultEquipmentSlots(randy, difficulty);
     }
 
 	@Override
 	protected boolean canReplaceCurrentItem(ItemStack drop, ItemStack hand, EquipmentSlot slot) {
 		if (drop.is(ItemTags.SWORDS)) {
 			return super.canReplaceCurrentItem(drop, hand, slot);
-		} else {
-			return false;
 		}
+        return false;
 	}
 
 	public int getMatchingItem(ItemStack stack, List<ItemStack> data) {

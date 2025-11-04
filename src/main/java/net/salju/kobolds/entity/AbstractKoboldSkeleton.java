@@ -50,15 +50,14 @@ public abstract class AbstractKoboldSkeleton extends AbstractSkeleton implements
 	}
 
 	@Override
-	public SpawnGroupData finalizeSpawn(ServerLevelAccessor world, DifficultyInstance difficulty, EntitySpawnReason reason, @Nullable SpawnGroupData data) {
-		SpawnGroupData spawndata = super.finalizeSpawn(world, difficulty, reason, data);
-		this.populateDefaultEquipmentSlots(world.getRandom(), difficulty);
-		this.populateDefaultEquipmentEnchantments(world, world.getRandom(), difficulty);
-		return spawndata;
+	public SpawnGroupData finalizeSpawn(ServerLevelAccessor lvl, DifficultyInstance difficulty, EntitySpawnReason reason, @Nullable SpawnGroupData data) {
+		this.populateDefaultEquipmentSlots(lvl.getRandom(), difficulty);
+		this.populateDefaultEquipmentEnchantments(lvl, lvl.getRandom(), difficulty);
+		return super.finalizeSpawn(lvl, difficulty, reason, data);
 	}
 
 	@Override
-	protected void populateDefaultEquipmentSlots(RandomSource randy, DifficultyInstance souls) {
+	protected void populateDefaultEquipmentSlots(RandomSource randy, DifficultyInstance difficulty) {
 		this.setItemSlot(EquipmentSlot.MAINHAND, new ItemStack(Items.CROSSBOW));
 		this.setDropChance(EquipmentSlot.MAINHAND, 0.15F);
 	}

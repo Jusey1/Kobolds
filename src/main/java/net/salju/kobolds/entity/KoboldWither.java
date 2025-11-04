@@ -33,6 +33,7 @@ import javax.annotation.Nullable;
 public class KoboldWither extends AbstractKoboldSkeleton {
 	public KoboldWither(EntityType<KoboldWither> type, Level world) {
 		super(type, world);
+        this.setCanPickUpLoot(true);
 		this.setPersistenceRequired();
 		this.setPathfindingMalus(PathType.LAVA, 8.0F);
 		this.getNavigation().setCanOpenDoors(true);
@@ -62,13 +63,6 @@ public class KoboldWither extends AbstractKoboldSkeleton {
 			}
 		}
 		return super.mobInteract(player, hand);
-	}
-
-	@Override
-	public SpawnGroupData finalizeSpawn(ServerLevelAccessor world, DifficultyInstance difficulty, EntitySpawnReason reason, @Nullable SpawnGroupData data) {
-		SpawnGroupData spawndata = super.finalizeSpawn(world, difficulty, reason, data);
-		this.setCanPickUpLoot(true);
-		return spawndata;
 	}
 
 	@Override
@@ -133,6 +127,11 @@ public class KoboldWither extends AbstractKoboldSkeleton {
 	public boolean canBeLeashed() {
 		return true;
 	}
+
+    @Override
+    public boolean canPickUpLoot() {
+        return true;
+    }
 
 	@Override
 	protected SoundEvent getAmbientSound() {

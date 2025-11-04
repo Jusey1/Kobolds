@@ -27,8 +27,7 @@ public class KoboldEnchanter extends AbstractKoboldEntity {
 	protected boolean canReplaceCurrentItem(ItemStack drop, ItemStack hand, EquipmentSlot slot) {
 		if (drop.is(KoboldsTags.ARMOR) || drop.is(Items.EMERALD)) {
 			return super.canReplaceCurrentItem(drop, hand, slot);
-		} else {
-			return false;
 		}
+        return false;
 	}
 }

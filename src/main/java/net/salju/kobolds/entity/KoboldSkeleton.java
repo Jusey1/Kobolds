@@ -23,7 +23,7 @@ public class KoboldSkeleton extends AbstractKoboldSkeleton {
 	}
 
 	@Override
-	protected void populateDefaultEquipmentSlots(RandomSource randy, DifficultyInstance souls) {
+	protected void populateDefaultEquipmentSlots(RandomSource randy, DifficultyInstance difficulty) {
 		this.setItemSlot(EquipmentSlot.MAINHAND, new ItemStack(Items.CROSSBOW));
 		this.setDropChance(EquipmentSlot.MAINHAND, 0.15F);
 	}

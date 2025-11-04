@@ -53,9 +53,9 @@ import java.util.Optional;
 public abstract class AbstractKoboldEntity extends AgeableMob implements CrossbowAttackMob, RangedAttackMob {
 	private static final EntityDataAccessor<Boolean> DATA_CHARGING_STATE = SynchedEntityData.defineId(AbstractKoboldEntity.class, EntityDataSerializers.BOOLEAN);
 	private static final EntityDataAccessor<Boolean> DATA_DIAMOND_EYES = SynchedEntityData.defineId(AbstractKoboldEntity.class, EntityDataSerializers.BOOLEAN);
-    private static final EntityDataAccessor<Integer> DATA_DRAGON_COLOR = SynchedEntityData.defineId(AbstractKoboldEntity.class, EntityDataSerializers.INT);
+	private static final EntityDataAccessor<Integer> DATA_DRAGON_COLOR = SynchedEntityData.defineId(AbstractKoboldEntity.class, EntityDataSerializers.INT);
 	private Optional<EntityReference<Entity>> thrownTrident = Optional.empty();
-    private Optional<EntityReference<Entity>> dragonFriend = Optional.empty();
+	private Optional<EntityReference<Entity>> dragonFriend = Optional.empty();
 	private ItemStack primary = ItemStack.EMPTY;
 	private ItemStack secondary = ItemStack.EMPTY;
 	private int cooldown;
@@ -84,15 +84,15 @@ public abstract class AbstractKoboldEntity extends AgeableMob implements Crossbo
 			tag.store("Primary", ItemStack.CODEC, this.getPrimary());
 		}
 		if (!this.getSecondary().isEmpty()) {
-			tag.store("Trident", ItemStack.CODEC, this.getSecondary());
+			tag.store("Secondary", ItemStack.CODEC, this.getSecondary());
 		}
 		if (this.getTridentReference() != null) {
 			EntityReference.store(this.getTridentReference(), tag, "ThrownTrident");
 		}
-        if (this.getDragonReference() != null) {
-            EntityReference.store(this.getDragonReference(), tag, "DragonFriend");
-        }
-        tag.putInt("DC", this.getDragonColor());
+		if (this.getDragonReference() != null) {
+			EntityReference.store(this.getDragonReference(), tag, "DragonFriend");
+		}
+		tag.putInt("DC", this.getDragonColor());
 		tag.putInt("CD", this.getCD());
 	}
 
@@ -102,23 +102,27 @@ public abstract class AbstractKoboldEntity extends AgeableMob implements Crossbo
 		if (tag.read("Primary", ItemStack.CODEC).isPresent()) {
 			this.setPrimary(tag.read("Primary", ItemStack.CODEC).orElse(ItemStack.EMPTY));
 		}
-		if (tag.read("Trident", ItemStack.CODEC).isPresent()) {
-			this.setSecondary(tag.read("Trident", ItemStack.CODEC).orElse(ItemStack.EMPTY));
+		if (tag.read("Secondary", ItemStack.CODEC).isPresent()) {
+			this.setSecondary(tag.read("Secondary", ItemStack.CODEC).orElse(ItemStack.EMPTY));
 		}
-        EntityReference<Entity> target = EntityReference.read(tag, "ThrownTrident");
-        if (target != null) {
-            this.thrownTrident = Optional.of(target);
-        } else {
-            this.thrownTrident = Optional.empty();
+		EntityReference<Entity> target = EntityReference.read(tag, "ThrownTrident");
+		if (target != null) {
+			this.thrownTrident = Optional.of(target);
+		} else {
+			this.thrownTrident = Optional.empty();
+		}
+		EntityReference<Entity> dragon = EntityReference.read(tag, "DragonFriend");
+		if (dragon != null) {
+			this.dragonFriend = Optional.of(dragon);
+		} else {
+			this.dragonFriend = Optional.empty();
+		}
+        if (tag.getInt("DC").isPresent()) {
+            this.setDragonColor(tag.getInt("DC").get());
         }
-        EntityReference<Entity> dragon = EntityReference.read(tag, "DragonFriend");
-        if (dragon != null) {
-            this.dragonFriend = Optional.of(dragon);
-        } else {
-            this.dragonFriend = Optional.empty();
+        if (tag.getInt("CD").isPresent()) {
+            this.setCD(tag.getInt("CD").get());
         }
-        this.setDragonColor(tag.getInt("DC").orElse(0));
-        this.setCD(tag.getInt("CD").orElse(0));
 	}
 
 	@Override
@@ -126,7 +130,7 @@ public abstract class AbstractKoboldEntity extends AgeableMob implements Crossbo
 		super.defineSynchedData(builder);
 		builder.define(DATA_CHARGING_STATE, false);
 		builder.define(DATA_DIAMOND_EYES, false);
-        builder.define(DATA_DRAGON_COLOR, 0);
+		builder.define(DATA_DRAGON_COLOR, 0);
 	}
 
 	@Override
@@ -209,11 +213,11 @@ public abstract class AbstractKoboldEntity extends AgeableMob implements Crossbo
 			return false;
 		} else if (drop.getItem() instanceof TridentItem) {
 			if (hand.getItem() instanceof TridentItem && this.canReplaceEqualItem(drop, hand)) {
-                this.setSecondary(drop);
+				this.setSecondary(drop);
 				return true;
 			} else if (this.getSecondary().isEmpty()) {
 				this.setPrimary(this.getMainHandItem());
-                this.setSecondary(drop);
+				this.setSecondary(drop);
 				this.setItemInHand(InteractionHand.MAIN_HAND, ItemStack.EMPTY);
 				return true;
 			}
@@ -229,10 +233,10 @@ public abstract class AbstractKoboldEntity extends AgeableMob implements Crossbo
 			return false;
 		} else if (drop.getItem() instanceof ShieldItem) {
 			if (hand.getItem() instanceof ShieldItem) {
-                this.setSecondary(drop);
+				this.setSecondary(drop);
 				return this.canReplaceEqualItem(drop, hand);
 			} else if (hand.isEmpty() && this.getSecondary().isEmpty()) {
-                this.setSecondary(drop);
+				this.setSecondary(drop);
 				return true;
 			}
 		} else if (drop.is(Items.EMERALD) && hand.isEmpty() && this.getType().is(KoboldsTags.TRADERS)) {
@@ -369,30 +373,29 @@ public abstract class AbstractKoboldEntity extends AgeableMob implements Crossbo
 	}
 
 	@Override
-	public SpawnGroupData finalizeSpawn(ServerLevelAccessor world, DifficultyInstance difficulty, EntitySpawnReason reason, @Nullable SpawnGroupData data) {
-		SpawnGroupData spawn = super.finalizeSpawn(world, difficulty, reason, data);
-		this.populateDefaultEquipmentSlots(world.getRandom(), difficulty);
-		this.populateDefaultEquipmentEnchantments(world, world.getRandom(), difficulty);
+	public SpawnGroupData finalizeSpawn(ServerLevelAccessor lvl, DifficultyInstance difficulty, EntitySpawnReason reason, @Nullable SpawnGroupData data) {
+		this.populateDefaultEquipmentSlots(lvl.getRandom(), difficulty);
+		this.populateDefaultEquipmentEnchantments(lvl, lvl.getRandom(), difficulty);
 		this.setBaby(this.isBaby());
-        if (this.getType().is(KoboldsTags.DRAGON)) {
-            KoboldEvent.DragonEvent event = KoboldsManager.onGetDragonEvent(this);
-            this.setDragonColor(event.getColorInt());
-            if (event.getDragon() != null) {
-                this.setDragonFriend(event.getDragon());
-            }
-        }
-		return spawn;
+		if (this.getType().is(KoboldsTags.DRAGON)) {
+			KoboldEvent.DragonEvent event = KoboldsManager.onGetDragonEvent(this);
+			this.setDragonColor(event.getColorInt());
+			if (event.getDragon() != null) {
+				this.setDragonFriend(event.getDragon());
+			}
+		}
+		return super.finalizeSpawn(lvl, difficulty, reason, data);
 	}
 
 	@Override
-	protected void populateDefaultEquipmentSlots(RandomSource randy, DifficultyInstance souls) {
+	protected void populateDefaultEquipmentSlots(RandomSource randy, DifficultyInstance difficulty) {
 		this.setPrimary(this.getMainHandItem());
 		if (this.getType().equals(KoboldsMobs.KOBOLD_PIRATE.get()) && Math.random() >= 0.75) {
 			this.setItemSlot(EquipmentSlot.MAINHAND, new ItemStack(Items.TRIDENT));
-            this.setSecondary(this.getMainHandItem());
+			this.setSecondary(this.getMainHandItem());
 		} else {
-            this.setSecondary(this.getOffhandItem());
-        }
+			this.setSecondary(this.getOffhandItem());
+		}
 		this.setDropChance(EquipmentSlot.MAINHAND, 0.0F);
 		this.setDropChance(EquipmentSlot.OFFHAND, 0.0F);
 	}
@@ -412,7 +415,7 @@ public abstract class AbstractKoboldEntity extends AgeableMob implements Crossbo
 		super.baseTick();
 		if (this.level() instanceof ServerLevel lvl && this.isAlive() && this.isEffectiveAi()) {
 			this.checkTrident(lvl);
-            this.checkDragon(lvl);
+			this.checkDragon(lvl);
 			if (this.getCD() > 0) {
 				this.setCD(this.getCD() - 1);
 			}
@@ -432,15 +435,15 @@ public abstract class AbstractKoboldEntity extends AgeableMob implements Crossbo
 								this.getNavigation().moveTo(target, 1.0F);
 							} else if (this.distanceTo(target) < 1.0D) {
 								KoboldChild child = this.getBreedOffspring(lvl, target);
-                                if (child != null) {
-                                    child.setBaby(true);
-                                    child.setDragonColor(this.getDragonColor());
-                                    if (this.getDragonReference() != null && lvl.getEntity(this.getDragonReference().getUUID()) instanceof LivingEntity dragon) {
-                                        child.setDragonFriend(dragon);
-                                    } else {
-                                        child.setDragonFriend(null);
-                                    }
-                                }
+								if (child != null) {
+									child.setBaby(true);
+									child.setDragonColor(this.getDragonColor());
+									if (this.getDragonReference() != null && lvl.getEntity(this.getDragonReference().getUUID()) instanceof LivingEntity dragon) {
+										child.setDragonFriend(dragon);
+									} else {
+										child.setDragonFriend(null);
+									}
+								}
 								target.setAge(18000);
 								this.setAge(18000);
 							}
@@ -468,9 +471,9 @@ public abstract class AbstractKoboldEntity extends AgeableMob implements Crossbo
 		if (this.isBlocking() && source.getDirectEntity() instanceof LivingEntity atk) {
 			this.setCD((int) atk.getSecondsToDisableBlocking() * 20);
 		}
-        if (source.getEntity() != null && this.getDragonReference() != null && source.getEntity().getUUID().equals(this.getDragonReference().getUUID())) {
-            return false;
-        }
+		if (source.getEntity() != null && this.getDragonReference() != null && source.getEntity().getUUID().equals(this.getDragonReference().getUUID())) {
+			return false;
+		}
 		return (!(source.getEntity() instanceof AbstractKoboldEntity) && !source.is(DamageTypes.CAMPFIRE) && super.hurtServer(lvl, source, amount));
 	}
 
@@ -498,12 +501,12 @@ public abstract class AbstractKoboldEntity extends AgeableMob implements Crossbo
 	}
 
 	public void setPrimary(ItemStack stack) {
-        this.primary = stack;
-    }
+		this.primary = stack;
+	}
 
-    public void setSecondary(ItemStack stack) {
-        this.secondary = stack;
-    }
+	public void setSecondary(ItemStack stack) {
+		this.secondary = stack;
+	}
 
 	public void givePotion(ItemStack stack) {
 		if (this.getOffhandItem().isEmpty()) {
@@ -511,13 +514,13 @@ public abstract class AbstractKoboldEntity extends AgeableMob implements Crossbo
 		}
 	}
 
-    public void checkDragon(ServerLevel lvl) {
-        if (this.getDragonReference() != null && lvl.getEntity(this.getDragonReference().getUUID()) instanceof LivingEntity dragon && dragon.isAlive()) {
-            if (this.distanceTo(dragon) >= 64.0F && this.getTarget() == null && !this.getNavigation().isInProgress()) {
-                this.getNavigation().moveTo(dragon, 1.2);
-            }
-        }
-    }
+	public void checkDragon(ServerLevel lvl) {
+		if (this.getDragonReference() != null && lvl.getEntity(this.getDragonReference().getUUID()) instanceof LivingEntity dragon && dragon.isAlive()) {
+			if (this.distanceTo(dragon) >= 64.0F && this.getTarget() == null && !this.getNavigation().isInProgress()) {
+				this.getNavigation().moveTo(dragon, 1.2);
+			}
+		}
+	}
 
 	public void checkTrident(ServerLevel lvl) {
 		if (this.getTridentReference() != null && lvl.getEntity(this.getTridentReference().getUUID()) instanceof ThrownTrident proj && proj.getOwner() != null) {
@@ -529,8 +532,8 @@ public abstract class AbstractKoboldEntity extends AgeableMob implements Crossbo
 				}
 			}
 		} else if (this.getTridentReference() != null && this.getCD() <= 1) {
-            this.giveTrident(null);
-        }
+			this.giveTrident(null);
+		}
 	}
 
 	protected void giveTrident(@Nullable ThrownTrident proj) {
@@ -547,25 +550,25 @@ public abstract class AbstractKoboldEntity extends AgeableMob implements Crossbo
 		this.cooldown = i;
 	}
 
-    public void setDragonColor(int i) {
-        this.getEntityData().set(DATA_DRAGON_COLOR, i);
-    }
+	public void setDragonColor(int i) {
+		this.getEntityData().set(DATA_DRAGON_COLOR, i);
+	}
 
 	public void setTrident(@Nullable ThrownTrident proj) {
 		this.thrownTrident = Optional.ofNullable(proj).map(EntityReference::of);
 	}
 
-    public void setDragonFriend(LivingEntity dragon) {
-        this.dragonFriend = Optional.ofNullable(dragon).map(EntityReference::of);
-    }
+	public void setDragonFriend(LivingEntity dragon) {
+		this.dragonFriend = Optional.ofNullable(dragon).map(EntityReference::of);
+	}
 
 	public boolean isDiamond() {
 		return this.getEntityData().get(DATA_DIAMOND_EYES);
 	}
 
-    public int getDragonColor() {
-        return this.getEntityData().get(DATA_DRAGON_COLOR);
-    }
+	public int getDragonColor() {
+		return this.getEntityData().get(DATA_DRAGON_COLOR);
+	}
 
 	public int getCD() {
 		return this.cooldown;
@@ -580,8 +583,8 @@ public abstract class AbstractKoboldEntity extends AgeableMob implements Crossbo
 		return this.thrownTrident.orElse(null);
 	}
 
-    @Nullable
-    public EntityReference<Entity> getDragonReference() {
-        return this.dragonFriend.orElse(null);
-    }
+	@Nullable
+	public EntityReference<Entity> getDragonReference() {
+		return this.dragonFriend.orElse(null);
+	}
 }

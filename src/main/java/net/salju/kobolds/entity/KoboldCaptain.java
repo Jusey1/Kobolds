@@ -10,9 +10,12 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.enchantment.EnchantmentHelper;
+import net.minecraft.world.item.enchantment.providers.VanillaEnchantmentProviders;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -64,8 +67,17 @@ public class KoboldCaptain extends AbstractKoboldEntity {
     }
 
     @Override
-    protected void populateDefaultEquipmentSlots(RandomSource randy, DifficultyInstance souls) {
+    protected void populateDefaultEquipmentSlots(RandomSource randy, DifficultyInstance difficulty) {
         this.setItemSlot(EquipmentSlot.MAINHAND, new ItemStack(KoboldsItems.KOBOLD_IRON_SWORD.get()));
-        super.populateDefaultEquipmentSlots(randy, souls);
+        super.populateDefaultEquipmentSlots(randy, difficulty);
+    }
+
+    @Override
+    protected void populateDefaultEquipmentEnchantments(ServerLevelAccessor lvl, RandomSource randy, DifficultyInstance difficulty) {
+        ItemStack stack = this.getItemBySlot(EquipmentSlot.MAINHAND);
+        if (!stack.isEmpty()) {
+            EnchantmentHelper.enchantItemFromProvider(stack, lvl.registryAccess(), VanillaEnchantmentProviders.MOB_SPAWN_EQUIPMENT, difficulty, randy);
+            this.setItemSlot(EquipmentSlot.MAINHAND, stack);
+        }
     }
 }

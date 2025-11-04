@@ -37,12 +37,12 @@ public class Kobold extends AbstractKoboldEntity {
 	}
 
     @Override
-    protected void populateDefaultEquipmentSlots(RandomSource randy, DifficultyInstance souls) {
+    protected void populateDefaultEquipmentSlots(RandomSource randy, DifficultyInstance difficulty) {
         if (Math.random() >= 0.6) {
             this.setItemSlot(EquipmentSlot.MAINHAND, new ItemStack(Items.CROSSBOW));
         } else {
             this.setItemSlot(EquipmentSlot.MAINHAND, new ItemStack(KoboldsItems.KOBOLD_IRON_SWORD.get()));
         }
-        super.populateDefaultEquipmentSlots(randy, souls);
+        super.populateDefaultEquipmentSlots(randy, difficulty);
     }
 }

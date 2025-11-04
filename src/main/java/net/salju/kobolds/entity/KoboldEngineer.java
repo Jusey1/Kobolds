@@ -8,9 +8,12 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.enchantment.EnchantmentHelper;
+import net.minecraft.world.item.enchantment.providers.VanillaEnchantmentProviders;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.DifficultyInstance;
 
 public class KoboldEngineer extends AbstractKoboldEntity {
@@ -33,9 +36,18 @@ public class KoboldEngineer extends AbstractKoboldEntity {
 	}
 
     @Override
-    protected void populateDefaultEquipmentSlots(RandomSource randy, DifficultyInstance souls) {
+    protected void populateDefaultEquipmentSlots(RandomSource randy, DifficultyInstance difficulty) {
         this.setItemSlot(EquipmentSlot.MAINHAND, new ItemStack(Items.CROSSBOW));
-        super.populateDefaultEquipmentSlots(randy, souls);
+        super.populateDefaultEquipmentSlots(randy, difficulty);
+    }
+
+    @Override
+    protected void populateDefaultEquipmentEnchantments(ServerLevelAccessor lvl, RandomSource randy, DifficultyInstance difficulty) {
+        ItemStack stack = this.getItemBySlot(EquipmentSlot.MAINHAND);
+        if (!stack.isEmpty()) {
+            EnchantmentHelper.enchantItemFromProvider(stack, lvl.registryAccess(), VanillaEnchantmentProviders.MOB_SPAWN_EQUIPMENT, difficulty, randy);
+            this.setItemSlot(EquipmentSlot.MAINHAND, stack);
+        }
     }
 
 	@Override
