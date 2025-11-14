@@ -3,9 +3,9 @@ package net.salju.kobolds.entity.ai;
 import net.salju.kobolds.entity.AbstractKoboldEntity;
 import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.monster.RangedAttackMob;
-import net.minecraft.world.entity.projectile.ProjectileUtil;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ShieldItem;
+import net.minecraft.world.InteractionHand;
 
 public class KoboldShieldGoal extends Goal {
 	public final AbstractKoboldEntity kobold;
@@ -27,7 +27,7 @@ public class KoboldShieldGoal extends Goal {
 	@Override
 	public void start() {
 		super.start();
-		kobold.startUsingItem(ProjectileUtil.getWeaponHoldingHand(kobold, item -> item instanceof ShieldItem));
+		kobold.startUsingItem(InteractionHand.OFF_HAND);
 	}
 
 	@Override
@@ -45,6 +45,6 @@ public class KoboldShieldGoal extends Goal {
 	}
 
 	private boolean isHoldingShield() {
-		return kobold.isHolding(stack -> stack.getItem() instanceof ShieldItem);
+		return kobold.getOffhandItem().getItem() instanceof ShieldItem;
 	}
 }

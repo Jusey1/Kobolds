@@ -135,11 +135,10 @@ public abstract class AbstractKoboldEntity extends AgeableMob implements Crossbo
 
 	@Override
 	public void performRangedAttack(LivingEntity target, float f) {
-		InteractionHand hand = ProjectileUtil.getWeaponHoldingHand(this, stack -> (stack instanceof CrossbowItem || stack instanceof  BowItem || stack instanceof TridentItem));
-		if (this.getItemInHand(hand).getItem() instanceof CrossbowItem) {
+		if (this.getMainHandItem().getItem() instanceof CrossbowItem) {
 			this.performCrossbowAttack(this, 2.0F);
-		} else if (this.getItemInHand(hand).getItem() instanceof BowItem) {
-			AbstractArrow arrow = ProjectileUtil.getMobArrow(this, this.getProjectile(this.getItemInHand(hand)), f, this.getItemInHand(hand));
+		} else if (this.getMainHandItem().getItem() instanceof BowItem) {
+			AbstractArrow arrow = ProjectileUtil.getMobArrow(this, this.getProjectile(this.getMainHandItem()), f, this.getMainHandItem());
 			double d0 = target.getX() - this.getX();
 			double d1 = target.getY(0.3333333333333333D) - arrow.getY();
 			double d2 = target.getZ() - this.getZ();
@@ -147,8 +146,8 @@ public abstract class AbstractKoboldEntity extends AgeableMob implements Crossbo
 			arrow.shoot(d0, d1 + d3 * (double) 0.2F, d2, 1.6F, (float) (14 - this.level().getDifficulty().getId() * 4));
 			this.playSound(SoundEvents.SKELETON_SHOOT, 1.0F, 1.0F / (this.getRandom().nextFloat() * 0.4F + 0.8F));
 			this.level().addFreshEntity(arrow);
-		} else if (this.getItemInHand(hand).getItem() instanceof TridentItem) {
-			this.setSecondary(this.getItemInHand(hand));
+		} else if (this.getMainHandItem().getItem() instanceof TridentItem) {
+			this.setSecondary(this.getMainHandItem());
 			ThrownTrident proj = new ThrownTrident(this.level(), this, this.getSecondary());
 			double d0 = target.getX() - this.getX();
 			double d1 = target.getY(0.3333333333333333D) - proj.getY();
@@ -294,7 +293,7 @@ public abstract class AbstractKoboldEntity extends AgeableMob implements Crossbo
 	}
 
 	@Override
-	public SoundEvent getHurtSound(DamageSource ds) {
+	public SoundEvent getHurtSound(DamageSource source) {
 		return (this.isBlocking() ? SoundEvents.SHIELD_BLOCK.value() : KoboldsSounds.KOBOLD_HURT.get());
 	}
 

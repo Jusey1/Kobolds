@@ -2,8 +2,8 @@ package net.salju.kobolds.entity.ai;
 
 import net.salju.kobolds.entity.AbstractKoboldEntity;
 import net.minecraft.world.entity.ai.goal.RangedAttackGoal;
-import net.minecraft.world.entity.projectile.ProjectileUtil;
 import net.minecraft.world.item.TridentItem;
+import net.minecraft.world.InteractionHand;
 
 public class KoboldTridentGoal extends RangedAttackGoal {
 	public final AbstractKoboldEntity kobold;
@@ -22,7 +22,7 @@ public class KoboldTridentGoal extends RangedAttackGoal {
 	public void start() {
 		super.start();
 		kobold.setAggressive(true);
-		kobold.startUsingItem(ProjectileUtil.getWeaponHoldingHand(kobold, item -> item instanceof TridentItem));
+		kobold.startUsingItem(InteractionHand.MAIN_HAND);
 	}
 
 	@Override
@@ -33,6 +33,6 @@ public class KoboldTridentGoal extends RangedAttackGoal {
 	}
 
 	private boolean isHoldingTrident() {
-		return kobold.isHolding(stack -> stack.getItem() instanceof TridentItem);
+		return kobold.getMainHandItem().getItem() instanceof TridentItem;
 	}
 }
