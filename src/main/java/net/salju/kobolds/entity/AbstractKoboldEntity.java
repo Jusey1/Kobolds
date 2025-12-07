@@ -68,16 +68,6 @@ public abstract class AbstractKoboldEntity extends AgeableMob implements Crossbo
 	}
 
 	@Override
-	protected void registerGoals() {
-		super.registerGoals();
-		this.goalSelector.addGoal(0, new OpenDoorGoal(this, true));
-		this.goalSelector.addGoal(3, new RandomStrollGoal(this, 1.0F));
-		this.goalSelector.addGoal(3, new LookAtPlayerGoal(this, LivingEntity.class, 6.0F));
-		this.goalSelector.addGoal(3, new RandomLookAroundGoal(this));
-		this.goalSelector.addGoal(3, new FloatGoal(this));
-	}
-
-	@Override
 	public void addAdditionalSaveData(ValueOutput tag) {
 		super.addAdditionalSaveData(tag);
 		if (!this.getPrimary().isEmpty()) {
@@ -132,6 +122,16 @@ public abstract class AbstractKoboldEntity extends AgeableMob implements Crossbo
 		builder.define(DATA_DIAMOND_EYES, false);
 		builder.define(DATA_DRAGON_COLOR, 0);
 	}
+
+    @Override
+    protected void registerGoals() {
+        super.registerGoals();
+        this.goalSelector.addGoal(0, new OpenDoorGoal(this, true));
+        this.goalSelector.addGoal(3, new RandomStrollGoal(this, 1.0F));
+        this.goalSelector.addGoal(3, new LookAtPlayerGoal(this, LivingEntity.class, 6.0F));
+        this.goalSelector.addGoal(3, new RandomLookAroundGoal(this));
+        this.goalSelector.addGoal(3, new FloatGoal(this));
+    }
 
 	@Override
 	public void performRangedAttack(LivingEntity target, float f) {

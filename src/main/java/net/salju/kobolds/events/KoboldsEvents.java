@@ -24,9 +24,9 @@ public class KoboldsEvents {
 	@SubscribeEvent
 	public static void onEntitySpawned(EntityJoinLevelEvent event) {
 		if (event.getEntity() instanceof Raider johnny) {
-			johnny.targetSelector.addGoal(3, new NearestAttackableTargetGoal(johnny, AbstractKoboldEntity.class, false));
+			johnny.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(johnny, AbstractKoboldEntity.class, false));
 		} else if (event.getEntity() instanceof Zombie billy && !(billy instanceof ZombifiedPiglin)) {
-			billy.targetSelector.addGoal(3, new NearestAttackableTargetGoal(billy, AbstractKoboldEntity.class, false));
+			billy.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(billy, AbstractKoboldEntity.class, false));
 		}
 	}
 
