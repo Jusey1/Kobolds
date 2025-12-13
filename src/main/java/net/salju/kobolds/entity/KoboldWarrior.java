@@ -1,5 +1,6 @@
 package net.salju.kobolds.entity;
 
+import net.salju.kobolds.events.KoboldsManager;
 import net.salju.kobolds.init.KoboldsItems;
 import net.salju.kobolds.init.KoboldsTags;
 import net.salju.kobolds.entity.ai.*;
@@ -20,6 +21,7 @@ public class KoboldWarrior extends AbstractKoboldEntity {
 	@Override
 	protected void registerGoals() {
 		super.registerGoals();
+        KoboldsManager.addPirateGoals(this);
 		this.targetSelector.addGoal(0, new KoboldRevengeGoal(this));
 		this.goalSelector.addGoal(1, new KoboldPotionGoal(this));
 		this.goalSelector.addGoal(1, new KoboldShieldGoal(this));

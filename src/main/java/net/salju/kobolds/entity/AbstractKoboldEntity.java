@@ -133,34 +133,35 @@ public abstract class AbstractKoboldEntity extends AgeableMob implements Crossbo
         this.goalSelector.addGoal(3, new FloatGoal(this));
     }
 
-	@Override
-	public void performRangedAttack(LivingEntity target, float f) {
-		if (this.getMainHandItem().getItem() instanceof CrossbowItem) {
-			this.performCrossbowAttack(this, 2.0F);
-		} else if (this.getMainHandItem().getItem() instanceof BowItem) {
-			AbstractArrow arrow = ProjectileUtil.getMobArrow(this, this.getProjectile(this.getMainHandItem()), f, this.getMainHandItem());
-			double d0 = target.getX() - this.getX();
-			double d1 = target.getY(0.3333333333333333D) - arrow.getY();
-			double d2 = target.getZ() - this.getZ();
-			double d3 = Math.sqrt(d0 * d0 + d2 * d2);
-			arrow.shoot(d0, d1 + d3 * (double) 0.2F, d2, 1.6F, (float) (14 - this.level().getDifficulty().getId() * 4));
-			this.playSound(SoundEvents.SKELETON_SHOOT, 1.0F, 1.0F / (this.getRandom().nextFloat() * 0.4F + 0.8F));
-			this.level().addFreshEntity(arrow);
-		} else if (this.getMainHandItem().getItem() instanceof TridentItem) {
-			this.setSecondary(this.getMainHandItem());
-			ThrownTrident proj = new ThrownTrident(this.level(), this, this.getSecondary());
-			double d0 = target.getX() - this.getX();
-			double d1 = target.getY(0.3333333333333333D) - proj.getY();
-			double d2 = target.getZ() - this.getZ();
-			double d3 = Mth.sqrt((float) (d0 * d0 + d2 * d2));
-			proj.shoot(d0, d1 + d3 * (double) 0.2F, d2, 1.6F, (float) (14 - this.level().getDifficulty().getId() * 4));
-			this.playSound(SoundEvents.DROWNED_SHOOT, 1.0F, 1.0F / (this.getRandom().nextFloat() * 0.4F + 0.8F));
-			this.level().addFreshEntity(proj);
-			this.setItemInHand(InteractionHand.MAIN_HAND, this.getPrimary());
-			this.setTrident(proj);
-			this.setCD(1200);
-		}
-	}
+    @Override
+    public void performRangedAttack(LivingEntity target, float f) {
+        if (this.isHolding((stack) -> stack.getItem() instanceof CrossbowItem)) {
+            this.performCrossbowAttack(this, 2.0F);
+        } else if (this.isHolding((stack) -> stack.getItem() instanceof BowItem)) {
+            ItemStack weapon = this.getItemInHand(ProjectileUtil.getWeaponHoldingHand(this, (item) -> item instanceof BowItem));
+            AbstractArrow arrow = ProjectileUtil.getMobArrow(this, this.getProjectile(weapon), f, weapon);
+            double d0 = target.getX() - this.getX();
+            double d1 = target.getY(0.3333333333333333D) - arrow.getY();
+            double d2 = target.getZ() - this.getZ();
+            double d3 = Math.sqrt(d0 * d0 + d2 * d2);
+            arrow.shoot(d0, d1 + d3 * (double) 0.2F, d2, 1.6F, (float) (14 - this.level().getDifficulty().getId() * 4));
+            this.playSound(SoundEvents.SKELETON_SHOOT, 1.0F, 1.0F / (this.getRandom().nextFloat() * 0.4F + 0.8F));
+            this.level().addFreshEntity(arrow);
+        } else if (this.isHolding((stack) -> stack.getItem() instanceof TridentItem)) {
+            this.setSecondary(this.getItemInHand(ProjectileUtil.getWeaponHoldingHand(this, (item) -> item instanceof TridentItem)));
+            ThrownTrident proj = new ThrownTrident(this.level(), this, this.getSecondary());
+            double d0 = target.getX() - this.getX();
+            double d1 = target.getY(0.3333333333333333D) - proj.getY();
+            double d2 = target.getZ() - this.getZ();
+            double d3 = Mth.sqrt((float) (d0 * d0 + d2 * d2));
+            proj.shoot(d0, d1 + d3 * (double) 0.2F, d2, 1.6F, (float) (14 - this.level().getDifficulty().getId() * 4));
+            this.playSound(SoundEvents.DROWNED_SHOOT, 1.0F, 1.0F / (this.getRandom().nextFloat() * 0.4F + 0.8F));
+            this.level().addFreshEntity(proj);
+            this.setItemInHand(InteractionHand.MAIN_HAND, this.getPrimary());
+            this.setTrident(proj);
+            this.setCD(1200);
+        }
+    }
 
 	@Override
 	public void onCrossbowAttackPerformed() {
