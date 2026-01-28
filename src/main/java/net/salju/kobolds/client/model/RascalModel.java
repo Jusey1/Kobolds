@@ -40,16 +40,16 @@ public class RascalModel<T extends AbstractKoboldState> extends KoboldModel<T> {
 	}
 
     @Override
-    protected void defaultPose(T kobold) {
-        super.defaultPose(kobold);
+    protected void defaultPose(T target) {
+        super.defaultPose(target);
         this.leftArm.xRot = -0.7854F;
         this.leftArm.yRot = 0.0F;
         this.leftArm.zRot = 0.0F;
     }
 
     @Override
-    protected void poseArms(T kobold, Item target, ModelPart mainArm, ModelPart offArm) {
-        if (kobold.isAggressive) {
+    protected void poseArms(T target, Item item, ModelPart mainArm, ModelPart offArm) {
+        if (target.isAggressive) {
             this.rightArm.xRot = -2.0944F;
             this.rightArm.yRot = 0.1745F;
         }
