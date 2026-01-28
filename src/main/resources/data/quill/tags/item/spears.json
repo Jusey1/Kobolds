@@ -1,7 +1,6 @@
 {
   "replace": false,
   "values": [
-    "kobolds:kobold_iron_axe",
     "kobolds:kobold_iron_spear"
   ]
 }
