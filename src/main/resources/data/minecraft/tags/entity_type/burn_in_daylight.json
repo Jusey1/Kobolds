@@ -1,0 +1,7 @@
+{
+  "replace": false,
+  "values": [
+    "kobolds:kobold_skeleton",
+    "kobolds:kobold_zombie"
+  ]
+}
