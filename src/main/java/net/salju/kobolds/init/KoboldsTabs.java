@@ -26,9 +26,10 @@ public class KoboldsTabs {
 				tabData.accept(KoboldsItems.KOBOLD_IRON_SHOVEL.get());
 				tabData.accept(KoboldsItems.KOBOLD_IRON_PICKAXE.get());
 				tabData.accept(KoboldsItems.KOBOLD_IRON_AXE.get());
-				tabData.accept(KoboldsItems.KOBOLD_IRON_HOE.get());
+                tabData.accept(KoboldsItems.KOBOLD_IRON_HOE.get());
+                tabData.accept(KoboldsItems.KOBOLD_IRON_SPEAR.get());
 				tabData.accept(KoboldsItems.BANNER_PATTERN_KOBOLD.get());
-				tabData.accept(KoboldsItems.MUSIC_DISC_KOBBLESTONE.get());
 				tabData.accept(KoboldsItems.KOBOLD_SKULL.get());
+                tabData.accept(KoboldsItems.MUSIC_DISC_KOBBLESTONE.get());
 			}).build());
 }

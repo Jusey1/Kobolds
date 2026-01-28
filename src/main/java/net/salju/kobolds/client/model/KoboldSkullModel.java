@@ -7,8 +7,8 @@ import net.minecraft.client.model.geom.builders.CubeListBuilder;
 import net.minecraft.client.model.geom.builders.CubeDeformation;
 import net.minecraft.client.model.geom.PartPose;
 import net.minecraft.client.model.geom.ModelPart;
-import net.minecraft.client.model.SkullModelBase;
-import net.minecraft.client.model.SkullModel;
+import net.minecraft.client.model.object.skull.SkullModelBase;
+import net.minecraft.client.model.object.skull.SkullModel;
 
 public class KoboldSkullModel extends SkullModelBase {
 	private final ModelPart head;

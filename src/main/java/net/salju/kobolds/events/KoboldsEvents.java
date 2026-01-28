@@ -8,11 +8,12 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.neoforge.event.entity.EntityJoinLevelEvent;
 import net.neoforged.neoforge.event.entity.living.LivingDeathEvent;
 import net.neoforged.neoforge.event.entity.living.LivingChangeTargetEvent;
+import net.neoforged.neoforge.event.entity.living.LivingIncomingDamageEvent;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
 import net.minecraft.world.entity.raid.Raider;
 import net.minecraft.world.entity.monster.Enemy;
-import net.minecraft.world.entity.monster.ZombifiedPiglin;
-import net.minecraft.world.entity.monster.Zombie;
+import net.minecraft.world.entity.monster.zombie.ZombifiedPiglin;
+import net.minecraft.world.entity.monster.zombie.Zombie;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.ItemStack;
@@ -33,6 +34,13 @@ public class KoboldsEvents {
     @SubscribeEvent
     public static void onDragon(KoboldEvent.DragonEvent event) {
         //
+    }
+
+    @SubscribeEvent
+    public static void onAttacked(LivingIncomingDamageEvent event) {
+        if (event.getSource().getDirectEntity() instanceof AbstractKoboldEntity kobold && kobold.isSpear(kobold.getMainHandItem())) {
+            event.setAmount(event.getAmount() * 1.5F);
+        }
     }
 
 	@SubscribeEvent

@@ -8,8 +8,8 @@ import net.neoforged.neoforge.event.BlockEntityTypeAddBlocksEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.material.PushReaction;
 import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -27,7 +27,7 @@ public class KoboldsBlocks {
 	public static final DeferredHolder<Block, Block> KOBOLD_WITHER_SKULL_WALL = REGISTRY.register("kobold_wither_skull_wall", () -> new KoboldWitherWallSkull(KoboldWitherSkull.Types.WITHERBOLD, createBaseProps("kobold_wither_skull_wall").mapColor(MapColor.NONE).sound(SoundType.BONE_BLOCK).strength(1.0F).pushReaction(PushReaction.DESTROY).randomTicks()));
 
 	public static BlockBehaviour.Properties createBaseProps(String name) {
-		return BlockBehaviour.Properties.of().setId(ResourceKey.create(Registries.BLOCK, ResourceLocation.fromNamespaceAndPath(Kobolds.MODID, name)));
+		return BlockBehaviour.Properties.of().setId(ResourceKey.create(Registries.BLOCK, Identifier.fromNamespaceAndPath(Kobolds.MODID, name)));
 	}
 
 	@SubscribeEvent

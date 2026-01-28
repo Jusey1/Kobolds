@@ -12,7 +12,7 @@ import net.neoforged.api.distmarker.Dist;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.renderer.blockentity.SkullBlockRenderer;
 import net.minecraft.client.renderer.entity.ArmorModelSet;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 @EventBusSubscriber(value = Dist.CLIENT)
 public class KoboldsClient {
@@ -59,14 +59,14 @@ public class KoboldsClient {
 
 	@SubscribeEvent
 	public static void registerSkullRenderers(EntityRenderersEvent.CreateSkullModels event) {
-		event.registerSkullModel(KoboldSkull.Types.SKELEBOLD, KOBOLD_SKULL, ResourceLocation.fromNamespaceAndPath(Kobolds.MODID, "textures/entity/undead/skeleton.png"));
-		event.registerSkullModel(KoboldWitherSkull.Types.WITHERBOLD, KOBOLD_WITHER_SKULL, ResourceLocation.fromNamespaceAndPath(Kobolds.MODID, "textures/entity/undead/skeleton_wither.png"));
+		event.registerSkullModel(KoboldSkull.Types.SKELEBOLD, KOBOLD_SKULL, Identifier.fromNamespaceAndPath(Kobolds.MODID, "textures/entity/undead/skeleton.png"));
+		event.registerSkullModel(KoboldWitherSkull.Types.WITHERBOLD, KOBOLD_WITHER_SKULL, Identifier.fromNamespaceAndPath(Kobolds.MODID, "textures/entity/undead/skeleton_wither.png"));
 	}
 
 	@SubscribeEvent
 	public static void clientSetupEvent(FMLClientSetupEvent event) {
-		event.enqueueWork(() -> SkullBlockRenderer.SKIN_BY_TYPE.put(KoboldSkull.Types.SKELEBOLD, ResourceLocation.fromNamespaceAndPath(Kobolds.MODID, "textures/entity/undead/skeleton.png")));
-		event.enqueueWork(() -> SkullBlockRenderer.SKIN_BY_TYPE.put(KoboldWitherSkull.Types.WITHERBOLD, ResourceLocation.fromNamespaceAndPath(Kobolds.MODID, "textures/entity/undead/skeleton_wither.png")));
+		event.enqueueWork(() -> SkullBlockRenderer.SKIN_BY_TYPE.put(KoboldSkull.Types.SKELEBOLD, Identifier.fromNamespaceAndPath(Kobolds.MODID, "textures/entity/undead/skeleton.png")));
+		event.enqueueWork(() -> SkullBlockRenderer.SKIN_BY_TYPE.put(KoboldWitherSkull.Types.WITHERBOLD, Identifier.fromNamespaceAndPath(Kobolds.MODID, "textures/entity/undead/skeleton_wither.png")));
 	}
 
     private static ArmorModelSet<ModelLayerLocation> registerArmorSet(String path) {
@@ -74,6 +74,6 @@ public class KoboldsClient {
     }
 
     private static ModelLayerLocation registerModel(String path, String model) {
-        return new ModelLayerLocation(ResourceLocation.fromNamespaceAndPath(Kobolds.MODID, path), model);
+        return new ModelLayerLocation(Identifier.fromNamespaceAndPath(Kobolds.MODID, path), model);
     }
 }

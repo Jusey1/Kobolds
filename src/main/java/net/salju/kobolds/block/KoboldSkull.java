@@ -30,7 +30,7 @@ public class KoboldSkull extends SkullBlock {
 	public void neighborChanged(BlockState state, Level world, BlockPos pos, Block blok, Orientation ori, boolean moving) {
 		super.neighborChanged(state, world, pos, blok, ori, moving);
 		if (world.getBestNeighborSignal(pos) > 0) {
-			if (world instanceof ServerLevel lvl && world.isMoonVisible() && world.canSeeSkyFromBelowWater(pos)) {
+			if (world instanceof ServerLevel lvl && world.isDarkOutside() && world.canSeeSkyFromBelowWater(pos)) {
 				summonSkelebold(lvl, BlockPos.containing((pos.getX() + 0.5), pos.getY(), (pos.getZ() + 0.5)));
 			}
 		}
@@ -39,7 +39,7 @@ public class KoboldSkull extends SkullBlock {
 	@Override
 	public void tick(BlockState state, ServerLevel lvl, BlockPos pos, RandomSource random) {
 		super.tick(state, lvl, pos, random);
-		if (lvl.isMoonVisible() && lvl.canSeeSkyFromBelowWater(pos)) {
+		if (lvl.isDarkOutside() && lvl.canSeeSkyFromBelowWater(pos)) {
 			summonSkelebold(lvl, BlockPos.containing((pos.getX() + 0.5), pos.getY(), (pos.getZ() + 0.5)));
 		}
 	}

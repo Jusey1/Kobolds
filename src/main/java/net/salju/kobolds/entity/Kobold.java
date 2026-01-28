@@ -1,5 +1,6 @@
 package net.salju.kobolds.entity;
 
+import net.minecraft.client.model.effects.SpearAnimations;
 import net.salju.kobolds.events.KoboldsManager;
 import net.salju.kobolds.init.KoboldsItems;
 import net.salju.kobolds.entity.ai.*;
@@ -28,15 +29,17 @@ public class Kobold extends AbstractKoboldEntity {
 		this.goalSelector.addGoal(1, new KoboldCrossbowGoal<>(this, 1.0D, 12.0F));
 		this.goalSelector.addGoal(1, new KoboldBowGoal<>(this, 1.0D, 20, 15.0F));
 		this.goalSelector.addGoal(1, new KoboldTradeGoal(this, "gameplay/trader_loot"));
-		this.goalSelector.addGoal(1, new KoboldWarriorGoal(this));
 		this.goalSelector.addGoal(2, new KoboldMeleeGoal<>(this, 1.2D, false));
 		this.targetSelector.addGoal(2, new KoboldTargetGoal<>(this, LivingEntity.class, new KoboldAttackSelector(this)));
 	}
 
     @Override
     protected void populateDefaultEquipmentSlots(RandomSource randy, DifficultyInstance difficulty) {
-        if (Math.random() >= 0.6) {
+        double d = Math.random();
+        if (d >= 0.7) {
             this.setItemSlot(EquipmentSlot.MAINHAND, new ItemStack(Items.CROSSBOW));
+        } else if (d <= 0.15) {
+            this.setItemSlot(EquipmentSlot.MAINHAND, new ItemStack(KoboldsItems.KOBOLD_IRON_SPEAR.get()));
         } else {
             this.setItemSlot(EquipmentSlot.MAINHAND, new ItemStack(KoboldsItems.KOBOLD_IRON_SWORD.get()));
         }

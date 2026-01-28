@@ -2,9 +2,9 @@ package net.salju.kobolds.worldgen;
 
 import net.salju.kobolds.init.KoboldsTags;
 import net.salju.kobolds.init.KoboldsStructures;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.core.*;
+import net.minecraft.resources.Identifier;
 import net.minecraft.tags.BiomeTags;
 import net.minecraft.world.level.levelgen.structure.pools.DimensionPadding;
 import net.minecraft.world.level.levelgen.structure.pools.JigsawPlacement;
@@ -27,7 +27,7 @@ public class AbstractKoboldStructure extends Structure {
 	public static final MapCodec<AbstractKoboldStructure> CODEC = RecordCodecBuilder.mapCodec(instance ->
 			instance.group(AbstractKoboldStructure.settingsCodec(instance),
 					StructureTemplatePool.CODEC.fieldOf("start_pool").forGetter(structure -> structure.startPool),
-					ResourceLocation.CODEC.optionalFieldOf("start_jigsaw_name").forGetter(structure -> structure.jiggy),
+					Identifier.CODEC.optionalFieldOf("start_jigsaw_name").forGetter(structure -> structure.jiggy),
 					HeightProvider.CODEC.fieldOf("start_height").forGetter(structure -> structure.startHeight),
 					Heightmap.Types.CODEC.optionalFieldOf("project_start_to_heightmap").forGetter(structure -> structure.heightmap),
 					DimensionPadding.CODEC.optionalFieldOf("dimension_padding", JigsawStructure.DEFAULT_DIMENSION_PADDING).forGetter(structure -> structure.dims),
@@ -36,14 +36,14 @@ public class AbstractKoboldStructure extends Structure {
 			).apply(instance, AbstractKoboldStructure::new));
 
 	private final Holder<StructureTemplatePool> startPool;
-	private final Optional<ResourceLocation> jiggy;
+	private final Optional<Identifier> jiggy;
 	private final HeightProvider startHeight;
 	private final Optional<Heightmap.Types> heightmap;
 	private final DimensionPadding dims;
 	private final LiquidSettings water;
 	private final Optional<HolderSet<Biome>> underBiomes;
 
-	public AbstractKoboldStructure(Structure.StructureSettings config, Holder<StructureTemplatePool> pool, Optional<ResourceLocation> jigsaw, HeightProvider height, Optional<Heightmap.Types> map, DimensionPadding d, LiquidSettings w, Optional<HolderSet<Biome>> under) {
+	public AbstractKoboldStructure(Structure.StructureSettings config, Holder<StructureTemplatePool> pool, Optional<Identifier> jigsaw, HeightProvider height, Optional<Heightmap.Types> map, DimensionPadding d, LiquidSettings w, Optional<HolderSet<Biome>> under) {
 		super(config);
 		this.startPool = pool;
 		this.jiggy = jigsaw;

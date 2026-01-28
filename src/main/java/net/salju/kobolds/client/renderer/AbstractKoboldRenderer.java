@@ -14,9 +14,9 @@ import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.state.CameraRenderState;
 import net.minecraft.client.renderer.SubmitNodeCollector;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.entity.HumanoidArm;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.Mob;
+import net.minecraft.world.item.ShieldItem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import javax.annotation.Nullable;
 
@@ -30,7 +30,7 @@ public abstract class AbstractKoboldRenderer extends MobRenderer<Mob, AbstractKo
 	}
 
 	@Override
-	public ResourceLocation getTextureLocation(AbstractKoboldState kobold) {
+	public Identifier getTextureLocation(AbstractKoboldState kobold) {
 		return kobold.texture;
 	}
 
@@ -44,19 +44,19 @@ public abstract class AbstractKoboldRenderer extends MobRenderer<Mob, AbstractKo
 		super.extractRenderState(target, state, f1);
 		HumanoidMobRenderer.extractHumanoidRenderState(target, state, f1, this.itemModelResolver);
         if (target instanceof AbstractKoboldEntity kobold) {
-            state.texture = ResourceLocation.fromNamespaceAndPath(Kobolds.MODID, "textures/entity/" + this.getKoboldType(kobold) + ".png");
+            state.texture = Identifier.fromNamespaceAndPath(Kobolds.MODID, "textures/entity/" + this.getKoboldType(kobold) + ".png");
             state.isCharging = kobold.isCharging();
             state.isDiamond = kobold.isDiamond();
             state.dragonColor = kobold.getDragonColor();
         } else {
-            state.texture = ResourceLocation.fromNamespaceAndPath(Kobolds.MODID, "textures/entity/" + this.getKoboldType(null) + ".png");
+            state.texture = Identifier.fromNamespaceAndPath(Kobolds.MODID, "textures/entity/" + this.getKoboldType(null) + ".png");
             if (target instanceof KoboldSkeleton kobold) {
                 state.isCharging = kobold.isCharging();
             } else if (target instanceof KoboldZombie kobold) {
                 if (kobold.getName().getString().equals("James") && kobold.getZomboType().equals("enchanter")) {
-                    state.texture = ResourceLocation.fromNamespaceAndPath(Kobolds.MODID, "textures/entity/undead/zombie_james.png");
+                    state.texture = Identifier.fromNamespaceAndPath(Kobolds.MODID, "textures/entity/undead/zombie_james.png");
                 } else {
-                    state.texture = ResourceLocation.fromNamespaceAndPath(Kobolds.MODID, "textures/entity/undead/zombie_" + kobold.getZomboType() + ".png");
+                    state.texture = Identifier.fromNamespaceAndPath(Kobolds.MODID, "textures/entity/undead/zombie_" + kobold.getZomboType() + ".png");
                 }
                 state.getZomboType = kobold.getZomboType();
                 state.isZomboConverting = kobold.isConvert();
@@ -65,8 +65,7 @@ public abstract class AbstractKoboldRenderer extends MobRenderer<Mob, AbstractKo
 		state.isAggressive = target.isAggressive();
 		state.isBlocking = target.isBlocking();
 		state.isLeftHanded = target.isLeftHanded();
-		state.rightStack = target.getItemHeldByArm(HumanoidArm.RIGHT);
-		state.leftStack = target.getItemHeldByArm(HumanoidArm.LEFT);
+        state.hasOffhandItem = !target.getOffhandItem().isEmpty() && !(target.getOffhandItem().getItem() instanceof ShieldItem);
 	}
 
 	@Override

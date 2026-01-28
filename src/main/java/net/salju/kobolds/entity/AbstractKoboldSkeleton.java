@@ -7,7 +7,7 @@ import net.minecraft.world.item.CrossbowItem;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.monster.RangedAttackMob;
 import net.minecraft.world.entity.monster.CrossbowAttackMob;
-import net.minecraft.world.entity.monster.AbstractSkeleton;
+import net.minecraft.world.entity.monster.skeleton.AbstractSkeleton;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.util.RandomSource;
 import net.minecraft.network.syncher.SynchedEntityData;

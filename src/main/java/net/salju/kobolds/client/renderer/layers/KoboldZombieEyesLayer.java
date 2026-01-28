@@ -3,11 +3,12 @@ package net.salju.kobolds.client.renderer.layers;
 import net.salju.kobolds.Kobolds;
 import net.salju.kobolds.client.model.KoboldModel;
 import net.salju.kobolds.client.renderer.AbstractKoboldState;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.renderer.entity.layers.EyesLayer;
 import net.minecraft.client.renderer.entity.RenderLayerParent;
-import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.rendertype.RenderType;
+import net.minecraft.client.renderer.rendertype.RenderTypes;
 import net.minecraft.client.renderer.SubmitNodeCollector;
 import com.mojang.blaze3d.vertex.PoseStack;
 
@@ -23,12 +24,12 @@ public class KoboldZombieEyesLayer<S extends AbstractKoboldState, M extends Kobo
 
 	@Override
 	public RenderType renderType() {
-		return RenderType.eyes(ResourceLocation.fromNamespaceAndPath(Kobolds.MODID, "textures/entity/eyes/zombie.png"));
+		return RenderTypes.eyes(Identifier.fromNamespaceAndPath(Kobolds.MODID, "textures/entity/eyes/zombie.png"));
 	}
 
     public RenderType renderSpecialType(String type) {
         if (!type.isEmpty()) {
-            return RenderType.eyes(ResourceLocation.fromNamespaceAndPath(Kobolds.MODID, "textures/entity/eyes/" + type + ".png"));
+            return RenderTypes.eyes(Identifier.fromNamespaceAndPath(Kobolds.MODID, "textures/entity/eyes/" + type + ".png"));
         }
         return this.renderType();
     }

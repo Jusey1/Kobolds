@@ -1,5 +1,8 @@
 package net.salju.kobolds.entity;
 
+import net.minecraft.tags.ItemTags;
+import net.minecraft.world.entity.ai.behavior.SpearRetreat;
+import net.minecraft.world.entity.item.ItemEntity;
 import net.salju.kobolds.init.*;
 import net.salju.kobolds.events.*;
 import net.neoforged.neoforge.event.EventHooks;
@@ -19,20 +22,17 @@ import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.Attributes;
-import net.minecraft.world.entity.ai.goal.FloatGoal;
-import net.minecraft.world.entity.ai.goal.LookAtPlayerGoal;
-import net.minecraft.world.entity.ai.goal.OpenDoorGoal;
-import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
-import net.minecraft.world.entity.ai.goal.RandomStrollGoal;
+import net.minecraft.world.entity.ai.goal.*;
 import net.minecraft.world.entity.ai.targeting.TargetingConditions;
 import net.minecraft.world.entity.monster.CrossbowAttackMob;
 import net.minecraft.world.entity.monster.RangedAttackMob;
-import net.minecraft.world.entity.monster.Zombie;
+import net.minecraft.world.entity.monster.zombie.Zombie;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.entity.projectile.ProjectileUtil;
-import net.minecraft.world.entity.projectile.ThrownTrident;
+import net.minecraft.world.entity.projectile.arrow.AbstractArrow;
+import net.minecraft.world.entity.projectile.arrow.ThrownTrident;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.item.alchemy.PotionContents;
 import net.minecraft.world.item.alchemy.Potions;
@@ -177,6 +177,14 @@ public abstract class AbstractKoboldEntity extends AgeableMob implements Crossbo
 		return this.entityData.get(DATA_CHARGING_STATE);
 	}
 
+    @Override
+    protected void pickUpItem(ServerLevel world, ItemEntity item) {
+        super.pickUpItem(world, item);
+        if (this instanceof Kobold) {
+            this.checkWarrior();
+        }
+    }
+
 	@Override
 	public ItemStack equipItemIfPossible(ServerLevel lvl, ItemStack stack) {
 		EquipmentSlot slot = this.getEquipmentSlotForItem(stack);
@@ -212,17 +220,25 @@ public abstract class AbstractKoboldEntity extends AgeableMob implements Crossbo
 		if (EnchantmentHelper.hasTag(drop, EnchantmentTags.CURSE)) {
 			return false;
 		} else if (drop.getItem() instanceof TridentItem) {
-			if (hand.getItem() instanceof TridentItem && this.canReplaceEqualItem(drop, hand)) {
-				this.setSecondary(drop);
-				return true;
-			} else if (this.getSecondary().isEmpty()) {
-				this.setPrimary(this.getMainHandItem());
-				this.setSecondary(drop);
-				this.setItemInHand(InteractionHand.MAIN_HAND, ItemStack.EMPTY);
-				return true;
-			}
+            if (hand.getItem() instanceof TridentItem && this.canReplaceEqualItem(drop, hand)) {
+                this.setSecondary(drop);
+                return true;
+            } else if (this.getSecondary().isEmpty()) {
+                this.setPrimary(this.getMainHandItem());
+                this.setSecondary(drop);
+                this.setItemInHand(InteractionHand.MAIN_HAND, ItemStack.EMPTY);
+                return true;
+            }
+        } else if (this.isSpear(drop)) {
+            if (hand.getItem() instanceof TridentItem) {
+                return false;
+            } else if (this.isSpear(hand)) {
+                return this.canReplaceEqualItem(drop, hand);
+            } else {
+                return true;
+            }
 		} else if (this.isPreferredWeapon(drop)) {
-			if (hand.getItem() instanceof TridentItem) {
+			if (hand.getItem() instanceof TridentItem || this.isSpear(hand)) {
 				return false;
 			} else if (this.isPreferredWeapon(hand)) {
 				return this.canReplaceEqualItem(drop, hand);
@@ -272,12 +288,16 @@ public abstract class AbstractKoboldEntity extends AgeableMob implements Crossbo
 				if (id > ih) {
 					return true;
 				} else if (this.isPreferredWeapon(drop) && id == ih) {
-					return drop.getAttributeModifiers().compute(this.getAttributeBaseValue(Attributes.ATTACK_DAMAGE), EquipmentSlot.MAINHAND) > hand.getAttributeModifiers().compute(this.getAttributeBaseValue(Attributes.ATTACK_DAMAGE), EquipmentSlot.MAINHAND);
+                    Holder<Attribute> a = Attributes.ATTACK_DAMAGE;
+                    double d = this.getAttributes().hasAttribute(a) ? this.getAttributeBaseValue(a) : 0.0;
+					return drop.getAttributeModifiers().compute(a, d, EquipmentSlot.MAINHAND) > hand.getAttributeModifiers().compute(a, d, EquipmentSlot.MAINHAND);
 				}
 			}
 			return !hand.isEnchanted();
 		} else if (this.isPreferredWeapon(drop) && !hand.isEnchanted()) {
-			return drop.getAttributeModifiers().compute(this.getAttributeBaseValue(Attributes.ATTACK_DAMAGE), EquipmentSlot.MAINHAND) > hand.getAttributeModifiers().compute(this.getAttributeBaseValue(Attributes.ATTACK_DAMAGE), EquipmentSlot.MAINHAND);
+            Holder<Attribute> a = Attributes.ATTACK_DAMAGE;
+            double d = this.getAttributes().hasAttribute(a) ? this.getAttributeBaseValue(a) : 0.0;
+            return drop.getAttributeModifiers().compute(a, d, EquipmentSlot.MAINHAND) > hand.getAttributeModifiers().compute(a, d, EquipmentSlot.MAINHAND);
 		}
 		return super.canReplaceEqualItem(drop, hand);
 	}
@@ -348,15 +368,7 @@ public abstract class AbstractKoboldEntity extends AgeableMob implements Crossbo
 					}
 					return InteractionResult.SUCCESS;
 				} else if (this.getOffhandItem().isEmpty()) {
-					if (gem.getItem() instanceof AxeItem && hand != InteractionHand.MAIN_HAND && this instanceof Kobold) {
-						if (this.isEffectiveAi()) {
-							this.setItemInHand(InteractionHand.OFF_HAND, gem);
-							if (!player.isCreative()) {
-								player.getItemInHand(hand).shrink(1);
-							}
-						}
-						return InteractionResult.SUCCESS;
-					} else if (gem.is(Items.EMERALD) && this.getType().is(KoboldsTags.TRADERS)) {
+                    if (gem.is(Items.EMERALD) && this.getType().is(KoboldsTags.TRADERS)) {
 						if (this.isEffectiveAi()) {
 							gem.setCount(1);
 							this.setItemInHand(InteractionHand.OFF_HAND, gem);
@@ -546,6 +558,12 @@ public abstract class AbstractKoboldEntity extends AgeableMob implements Crossbo
 		}
 	}
 
+    public void checkWarrior() {
+        if (this.getSecondary().getItem() instanceof ShieldItem && this.isSpear(this.getMainHandItem())) {
+            this.convertTo(KoboldsMobs.KOBOLD_WARRIOR.get(), ConversionParams.single(this, true, true), newbie -> { EventHooks.onLivingConvert(this, newbie); });
+        }
+    }
+
 	public void setCD(int i) {
 		this.cooldown = i;
 	}
@@ -574,9 +592,13 @@ public abstract class AbstractKoboldEntity extends AgeableMob implements Crossbo
 		return this.cooldown;
 	}
 
-	public boolean isPreferredWeapon(ItemStack stack) {
-		return stack.is(KoboldsTags.BASIC);
-	}
+    public boolean isPreferredWeapon(ItemStack stack) {
+        return stack.is(KoboldsTags.BASIC);
+    }
+
+    public boolean isSpear(ItemStack stack) {
+        return stack.is(ItemTags.SPEARS);
+    }
 
 	@Nullable
 	public EntityReference<Entity> getTridentReference() {

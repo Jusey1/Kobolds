@@ -10,7 +10,7 @@ import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.entity.EntityType;
@@ -32,7 +32,7 @@ public class KoboldsMobs {
 	public static final DeferredHolder<EntityType<?>, EntityType<KoboldWither>> WITHERBOLD = register("witherbold", EntityType.Builder.of(KoboldWither::new, MobCategory.MONSTER).sized(0.5f, 1.48f).eyeHeight(1.26F).ridingOffset(-0.45F).fireImmune());
 
 	private static <T extends Entity> DeferredHolder<EntityType<?>, EntityType<T>> register(String registryname, EntityType.Builder<T> entityTypeBuilder) {
-		return REGISTRY.register(registryname, () -> entityTypeBuilder.build(ResourceKey.create(Registries.ENTITY_TYPE, ResourceLocation.fromNamespaceAndPath(Kobolds.MODID, registryname))));
+		return REGISTRY.register(registryname, () -> entityTypeBuilder.build(ResourceKey.create(Registries.ENTITY_TYPE, Identifier.fromNamespaceAndPath(Kobolds.MODID, registryname))));
 	}
 
 	@SubscribeEvent
