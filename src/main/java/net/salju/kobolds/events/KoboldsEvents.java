@@ -31,17 +31,17 @@ public class KoboldsEvents {
 		}
 	}
 
-    @SubscribeEvent
-    public static void onDragon(KoboldEvent.DragonEvent event) {
-        //
-    }
+	@SubscribeEvent
+	public static void onDragon(KoboldEvent.DragonEvent event) {
+		//
+	}
 
-    @SubscribeEvent
-    public static void onAttacked(LivingIncomingDamageEvent event) {
-        if (event.getSource().getDirectEntity() instanceof AbstractKoboldEntity kobold && kobold.isSpear(kobold.getMainHandItem())) {
-            event.setAmount(event.getAmount() * 1.5F);
-        }
-    }
+	@SubscribeEvent
+	public static void onAttacked(LivingIncomingDamageEvent event) {
+		if (event.getSource().getDirectEntity() instanceof AbstractKoboldEntity kobold && kobold.isSpear(kobold.getMainHandItem())) {
+			event.setAmount(event.getAmount() * 1.5F);
+		}
+	}
 
 	@SubscribeEvent
 	public static void onAttackTarget(LivingChangeTargetEvent event) {

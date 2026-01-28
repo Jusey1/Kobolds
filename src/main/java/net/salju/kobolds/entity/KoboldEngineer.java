@@ -47,6 +47,14 @@ public class KoboldEngineer extends AbstractKoboldEntity {
         }
     }
 
+    @Override
+    protected boolean canReplaceCurrentItem(ItemStack drop, ItemStack hand, EquipmentSlot slot) {
+        if (drop.is(KoboldsTags.ARMOR) || drop.is(Items.EMERALD) || this.isPreferredWeapon(drop)) {
+            return super.canReplaceCurrentItem(drop, hand, slot);
+        }
+        return false;
+    }
+
 	@Override
 	public boolean isPreferredWeapon(ItemStack stack) {
 		return stack.is(KoboldsTags.ENGI);

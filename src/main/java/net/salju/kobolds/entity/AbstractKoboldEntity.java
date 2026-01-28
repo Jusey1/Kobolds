@@ -107,12 +107,12 @@ public abstract class AbstractKoboldEntity extends AgeableMob implements Crossbo
 		} else {
 			this.dragonFriend = Optional.empty();
 		}
-        if (tag.getInt("DC").isPresent()) {
-            this.setDragonColor(tag.getInt("DC").get());
-        }
-        if (tag.getInt("CD").isPresent()) {
-            this.setCD(tag.getInt("CD").get());
-        }
+		if (tag.getInt("DC").isPresent()) {
+			this.setDragonColor(tag.getInt("DC").get());
+		}
+		if (tag.getInt("CD").isPresent()) {
+			this.setCD(tag.getInt("CD").get());
+		}
 	}
 
 	@Override
@@ -123,45 +123,45 @@ public abstract class AbstractKoboldEntity extends AgeableMob implements Crossbo
 		builder.define(DATA_DRAGON_COLOR, 0);
 	}
 
-    @Override
-    protected void registerGoals() {
-        super.registerGoals();
-        this.goalSelector.addGoal(0, new OpenDoorGoal(this, true));
-        this.goalSelector.addGoal(3, new RandomStrollGoal(this, 1.0F));
-        this.goalSelector.addGoal(3, new LookAtPlayerGoal(this, LivingEntity.class, 6.0F));
-        this.goalSelector.addGoal(3, new RandomLookAroundGoal(this));
-        this.goalSelector.addGoal(3, new FloatGoal(this));
-    }
+	@Override
+	protected void registerGoals() {
+		super.registerGoals();
+		this.goalSelector.addGoal(0, new OpenDoorGoal(this, true));
+		this.goalSelector.addGoal(3, new RandomStrollGoal(this, 1.0F));
+		this.goalSelector.addGoal(3, new LookAtPlayerGoal(this, LivingEntity.class, 6.0F));
+		this.goalSelector.addGoal(3, new RandomLookAroundGoal(this));
+		this.goalSelector.addGoal(3, new FloatGoal(this));
+	}
 
-    @Override
-    public void performRangedAttack(LivingEntity target, float f) {
-        if (this.isHolding((stack) -> stack.getItem() instanceof CrossbowItem)) {
-            this.performCrossbowAttack(this, 2.0F);
-        } else if (this.isHolding((stack) -> stack.getItem() instanceof BowItem)) {
-            ItemStack weapon = this.getItemInHand(ProjectileUtil.getWeaponHoldingHand(this, (item) -> item instanceof BowItem));
-            AbstractArrow arrow = ProjectileUtil.getMobArrow(this, this.getProjectile(weapon), f, weapon);
-            double d0 = target.getX() - this.getX();
-            double d1 = target.getY(0.3333333333333333D) - arrow.getY();
-            double d2 = target.getZ() - this.getZ();
-            double d3 = Math.sqrt(d0 * d0 + d2 * d2);
-            arrow.shoot(d0, d1 + d3 * (double) 0.2F, d2, 1.6F, (float) (14 - this.level().getDifficulty().getId() * 4));
-            this.playSound(SoundEvents.SKELETON_SHOOT, 1.0F, 1.0F / (this.getRandom().nextFloat() * 0.4F + 0.8F));
-            this.level().addFreshEntity(arrow);
-        } else if (this.isHolding((stack) -> stack.getItem() instanceof TridentItem)) {
-            this.setSecondary(this.getItemInHand(ProjectileUtil.getWeaponHoldingHand(this, (item) -> item instanceof TridentItem)));
-            ThrownTrident proj = new ThrownTrident(this.level(), this, this.getSecondary());
-            double d0 = target.getX() - this.getX();
-            double d1 = target.getY(0.3333333333333333D) - proj.getY();
-            double d2 = target.getZ() - this.getZ();
-            double d3 = Mth.sqrt((float) (d0 * d0 + d2 * d2));
-            proj.shoot(d0, d1 + d3 * (double) 0.2F, d2, 1.6F, (float) (14 - this.level().getDifficulty().getId() * 4));
-            this.playSound(SoundEvents.DROWNED_SHOOT, 1.0F, 1.0F / (this.getRandom().nextFloat() * 0.4F + 0.8F));
-            this.level().addFreshEntity(proj);
-            this.setItemInHand(InteractionHand.MAIN_HAND, this.getPrimary());
-            this.setTrident(proj);
-            this.setCD(1200);
-        }
-    }
+	@Override
+	public void performRangedAttack(LivingEntity target, float f) {
+		if (this.isHolding((stack) -> stack.getItem() instanceof CrossbowItem)) {
+			this.performCrossbowAttack(this, 2.0F);
+		} else if (this.isHolding((stack) -> stack.getItem() instanceof BowItem)) {
+			ItemStack weapon = this.getItemInHand(ProjectileUtil.getWeaponHoldingHand(this, (item) -> item instanceof BowItem));
+			AbstractArrow arrow = ProjectileUtil.getMobArrow(this, this.getProjectile(weapon), f, weapon);
+			double d0 = target.getX() - this.getX();
+			double d1 = target.getY(0.3333333333333333D) - arrow.getY();
+			double d2 = target.getZ() - this.getZ();
+			double d3 = Math.sqrt(d0 * d0 + d2 * d2);
+			arrow.shoot(d0, d1 + d3 * (double) 0.2F, d2, 1.6F, (float) (14 - this.level().getDifficulty().getId() * 4));
+			this.playSound(SoundEvents.SKELETON_SHOOT, 1.0F, 1.0F / (this.getRandom().nextFloat() * 0.4F + 0.8F));
+			this.level().addFreshEntity(arrow);
+		} else if (this.isHolding((stack) -> stack.getItem() instanceof TridentItem)) {
+			this.setSecondary(this.getItemInHand(ProjectileUtil.getWeaponHoldingHand(this, (item) -> item instanceof TridentItem)));
+			ThrownTrident proj = new ThrownTrident(this.level(), this, this.getSecondary());
+			double d0 = target.getX() - this.getX();
+			double d1 = target.getY(0.3333333333333333D) - proj.getY();
+			double d2 = target.getZ() - this.getZ();
+			double d3 = Mth.sqrt((float) (d0 * d0 + d2 * d2));
+			proj.shoot(d0, d1 + d3 * (double) 0.2F, d2, 1.6F, (float) (14 - this.level().getDifficulty().getId() * 4));
+			this.playSound(SoundEvents.DROWNED_SHOOT, 1.0F, 1.0F / (this.getRandom().nextFloat() * 0.4F + 0.8F));
+			this.level().addFreshEntity(proj);
+			this.setItemInHand(InteractionHand.MAIN_HAND, this.getPrimary());
+			this.setTrident(proj);
+			this.setCD(1200);
+		}
+	}
 
 	@Override
 	public void onCrossbowAttackPerformed() {
@@ -177,13 +177,13 @@ public abstract class AbstractKoboldEntity extends AgeableMob implements Crossbo
 		return this.entityData.get(DATA_CHARGING_STATE);
 	}
 
-    @Override
-    protected void pickUpItem(ServerLevel world, ItemEntity item) {
-        super.pickUpItem(world, item);
-        if (this instanceof Kobold) {
-            this.checkWarrior();
-        }
-    }
+	@Override
+	protected void pickUpItem(ServerLevel world, ItemEntity item) {
+		super.pickUpItem(world, item);
+		if (this instanceof Kobold) {
+			this.checkWarrior();
+		}
+	}
 
 	@Override
 	public ItemStack equipItemIfPossible(ServerLevel lvl, ItemStack stack) {
@@ -220,23 +220,23 @@ public abstract class AbstractKoboldEntity extends AgeableMob implements Crossbo
 		if (EnchantmentHelper.hasTag(drop, EnchantmentTags.CURSE)) {
 			return false;
 		} else if (drop.getItem() instanceof TridentItem) {
-            if (hand.getItem() instanceof TridentItem && this.canReplaceEqualItem(drop, hand)) {
-                this.setSecondary(drop);
-                return true;
-            } else if (this.getSecondary().isEmpty()) {
-                this.setPrimary(this.getMainHandItem());
-                this.setSecondary(drop);
-                this.setItemInHand(InteractionHand.MAIN_HAND, ItemStack.EMPTY);
-                return true;
-            }
-        } else if (this.isSpear(drop)) {
-            if (hand.getItem() instanceof TridentItem) {
-                return false;
-            } else if (this.isSpear(hand)) {
-                return this.canReplaceEqualItem(drop, hand);
-            } else {
-                return true;
-            }
+			if (hand.getItem() instanceof TridentItem && this.canReplaceEqualItem(drop, hand)) {
+				this.setSecondary(drop);
+				return true;
+			} else if (this.getSecondary().isEmpty()) {
+				this.setPrimary(this.getMainHandItem());
+				this.setSecondary(drop);
+				this.setItemInHand(InteractionHand.MAIN_HAND, ItemStack.EMPTY);
+				return true;
+			}
+		} else if (this.isSpear(drop)) {
+			if (hand.getItem() instanceof TridentItem) {
+				return false;
+			} else if (this.isSpear(hand)) {
+				return this.canReplaceEqualItem(drop, hand);
+			} else {
+				return true;
+			}
 		} else if (this.isPreferredWeapon(drop)) {
 			if (hand.getItem() instanceof TridentItem || this.isSpear(hand)) {
 				return false;
@@ -288,16 +288,16 @@ public abstract class AbstractKoboldEntity extends AgeableMob implements Crossbo
 				if (id > ih) {
 					return true;
 				} else if (this.isPreferredWeapon(drop) && id == ih) {
-                    Holder<Attribute> a = Attributes.ATTACK_DAMAGE;
-                    double d = this.getAttributes().hasAttribute(a) ? this.getAttributeBaseValue(a) : 0.0;
+					Holder<Attribute> a = Attributes.ATTACK_DAMAGE;
+					double d = this.getAttributes().hasAttribute(a) ? this.getAttributeBaseValue(a) : 0.0;
 					return drop.getAttributeModifiers().compute(a, d, EquipmentSlot.MAINHAND) > hand.getAttributeModifiers().compute(a, d, EquipmentSlot.MAINHAND);
 				}
 			}
 			return !hand.isEnchanted();
 		} else if (this.isPreferredWeapon(drop) && !hand.isEnchanted()) {
-            Holder<Attribute> a = Attributes.ATTACK_DAMAGE;
-            double d = this.getAttributes().hasAttribute(a) ? this.getAttributeBaseValue(a) : 0.0;
-            return drop.getAttributeModifiers().compute(a, d, EquipmentSlot.MAINHAND) > hand.getAttributeModifiers().compute(a, d, EquipmentSlot.MAINHAND);
+			Holder<Attribute> a = Attributes.ATTACK_DAMAGE;
+			double d = this.getAttributes().hasAttribute(a) ? this.getAttributeBaseValue(a) : 0.0;
+			return drop.getAttributeModifiers().compute(a, d, EquipmentSlot.MAINHAND) > hand.getAttributeModifiers().compute(a, d, EquipmentSlot.MAINHAND);
 		}
 		return super.canReplaceEqualItem(drop, hand);
 	}
@@ -368,7 +368,7 @@ public abstract class AbstractKoboldEntity extends AgeableMob implements Crossbo
 					}
 					return InteractionResult.SUCCESS;
 				} else if (this.getOffhandItem().isEmpty()) {
-                    if (gem.is(Items.EMERALD) && this.getType().is(KoboldsTags.TRADERS)) {
+					if (gem.is(Items.EMERALD) && this.getType().is(KoboldsTags.TRADERS)) {
 						if (this.isEffectiveAi()) {
 							gem.setCount(1);
 							this.setItemInHand(InteractionHand.OFF_HAND, gem);
@@ -558,11 +558,11 @@ public abstract class AbstractKoboldEntity extends AgeableMob implements Crossbo
 		}
 	}
 
-    public void checkWarrior() {
-        if (this.getSecondary().getItem() instanceof ShieldItem && this.isSpear(this.getMainHandItem())) {
-            this.convertTo(KoboldsMobs.KOBOLD_WARRIOR.get(), ConversionParams.single(this, true, true), newbie -> { EventHooks.onLivingConvert(this, newbie); });
-        }
-    }
+	public void checkWarrior() {
+		if (this.getSecondary().getItem() instanceof ShieldItem && this.isSpear(this.getMainHandItem())) {
+			this.convertTo(KoboldsMobs.KOBOLD_WARRIOR.get(), ConversionParams.single(this, true, true), newbie -> { EventHooks.onLivingConvert(this, newbie); });
+		}
+	}
 
 	public void setCD(int i) {
 		this.cooldown = i;
@@ -592,13 +592,13 @@ public abstract class AbstractKoboldEntity extends AgeableMob implements Crossbo
 		return this.cooldown;
 	}
 
-    public boolean isPreferredWeapon(ItemStack stack) {
-        return stack.is(KoboldsTags.BASIC);
-    }
+	public boolean isPreferredWeapon(ItemStack stack) {
+		return stack.is(KoboldsTags.BASIC);
+	}
 
-    public boolean isSpear(ItemStack stack) {
-        return stack.is(ItemTags.SPEARS);
-    }
+	public boolean isSpear(ItemStack stack) {
+		return stack.is(ItemTags.SPEARS);
+	}
 
 	@Nullable
 	public EntityReference<Entity> getTridentReference() {
