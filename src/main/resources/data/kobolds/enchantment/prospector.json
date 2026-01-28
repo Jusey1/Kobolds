@@ -2,7 +2,7 @@
   "description": {
     "translate": "enchantment.kobolds.prospector"
   },
-  "supported_items": "#minecraft:axes",
+  "supported_items": "#kobolds:prospector_weapons",
   "exclusive_set": "minecraft:looting",
   "max_cost": {
     "base": 25,
