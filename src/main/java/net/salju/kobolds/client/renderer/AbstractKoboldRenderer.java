@@ -62,6 +62,7 @@ public abstract class AbstractKoboldRenderer extends MobRenderer<Mob, AbstractKo
                 state.isZomboConverting = kobold.isConvert();
             }
         }
+        state.isBaby = target.isBaby();
 		state.isAggressive = target.isAggressive();
 		state.isBlocking = target.isBlocking();
 		state.isLeftHanded = target.isLeftHanded();
@@ -69,12 +70,12 @@ public abstract class AbstractKoboldRenderer extends MobRenderer<Mob, AbstractKo
 	}
 
 	@Override
-	public void submit(AbstractKoboldState kobold, PoseStack pose, SubmitNodeCollector buffer, CameraRenderState c) {
+	public void submit(AbstractKoboldState state, PoseStack pose, SubmitNodeCollector buffer, CameraRenderState c) {
 		pose.pushPose();
 		pose.translate(-0.025, 0, 0);
-		float scale = 0.875F;
+		float scale = state.isBaby ? 0.475F : 0.875F;
 		pose.scale(scale, scale, scale);
-		super.submit(kobold, pose, buffer, c);
+		super.submit(state, pose, buffer, c);
 		pose.popPose();
 	}
 
