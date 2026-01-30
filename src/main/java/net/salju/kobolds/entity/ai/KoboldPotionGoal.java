@@ -19,12 +19,12 @@ public class KoboldPotionGoal extends Goal {
 
 	@Override
 	public boolean canUse() {
-		return this.isHoldingPotion();
+		return kobold.isHoldingPotion();
 	}
 
 	@Override
 	public boolean canContinueToUse() {
-		if (!kobold.isUsingItem() && this.isHoldingPotion()) {
+		if (!kobold.isUsingItem() && kobold.isHoldingPotion()) {
 			InteractionHand hand = ProjectileUtil.getWeaponHoldingHand(kobold, item -> new ItemStack(item).is(Items.POTION) || new ItemStack(item).is(Items.GLASS_BOTTLE));
 			if (kobold.hasEffect(MobEffects.SLOWNESS)) {
 				kobold.removeEffect(MobEffects.SLOWNESS);
@@ -39,9 +39,5 @@ public class KoboldPotionGoal extends Goal {
 		InteractionHand hand = ProjectileUtil.getWeaponHoldingHand(kobold, item -> new ItemStack(item).is(Items.POTION));
 		kobold.addEffect(new MobEffectInstance(MobEffects.SLOWNESS, kobold.getItemInHand(hand).getUseDuration(kobold), 10, false, false));
 		kobold.startUsingItem(hand);
-	}
-
-	private boolean isHoldingPotion() {
-		return kobold.isHolding(stack -> stack.is(Items.POTION)) || kobold.isHolding(stack -> stack.is(Items.GLASS_BOTTLE));
 	}
 }

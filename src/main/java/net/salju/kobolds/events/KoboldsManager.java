@@ -1,9 +1,7 @@
 package net.salju.kobolds.events;
 
 import net.salju.kobolds.Kobolds;
-import net.salju.kobolds.compat.Supplementaries;
 import net.salju.kobolds.entity.AbstractKoboldEntity;
-import net.neoforged.fml.ModList;
 import net.neoforged.neoforge.common.NeoForge;
 import net.minecraft.core.Holder;
 import net.minecraft.core.RegistryAccess;
@@ -33,13 +31,6 @@ public class KoboldsManager {
 
     public static List<ItemStack> getTradeItems(AbstractKoboldEntity kobold, String table) {
         return Objects.requireNonNull(kobold.level().getServer()).reloadableRegistries().getLootTable(ResourceKey.create(Registries.LOOT_TABLE, Identifier.fromNamespaceAndPath(Kobolds.MODID, table))).getRandomItems((new LootParams.Builder((ServerLevel) kobold.level())).withParameter(LootContextParams.THIS_ENTITY, kobold).create(LootContextParamSets.EMPTY));
-    }
-
-    public static void addPirateGoals(AbstractKoboldEntity kobold) {
-        if (ModList.get().isLoaded("supplementaries")) {
-            Supplementaries.addCannonGoals(kobold);
-            Supplementaries.addBoatGoals(kobold);
-        }
     }
 
     public static KoboldEvent.DragonEvent onGetDragonEvent(AbstractKoboldEntity kobold) {

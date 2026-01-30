@@ -1,7 +1,5 @@
 package net.salju.kobolds.entity;
 
-import net.minecraft.client.model.effects.SpearAnimations;
-import net.salju.kobolds.events.KoboldsManager;
 import net.salju.kobolds.init.KoboldsItems;
 import net.salju.kobolds.entity.ai.*;
 import net.minecraft.util.RandomSource;
@@ -21,7 +19,6 @@ public class Kobold extends AbstractKoboldEntity {
 	@Override
 	protected void registerGoals() {
 		super.registerGoals();
-        KoboldsManager.addPirateGoals(this);
 		this.targetSelector.addGoal(0, new KoboldRevengeGoal(this));
 		this.goalSelector.addGoal(1, new KoboldPotionGoal(this));
 		this.goalSelector.addGoal(1, new KoboldShieldGoal(this));

@@ -12,6 +12,11 @@ public class KoboldCrossbowGoal<T extends AbstractKoboldEntity & CrossbowAttackM
 		this.kobold = t;
 	}
 
+    @Override
+    public boolean canUse() {
+        return super.canUse() && !kobold.isHoldingPotion();
+    }
+
 	@Override
 	public void start() {
 		super.start();

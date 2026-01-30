@@ -15,7 +15,7 @@ public class KoboldTridentGoal extends RangedAttackGoal {
 
 	@Override
 	public boolean canUse() {
-		return super.canUse() && this.isHoldingTrident();
+		return super.canUse() && this.isHoldingTrident() && !kobold.isHoldingPotion();
 	}
 
 	@Override

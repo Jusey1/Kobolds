@@ -600,6 +600,10 @@ public abstract class AbstractKoboldEntity extends AgeableMob implements Crossbo
 		return stack.is(ItemTags.SPEARS);
 	}
 
+    public boolean isHoldingPotion() {
+        return this.isHolding(stack -> stack.is(Items.POTION)) || this.isHolding(stack -> stack.is(Items.GLASS_BOTTLE));
+    }
+
 	@Nullable
 	public EntityReference<Entity> getTridentReference() {
 		return this.thrownTrident.orElse(null);
