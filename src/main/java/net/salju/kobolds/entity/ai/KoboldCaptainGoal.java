@@ -1,6 +1,5 @@
 package net.salju.kobolds.entity.ai;
 
-import net.salju.kobolds.Kobolds;
 import net.salju.kobolds.init.KoboldsTags;
 import net.salju.kobolds.init.KoboldsSounds;
 import net.salju.kobolds.entity.AbstractKoboldEntity;
@@ -31,11 +30,25 @@ public class KoboldCaptainGoal extends Goal {
 	}
 
 	@Override
+	public boolean canContinueToUse() {
+		return super.canContinueToUse() && this.kobold.hasEffect(MobEffects.SLOWNESS);
+	}
+
+	@Override
 	public void start() {
 		kobold.addEffect(new MobEffectInstance(MobEffects.SLOWNESS, 120, 10, false, false));
-		Kobolds.queueServerWork(100, () -> {
-			if (kobold.isAlive()) {
-				InteractionHand hand = ProjectileUtil.getWeaponHoldingHand(kobold, item -> new ItemStack(item).is(KoboldsTags.CAPTAIN));
+	}
+
+	@Override
+	public void stop() {
+		InteractionHand hand = ProjectileUtil.getWeaponHoldingHand(kobold, item -> new ItemStack(item).is(Items.EMERALD));
+		kobold.setItemInHand(hand, ItemStack.EMPTY);
+	}
+
+	@Override
+	public void tick() {
+		if (kobold.isAlive()) {
+			if (this.hasEffect(20)) {
 				kobold.swing(InteractionHand.MAIN_HAND, true);
 				kobold.playSound(KoboldsSounds.KOBOLD_TRADE.get(), 1.0F, 1.0F);
 				if (kobold.level() instanceof ServerLevel lvl) {
@@ -47,14 +60,21 @@ public class KoboldCaptainGoal extends Goal {
 					} else if (pos == null) {
 						pos = kobold.position();
 					}
-                    stack.setCount(Mth.randomBetweenInclusive(kobold.getRandom(), kobold.getItemInHand(hand).is(KoboldsTags.VALUABLE) ? 21 : 2, kobold.getItemInHand(hand).is(KoboldsTags.VALUABLE) ? 36 : 7));
-                    BehaviorUtils.throwItem(kobold, stack, pos);
+					InteractionHand hand = ProjectileUtil.getWeaponHoldingHand(kobold, item -> new ItemStack(item).is(Items.EMERALD));
+					stack.setCount(Mth.randomBetweenInclusive(kobold.getRandom(), kobold.getItemInHand(hand).is(KoboldsTags.VALUABLE) ? 21 : 2, kobold.getItemInHand(hand).is(KoboldsTags.VALUABLE) ? 36 : 7));
+					BehaviorUtils.throwItem(kobold, stack, pos);
 				}
-				Kobolds.queueServerWork(20, () -> {
-                    kobold.setItemInHand(hand, ItemStack.EMPTY);
-				});
 			}
-		});
+		}
+	}
+
+	@Override
+	public boolean requiresUpdateEveryTick() {
+		return true;
+	}
+
+	private boolean hasEffect(int i) {
+		return this.kobold.hasEffect(MobEffects.SLOWNESS) && this.kobold.getEffect(MobEffects.SLOWNESS).getDuration() == i;
 	}
 
 	private boolean isHoldingGem() {

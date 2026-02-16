@@ -521,7 +521,7 @@ public abstract class AbstractKoboldEntity extends AgeableMob implements Crossbo
 	}
 
 	public void givePotion(ItemStack stack) {
-		if (this.getOffhandItem().isEmpty()) {
+		if (this.getOffhandItem().isEmpty() && !this.isBaby()) {
 			this.setItemInHand(InteractionHand.OFF_HAND, stack);
 		}
 	}
