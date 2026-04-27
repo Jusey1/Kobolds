@@ -29,9 +29,18 @@
       }
     },
     {
-      "weight": 12,
+      "weight": 1,
       "element": {
         "location": "kobolds:side/kobold_side_04",
+        "processors": "kobolds:generic",
+        "projection": "rigid",
+        "element_type": "minecraft:single_pool_element"
+      }
+    },
+    {
+      "weight": 7,
+      "element": {
+        "location": "kobolds:side/kobold_side_06",
         "processors": "kobolds:generic",
         "projection": "rigid",
         "element_type": "minecraft:single_pool_element"
