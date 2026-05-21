@@ -1,6 +1,5 @@
 package net.salju.kobolds.entity;
 
-import net.minecraft.world.entity.LivingEntity;
 import net.salju.kobolds.init.KoboldsMobs;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
@@ -10,6 +9,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.ai.goal.PanicGoal;
 import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -45,21 +45,16 @@ public class KoboldChild extends AbstractKoboldEntity {
 				if (this.level() instanceof ServerLevel lvl) {
 					if (this.level().getBiome(pos).is(BiomeTags.IS_JUNGLE)) {
 						if (Math.random() < 0.06) {
-							KoboldCaptain kobold = KoboldsMobs.KOBOLD_CAPTAIN.get().spawn(lvl, pos, EntitySpawnReason.BREEDING);
-                            this.applyDragon(kobold, lvl);
+                            this.applyDragon(KoboldsMobs.KOBOLD_CAPTAIN.get().spawn(lvl, pos, EntitySpawnReason.BREEDING), lvl);
 						} else {
-							Kobold kobold = KoboldsMobs.KOBOLD_PIRATE.get().spawn(lvl, pos, EntitySpawnReason.BREEDING);
-                            this.applyDragon(kobold, lvl);
+                            this.applyDragon(KoboldsMobs.KOBOLD_PIRATE.get().spawn(lvl, pos, EntitySpawnReason.BREEDING), lvl);
 						}
 					} else if (Math.random() > 0.95) {
-						KoboldEngineer kobold = KoboldsMobs.KOBOLD_ENGINEER.get().spawn(lvl, pos, EntitySpawnReason.BREEDING);
-                        this.applyDragon(kobold, lvl);
+                        this.applyDragon(KoboldsMobs.KOBOLD_ENGINEER.get().spawn(lvl, pos, EntitySpawnReason.BREEDING), lvl);
 					} else if (Math.random() < 0.1) {
-						KoboldEnchanter kobold = KoboldsMobs.KOBOLD_ENCHANTER.get().spawn(lvl, pos, EntitySpawnReason.BREEDING);
-                        this.applyDragon(kobold, lvl);
+                        this.applyDragon(KoboldsMobs.KOBOLD_ENCHANTER.get().spawn(lvl, pos, EntitySpawnReason.BREEDING), lvl);
 					} else {
-						Kobold kobold = KoboldsMobs.KOBOLD.get().spawn(lvl, pos, EntitySpawnReason.BREEDING);
-                        this.applyDragon(kobold, lvl);
+                        this.applyDragon(KoboldsMobs.KOBOLD.get().spawn(lvl, pos, EntitySpawnReason.BREEDING), lvl);
 					}
 				}
 			}

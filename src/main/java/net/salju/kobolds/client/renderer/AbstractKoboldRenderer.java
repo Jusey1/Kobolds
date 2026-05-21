@@ -5,7 +5,6 @@ import net.salju.kobolds.init.KoboldsClient;
 import net.salju.kobolds.client.model.KoboldModel;
 import net.salju.kobolds.client.renderer.layers.KoboldItemInHandLayer;
 import net.salju.kobolds.entity.AbstractKoboldEntity;
-import net.salju.kobolds.entity.KoboldSkeleton;
 import net.salju.kobolds.entity.KoboldZombie;
 import net.minecraft.client.renderer.entity.ArmorModelSet;
 import net.minecraft.client.renderer.entity.HumanoidMobRenderer;
@@ -50,9 +49,7 @@ public abstract class AbstractKoboldRenderer extends MobRenderer<Mob, AbstractKo
             state.dragonColor = kobold.getDragonColor();
         } else {
             state.texture = Identifier.fromNamespaceAndPath(Kobolds.MODID, "textures/entity/" + this.getKoboldType(null) + ".png");
-            if (target instanceof KoboldSkeleton kobold) {
-                state.isCharging = kobold.isCharging();
-            } else if (target instanceof KoboldZombie kobold) {
+            if (target instanceof KoboldZombie kobold) {
                 if (kobold.getName().getString().equals("James") && kobold.getZomboType().equals("enchanter")) {
                     state.texture = Identifier.fromNamespaceAndPath(Kobolds.MODID, "textures/entity/undead/zombie_james.png");
                 } else {

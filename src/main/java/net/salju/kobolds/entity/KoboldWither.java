@@ -43,7 +43,6 @@ public class KoboldWither extends AbstractKoboldSkeleton {
 	protected void registerGoals() {
 		this.goalSelector.addGoal(0, new OpenDoorGoal(this, false));
 		this.targetSelector.addGoal(0, new HurtByTargetGoal(this));
-		this.goalSelector.addGoal(1, new RangedCrossbowAttackGoal<>(this, 1.0D, 12.0F));
 		this.goalSelector.addGoal(2, new MeleeAttackGoal(this, 1.2D, false));
 		this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, LivingEntity.class, 12, true, true, new WitherboldAttackSelector(this)));
 		this.goalSelector.addGoal(3, new WaterAvoidingRandomStrollGoal(this, 1.0));
