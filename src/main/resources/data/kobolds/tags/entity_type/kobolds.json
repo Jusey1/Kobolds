@@ -8,9 +8,6 @@
     "kobolds:kobold_engineer",
     "kobolds:kobold_rascal",
     "kobolds:kobold_pirate",
-    "kobolds:kobold_captain",
-    "kobolds:kobold_zombie",
-    "kobolds:kobold_skeleton",
-    "kobolds:witherbold"
+    "kobolds:kobold_captain"
   ]
 }
