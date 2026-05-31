@@ -1,0 +1,192 @@
+package net.salju.kobolds.entity;
+
+import net.salju.kobolds.init.KoboldsItems;
+import net.salju.kobolds.init.KoboldsTags;
+import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.tags.ItemTags;
+import net.minecraft.util.RandomSource;
+import net.minecraft.util.Mth;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.entity.*;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.monster.zombie.Zombie;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ShieldItem;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
+import net.minecraft.world.level.ServerLevelAccessor;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.DifficultyInstance;
+import net.minecraft.world.Difficulty;
+import javax.annotation.Nullable;
+
+public abstract class AbstractKoboldZombie extends Zombie {
+	private static final EntityDataAccessor<Boolean> DATA_CONVERTING = SynchedEntityData.defineId(AbstractKoboldZombie.class, EntityDataSerializers.BOOLEAN);
+	private static final EntityDataAccessor<String> DATA_TYPE = SynchedEntityData.defineId(AbstractKoboldZombie.class, EntityDataSerializers.STRING);
+	public int zomboType;
+	private int convert;
+
+	public AbstractKoboldZombie(EntityType<? extends AbstractKoboldZombie> type, Level world) {
+		super(type, world);
+		this.getEyePosition(0.5F);
+	}
+
+	@Override
+	public void addAdditionalSaveData(ValueOutput tag) {
+		super.addAdditionalSaveData(tag);
+		tag.putInt("ZomboType", this.zomboType);
+		tag.putInt("Convert", this.convert);
+	}
+
+	@Override
+	public void readAdditionalSaveData(ValueInput tag) {
+		super.readAdditionalSaveData(tag);
+		this.setZombo(tag.getInt("ZomboType").orElse(6));
+		this.convert = tag.getInt("Convert").orElse(0);
+	}
+
+    @Override
+    protected void defineSynchedData(SynchedEntityData.Builder builder) {
+        super.defineSynchedData(builder);
+        builder.define(DATA_CONVERTING, false);
+        builder.define(DATA_TYPE, "base");
+    }
+
+    @Override
+    protected boolean canReplaceCurrentItem(ItemStack drop, ItemStack hand, EquipmentSlot slot) {
+        if (drop.is(KoboldsTags.ARMOR) || drop.is(KoboldsTags.BASIC) || drop.is(ItemTags.SPEARS) || drop.getItem()instanceof ShieldItem) {
+            return super.canReplaceCurrentItem(drop, hand, slot);
+        }
+        return false;
+    }
+
+    @Override
+    public void baseTick() {
+        super.baseTick();
+        if (!this.level().isClientSide() && this.isAlive() && !this.isNoAi()) {
+            if (this.convert > 1) {
+                --this.convert;
+                if (!this.isConvert()) {
+                    this.getEntityData().set(DATA_CONVERTING, true);
+                }
+            } else if (this.convert == 1) {
+                if (this.isAlive()) {
+                    this.playSound(SoundEvents.ZOMBIE_VILLAGER_CONVERTED, 1.0F, 1.0F);
+                    if (this.level() instanceof ServerLevel) {
+                        this.convertZombo();
+                    }
+                }
+            }
+        }
+    }
+
+	@Override
+	public InteractionResult mobInteract(Player player, InteractionHand hand) {
+		ItemStack apple = player.getItemInHand(hand);
+		int waitTicks = 0;
+		int potionLevel = 0;
+		if (!this.level().isClientSide() && apple.getItem() == Items.GOLDEN_APPLE && this.hasEffect(MobEffects.WEAKNESS)) {
+			if (this.level().getDifficulty() == Difficulty.EASY) {
+				potionLevel = 0;
+				waitTicks = 1200;
+			} else if (this.level().getDifficulty() == Difficulty.NORMAL) {
+				potionLevel = 0;
+				waitTicks = 2400;
+			} else if (this.level().getDifficulty() == Difficulty.HARD) {
+				potionLevel = 1;
+				waitTicks = 4800;
+			}
+			if (!player.isCreative()) {
+				apple.shrink(1);
+			}
+			player.swing(hand, true);
+			this.playSound(SoundEvents.ZOMBIE_VILLAGER_CURE, 1.0F, 1.0F);
+			this.removeEffect(MobEffects.WEAKNESS);
+			this.addEffect(new MobEffectInstance(MobEffects.STRENGTH, waitTicks, potionLevel));
+			this.convert = waitTicks;
+			this.getEntityData().set(DATA_CONVERTING, true);
+		}
+		return super.mobInteract(player, hand);
+	}
+
+    @Override
+    public SpawnGroupData finalizeSpawn(ServerLevelAccessor world, DifficultyInstance difficulty, EntitySpawnReason reason, @Nullable SpawnGroupData data) {
+        if (reason != EntitySpawnReason.CONVERSION) {
+            this.setZombo(Mth.nextInt(this.getRandom(), 1, 100));
+            this.populateDefaultEquipmentSlots(world.getRandom(), difficulty);
+            this.populateDefaultEquipmentEnchantments(world, world.getRandom(), difficulty);
+        }
+        return super.finalizeSpawn(world, difficulty, reason, data);
+    }
+
+    @Override
+    protected void populateDefaultEquipmentSlots(RandomSource randy, DifficultyInstance souls) {
+        if (this.getZomboType().equals("warrior")) {
+            this.setItemSlot(EquipmentSlot.MAINHAND, new ItemStack(KoboldsItems.KOBOLD_IRON_SPEAR.get()));
+            this.setItemSlot(EquipmentSlot.OFFHAND, new ItemStack(Items.SHIELD));
+        } else if (this.getZomboType().equals("engineer")) {
+            this.setItemSlot(EquipmentSlot.MAINHAND, new ItemStack(Items.CROSSBOW));
+        } else if (this.getZomboType().equals("base")) {
+            if (Math.random() >= 0.6) {
+                this.setItemSlot(EquipmentSlot.MAINHAND, new ItemStack(Items.CROSSBOW));
+            } else {
+                this.setItemSlot(EquipmentSlot.MAINHAND, new ItemStack(KoboldsItems.KOBOLD_IRON_SWORD.get()));
+            }
+        }
+        this.setDropChance(EquipmentSlot.MAINHAND, 0.0F);
+        this.setDropChance(EquipmentSlot.OFFHAND, 0.0F);
+    }
+
+    @Override
+    public SoundEvent getAmbientSound() {
+        return SoundEvents.ZOMBIE_VILLAGER_AMBIENT;
+    }
+
+    @Override
+    public SoundEvent getHurtSound(DamageSource source) {
+        return SoundEvents.ZOMBIE_VILLAGER_HURT;
+    }
+
+    @Override
+    public SoundEvent getDeathSound() {
+        return SoundEvents.ZOMBIE_VILLAGER_DEATH;
+    }
+
+    @Override
+    protected boolean convertsInWater() {
+        return false;
+    }
+
+    @Override
+    public boolean isBaby() {
+        return false;
+    }
+
+	public boolean isConvert() {
+		return this.getEntityData().get(DATA_CONVERTING);
+	}
+
+    public void setZomboType(String str) {
+        this.getEntityData().set(DATA_TYPE, str);
+    }
+
+	public String getZomboType() {
+		return this.getEntityData().get(DATA_TYPE);
+	}
+
+    public abstract void convertZombo();
+
+    public abstract void setZombo(AbstractKoboldEntity kobold);
+
+    public abstract void setZombo(int i);
+}

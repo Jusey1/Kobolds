@@ -1,0 +1,63 @@
+package net.salju.kobolds.events;
+
+import net.salju.kobolds.Kobolds;
+import net.salju.kobolds.entity.AbstractKoboldEntity;
+import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.neoforge.event.entity.EntityJoinLevelEvent;
+import net.neoforged.neoforge.event.entity.living.LivingDeathEvent;
+import net.neoforged.neoforge.event.entity.living.LivingChangeTargetEvent;
+import net.neoforged.neoforge.event.entity.living.LivingIncomingDamageEvent;
+import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
+import net.minecraft.world.entity.raid.Raider;
+import net.minecraft.world.entity.monster.Enemy;
+import net.minecraft.world.entity.monster.zombie.ZombifiedPiglin;
+import net.minecraft.world.entity.monster.zombie.Zombie;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.effect.MobEffects;
+
+@EventBusSubscriber
+public class KoboldsEvents {
+	@SubscribeEvent
+	public static void onEntitySpawned(EntityJoinLevelEvent event) {
+		if (event.getEntity() instanceof Raider johnny) {
+			johnny.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(johnny, AbstractKoboldEntity.class, false));
+		} else if (event.getEntity() instanceof Zombie billy && !(billy instanceof ZombifiedPiglin)) {
+			billy.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(billy, AbstractKoboldEntity.class, false));
+		}
+	}
+
+	@SubscribeEvent
+	public static void onAttacked(LivingIncomingDamageEvent event) {
+		if (event.getSource().getDirectEntity() instanceof AbstractKoboldEntity kobold && kobold.isSpear(kobold.getMainHandItem())) {
+			event.setAmount(event.getAmount() * 1.5F);
+		}
+	}
+
+	@SubscribeEvent
+	public static void onAttackTarget(LivingChangeTargetEvent event) {
+		if (event.getEntity() instanceof AbstractKoboldEntity && event.getOriginalAboutToBeSetTarget() instanceof AbstractKoboldEntity) {
+			event.setCanceled(true);
+		}
+	}
+
+	@SubscribeEvent
+	public static void onEntityDeath(LivingDeathEvent event) {
+		if (event.getSource().getEntity() != null && event.getEntity() instanceof Enemy && event.getSource().getEntity() instanceof LivingEntity src) {
+			int e = src.getMainHandItem().getEnchantmentLevel(KoboldsManager.getEnchantment(src.level().registryAccess(), Kobolds.MODID, "prospector"));
+			if (e > 0) {
+				double check = src.hasEffect(MobEffects.LUCK) ? 0.25 : 0.05;
+				if (!event.getEntity().isAlive() && !event.getEntity().level().isClientSide()) {
+					if (Math.random() <= check) {
+						for (int i = 0; i < e; i++) {
+							event.getEntity().level().addFreshEntity(new ItemEntity(event.getEntity().level(), event.getEntity().getX(), event.getEntity().getY(), event.getEntity().getZ(), new ItemStack(Items.EMERALD)));
+						}
+					}
+				}
+			}
+		}
+	}
+}
