@@ -1,8 +1,0 @@
-{
-  "replace": false,
-  "values": [
-    "#minecraft:axes",
-    "minecraft:bow",
-    "minecraft:crossbow"
-  ]
-}
