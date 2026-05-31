@@ -1,0 +1,77 @@
+{
+  "fallback": "minecraft:empty",
+  "elements": [
+    {
+      "weight": 7,
+      "element": {
+        "location": "kobolds:mineshaft/kobold_mineshaft_01",
+        "processors": "kobolds:mineshaft",
+        "projection": "rigid",
+        "element_type": "minecraft:single_pool_element"
+      }
+    },
+    {
+      "weight": 7,
+      "element": {
+        "location": "kobolds:mineshaft/kobold_mineshaft_02",
+        "processors": "kobolds:mineshaft",
+        "projection": "rigid",
+        "element_type": "minecraft:single_pool_element"
+      }
+    },
+    {
+      "weight": 2,
+      "element": {
+        "location": "kobolds:mineshaft/kobold_mineshaft_03",
+        "processors": "kobolds:mineshaft",
+        "projection": "rigid",
+        "element_type": "minecraft:single_pool_element"
+      }
+    },
+    {
+      "weight": 7,
+      "element": {
+        "location": "kobolds:mineshaft/kobold_mineshaft_04",
+        "processors": "kobolds:mineshaft",
+        "projection": "rigid",
+        "element_type": "minecraft:single_pool_element"
+      }
+    },
+    {
+      "weight": 7,
+      "element": {
+        "location": "kobolds:mineshaft/kobold_mineshaft_05",
+        "processors": "kobolds:mineshaft",
+        "projection": "rigid",
+        "element_type": "minecraft:single_pool_element"
+      }
+    },
+    {
+      "weight": 4,
+      "element": {
+        "location": "kobolds:mineshaft/kobold_mineshaft_06",
+        "processors": "kobolds:mineshaft",
+        "projection": "rigid",
+        "element_type": "minecraft:single_pool_element"
+      }
+    },
+    {
+      "weight": 4,
+      "element": {
+        "location": "kobolds:mineshaft/kobold_mineshaft_07",
+        "processors": "kobolds:mineshaft",
+        "projection": "rigid",
+        "element_type": "minecraft:single_pool_element"
+      }
+    },
+    {
+      "weight": 4,
+      "element": {
+        "location": "kobolds:mineshaft/kobold_mineshaft_08",
+        "processors": "kobolds:mineshaft",
+        "projection": "rigid",
+        "element_type": "minecraft:single_pool_element"
+      }
+    }
+  ]
+}

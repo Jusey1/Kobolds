@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:smithing_transform",
+  "addition": "minecraft:iron_ingot",
+  "base": "minecraft:iron_pickaxe",
+  "result": {
+    "id": "kobolds:kobold_iron_pickaxe"
+  },
+  "template": "kobolds:kobold_template"
+}

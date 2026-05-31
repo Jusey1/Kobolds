@@ -1,0 +1,10 @@
+{
+  "type": "neoforge:add_spawns",
+  "biomes": "#kobolds:has_zombolds",
+  "spawners": {
+    "type": "kobolds:kobold_zombie",
+    "weight": 5,
+    "minCount": 1,
+    "maxCount": 2
+  }
+}

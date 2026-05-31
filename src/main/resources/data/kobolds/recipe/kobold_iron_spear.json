@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:smithing_transform",
+  "addition": "minecraft:iron_ingot",
+  "base": "minecraft:iron_spear",
+  "result": {
+    "id": "kobolds:kobold_iron_spear"
+  },
+  "template": "kobolds:kobold_template"
+}

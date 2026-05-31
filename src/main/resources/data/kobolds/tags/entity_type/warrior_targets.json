@@ -1,0 +1,10 @@
+{
+  "replace": false,
+  "values": [
+    "#minecraft:raiders",
+    "#minecraft:skeletons",
+    "minecraft:spider",
+    "minecraft:cave_spider",
+    "#kobolds:normal_targets"
+  ]
+}

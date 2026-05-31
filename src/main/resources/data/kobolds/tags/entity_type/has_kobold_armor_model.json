@@ -1,0 +1,7 @@
+{
+  "replace": false,
+  "values": [
+    "#kobolds:kobolds",
+    "#kobolds:kobolds_undead"
+  ]
+}
