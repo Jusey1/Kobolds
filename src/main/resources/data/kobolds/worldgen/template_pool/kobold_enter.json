@@ -2,10 +2,10 @@
   "fallback": "minecraft:empty",
   "elements": [
     {
-      "weight": 4,
+      "weight": 2,
       "element": {
-        "location": "kobolds:gravel/kobold_gravel_pile_01",
-        "processors": "kobolds:archaeology",
+        "location": "kobolds:enter/kobold_enter_01",
+        "processors": "minecraft:empty",
         "projection": "rigid",
         "element_type": "minecraft:single_pool_element"
       }
@@ -13,17 +13,17 @@
     {
       "weight": 2,
       "element": {
-        "location": "kobolds:gravel/kobold_gravel_pile_02",
-        "processors": "kobolds:archaeology",
+        "location": "kobolds:enter/kobold_enter_02",
+        "processors": "minecraft:empty",
         "projection": "rigid",
         "element_type": "minecraft:single_pool_element"
       }
     },
     {
-      "weight": 4,
+      "weight": 2,
       "element": {
-        "location": "kobolds:gravel/kobold_gravel_pile_03",
-        "processors": "kobolds:archaeology",
+        "location": "kobolds:enter/kobold_enter_03",
+        "processors": "minecraft:empty",
         "projection": "rigid",
         "element_type": "minecraft:single_pool_element"
       }

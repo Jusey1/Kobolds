@@ -2,9 +2,9 @@
   "fallback": "minecraft:empty",
   "elements": [
     {
-      "weight": 12,
+      "weight": 3,
       "element": {
-        "location": "kobolds:side/kobold_side_04",
+        "location": "kobolds:side/kobold_side_06",
         "processors": "kobolds:generic",
         "projection": "rigid",
         "element_type": "minecraft:single_pool_element"

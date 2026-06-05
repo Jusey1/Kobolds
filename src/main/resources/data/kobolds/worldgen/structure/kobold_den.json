@@ -1,18 +1,13 @@
 {
   "type": "kobolds:kobold_den",
-  "start_pool": "kobolds:kobold_den",
-  "biomes": "#minecraft:is_overworld",
-  "step": "underground_structures",
-  "terrain_adaptation": "encapsulate",
+  "start_pool": "kobolds:kobold_enter",
+  "biomes": "#kobolds:has_structure/kobold_den",
+  "step": "surface_structures",
   "liquid_settings": "ignore_waterlogging",
   "start_height": {
-    "type": "minecraft:uniform",
-    "min_inclusive": {
-      "absolute": 12
-    },
-    "max_inclusive": {
-      "absolute": 32
-    }
+    "absolute": -5
   },
+  "project_start_to_heightmap": "WORLD_SURFACE_WG",
+  "use_expansion_hack": false,
   "spawn_overrides": {}
 }
