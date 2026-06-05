@@ -48,6 +48,7 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionHand;
 import javax.annotation.Nullable;
 import java.util.Optional;
+import java.util.stream.Stream;
 
 public abstract class AbstractKoboldEntity extends AgeableMob implements CrossbowAttackMob, RangedAttackMob {
 	private static final EntityDataAccessor<Boolean> DATA_CHARGING_STATE = SynchedEntityData.defineId(AbstractKoboldEntity.class, EntityDataSerializers.BOOLEAN);
@@ -276,9 +277,8 @@ public abstract class AbstractKoboldEntity extends AgeableMob implements Crossbo
             this.setBaby(true);
         }
         if (reason != EntitySpawnReason.CONVERSION) {
-            this.setType(Mth.nextInt(this.getRandom(), 1, 100));
+            this.setType(this.getSpawnType(reason));
             this.populateDefaultEquipmentSlots(world.getRandom(), difficulty);
-            this.populateDefaultEquipmentEnchantments(world, world.getRandom(), difficulty);
         }
 		return super.finalizeSpawn(world, difficulty, reason, data);
 	}
@@ -370,15 +370,23 @@ public abstract class AbstractKoboldEntity extends AgeableMob implements Crossbo
 
     public void giveNewWeapon(double d) {
         if (d >= 0.7) {
-            this.setItemSlot(EquipmentSlot.MAINHAND, new ItemStack(Items.CROSSBOW));
+            this.setItemSlot(EquipmentSlot.MAINHAND, this.enchantWeapon(new ItemStack(Items.CROSSBOW), false));
+            this.setItemSlot(EquipmentSlot.OFFHAND, ItemStack.EMPTY);
         } else if (d <= 0.45) {
-            this.setItemSlot(EquipmentSlot.MAINHAND, new ItemStack(KoboldsItems.KOBOLD_IRON_SPEAR.get()));
+            this.setItemSlot(EquipmentSlot.MAINHAND, this.enchantWeapon(new ItemStack(KoboldsItems.KOBOLD_IRON_SPEAR.get()), false));
+            if (d <= 0.15) {
+                this.setItemSlot(EquipmentSlot.OFFHAND, this.enchantWeapon(new ItemStack(Items.SHIELD), false));
+            }
         } else {
-            this.setItemSlot(EquipmentSlot.MAINHAND, new ItemStack(KoboldsItems.KOBOLD_IRON_SWORD.get()));
+            this.setItemSlot(EquipmentSlot.MAINHAND, this.enchantWeapon(new ItemStack(KoboldsItems.KOBOLD_IRON_SWORD.get()), false));
         }
-        if (d <= 0.15 && !(this.getMainHandItem().getItem() instanceof ProjectileWeaponItem)) {
-            this.setItemSlot(EquipmentSlot.OFFHAND, new ItemStack(Items.SHIELD));
+    }
+
+    public ItemStack enchantWeapon(ItemStack stack, boolean check) {
+        if (Math.random() >= 0.85 || check) {
+            return EnchantmentHelper.enchantItem(this.getRandom(), stack, 21, this.registryAccess(), Optional.empty());
         }
+        return stack;
     }
 
 	public boolean isDiamond() {
@@ -404,4 +412,6 @@ public abstract class AbstractKoboldEntity extends AgeableMob implements Crossbo
     public abstract boolean canTrade(ItemStack stack);
 
     public abstract boolean isPreferredWeapon(ItemStack stack);
+
+    public abstract int getSpawnType(EntitySpawnReason reason);
 }

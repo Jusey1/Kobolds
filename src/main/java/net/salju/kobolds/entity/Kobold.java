@@ -11,6 +11,7 @@ import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.tags.ItemTags;
+import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.*;
@@ -146,12 +147,22 @@ public class Kobold extends AbstractKoboldEntity {
     }
 
     @Override
+    public boolean canReplaceEqualItem(ItemStack drop, ItemStack hand) {
+        boolean check = super.canReplaceEqualItem(drop, hand);
+        if (check && !this.isEngineer() && drop.getItem() instanceof CrossbowItem && drop.isEnchanted()) {
+            int i = drop.getTagEnchantments().size() * 5;
+            this.setType(Mth.nextInt(this.getRandom(), 65 + i, 95 + i));
+        }
+        return check;
+    }
+
+    @Override
     public void giveNewWeapon(double d) {
         if (this.isEnchanter()) {
             this.setItemSlot(EquipmentSlot.MAINHAND, ItemStack.EMPTY);
             this.setItemSlot(EquipmentSlot.OFFHAND, ItemStack.EMPTY);
         } else if (this.isEngineer()) {
-            this.setItemSlot(EquipmentSlot.MAINHAND, new ItemStack(Items.CROSSBOW));
+            this.setItemSlot(EquipmentSlot.MAINHAND, this.enchantWeapon(new ItemStack(Items.CROSSBOW), true));
             this.setItemSlot(EquipmentSlot.OFFHAND, ItemStack.EMPTY);
         } else {
             super.giveNewWeapon(d);
@@ -184,6 +195,13 @@ public class Kobold extends AbstractKoboldEntity {
             return stack.getItem() instanceof CrossbowItem;
         }
         return stack.is(KoboldsTags.BASIC);
+    }
+
+    @Override
+    public int getSpawnType(EntitySpawnReason reason) {
+        int min = reason != EntitySpawnReason.BREEDING ? 10 : 5;
+        int max = reason != EntitySpawnReason.BREEDING ? 95 : 100;
+        return Mth.nextInt(this.getRandom(), min, max);
     }
 
     public boolean isEnchanter() {

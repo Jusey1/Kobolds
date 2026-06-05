@@ -92,10 +92,10 @@ public abstract class AbstractKoboldZombie extends Zombie {
 
 	@Override
 	public InteractionResult mobInteract(Player player, InteractionHand hand) {
-		ItemStack apple = player.getItemInHand(hand);
+		ItemStack stack = player.getItemInHand(hand);
 		int waitTicks = 0;
 		int potionLevel = 0;
-		if (!this.level().isClientSide() && apple.getItem() == Items.GOLDEN_APPLE && this.hasEffect(MobEffects.WEAKNESS)) {
+		if (!this.level().isClientSide() && stack.is(Items.GOLDEN_APPLE) && this.hasEffect(MobEffects.WEAKNESS)) {
 			if (this.level().getDifficulty() == Difficulty.EASY) {
 				potionLevel = 0;
 				waitTicks = 1200;
@@ -107,7 +107,7 @@ public abstract class AbstractKoboldZombie extends Zombie {
 				waitTicks = 4800;
 			}
 			if (!player.isCreative()) {
-				apple.shrink(1);
+				stack.shrink(1);
 			}
 			player.swing(hand, true);
 			this.playSound(SoundEvents.ZOMBIE_VILLAGER_CURE, 1.0F, 1.0F);
@@ -122,7 +122,7 @@ public abstract class AbstractKoboldZombie extends Zombie {
     @Override
     public SpawnGroupData finalizeSpawn(ServerLevelAccessor world, DifficultyInstance difficulty, EntitySpawnReason reason, @Nullable SpawnGroupData data) {
         if (reason != EntitySpawnReason.CONVERSION) {
-            this.setZombo(Mth.nextInt(this.getRandom(), 1, 100));
+            this.setZombo(Mth.nextInt(this.getRandom(), 5, 45));
             this.populateDefaultEquipmentSlots(world.getRandom(), difficulty);
             this.populateDefaultEquipmentEnchantments(world, world.getRandom(), difficulty);
         }
